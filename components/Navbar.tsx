@@ -11,10 +11,20 @@ export default function Navbar() {
     <nav className="sticky top-0 z-50 bg-gray-950/80 backdrop-blur-lg border-b border-gray-800">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 flex items-center justify-between h-16">
         <Link href="/" className="flex items-center gap-2">
-          <div className="w-8 h-8 rounded-lg bg-indigo-600 flex items-center justify-center">
-            <Zap size={16} className="text-white" />
-          </div>
-          <span className="font-bold text-white">CSS <span className="text-indigo-400">4 JOBS</span></span>
+          <img
+            src="/images/logo.png"
+            alt="CSS 4 JOBS"
+            className="h-10 w-auto object-contain"
+            onError={(e) => {
+              const img = e.target as HTMLImageElement;
+              img.style.display = 'none';
+              const fallback = img.nextElementSibling as HTMLElement;
+              if (fallback) fallback.style.removeProperty('display');
+            }}
+          />
+          <span className="font-bold text-white" style={{ display: 'none' }}>
+            CSS <span className="text-indigo-400">4 JOBS</span>
+          </span>
         </Link>
 
         <div className="hidden md:flex items-center gap-6 text-sm">
