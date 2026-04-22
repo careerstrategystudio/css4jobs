@@ -190,7 +190,7 @@ export default function PricingPage() {
                 <div className="flex gap-1 mb-3">
                   {[...Array(5)].map((_, i) => <Star key={i} size={13} className="fill-yellow-400 text-yellow-400" />)}
                 </div>
-                <p className="text-gray-300 text-sm leading-relaxed mb-4 italic">"{t.text}"</p>
+                <p className="text-gray-300 text-sm leading-relaxed mb-4 italic">&ldquo;{t.text}&rdquo;</p>
                 <div>
                   <div className="font-semibold text-white text-sm">{t.name}</div>
                   <div className="text-gray-500 text-xs">{t.role}</div>

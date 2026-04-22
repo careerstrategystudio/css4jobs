@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { FileText, Linkedin, Search, Zap, CheckCircle, ArrowRight, Star } from 'lucide-react';
+import { FileText, Linkedin, Search, Zap, ArrowRight, Star } from 'lucide-react';
 
 const features = [
   {
@@ -159,7 +159,7 @@ export default function HomePage() {
                 <div className="flex gap-1 mb-3">
                   {[...Array(5)].map((_, i) => <Star key={i} size={14} className="fill-yellow-400 text-yellow-400" />)}
                 </div>
-                <p className="text-gray-300 text-sm leading-relaxed mb-4 italic">"{t.text}"</p>
+                <p className="text-gray-300 text-sm leading-relaxed mb-4 italic">&ldquo;{t.text}&rdquo;</p>
                 <div>
                   <div className="font-semibold text-white text-sm">{t.name}</div>
                   <div className="text-gray-500 text-xs">{t.role}</div>
