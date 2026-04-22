@@ -6,7 +6,7 @@ export type Lang = 'es' | 'en';
 const translations = {
   es: {
     // Navbar
-    nav_cv: 'CV Tailoring',
+    nav_cv: 'Adaptación de CV',
     nav_linkedin: 'LinkedIn AI',
     nav_pricing: 'Precios',
     nav_cta: 'Empezar gratis',
