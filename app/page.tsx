@@ -42,9 +42,9 @@ export default function HomePage() {
   ];
 
   const testimonials = [
-    { name: 'María García', role: 'Software Engineer · Dublin', text: 'En 2 minutos tenía un CV adaptado para Google. Conseguí la entrevista en menos de una semana.' },
-    { name: 'Carlos Ruiz', role: 'Sales Manager · Londres', text: 'Mi LinkedIn pasó de 5 a 50 visitas semanales de reclutadores. Increíble herramienta.' },
-    { name: 'Ana Martínez', role: 'Data Analyst · Amsterdam', text: 'El CV tailoring es brutalmente bueno. Diferente a todo lo que había probado antes.' },
+    { name: t('test1_name'), role: t('test1_role'), text: t('test1_text') },
+    { name: t('test2_name'), role: t('test2_role'), text: t('test2_text') },
+    { name: t('test3_name'), role: t('test3_role'), text: t('test3_text') },
   ];
 
   return (
