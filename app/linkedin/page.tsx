@@ -14,7 +14,7 @@ export default function LinkedInPage() {
   const [language, setLanguage]         = useState('es');
 
   const handleSubmit = async () => {
-    if (\!linkedinData.trim()) {
+    if (!linkedinData.trim()) {
       setError(t('li_error'));
       return;
     }
@@ -28,7 +28,7 @@ export default function LinkedInPage() {
         body: JSON.stringify({ linkedinData, targetRole, language }),
       });
       const data = await res.json();
-      if (\!res.ok) throw new Error(data.error || 'Error');
+      if (!res.ok) throw new Error(data.error || 'Error');
       setResult(data.analysis);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Error');

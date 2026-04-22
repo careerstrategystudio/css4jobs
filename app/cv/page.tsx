@@ -17,14 +17,14 @@ export default function CVTailoringPage() {
 
   const handleFile = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
-    if (\!file) return;
+    if (!file) return;
     const text = await file.text();
     setCvText(text);
     setActiveTab('paste');
   };
 
   const handleSubmit = async () => {
-    if (\!cvText.trim() || \!jobDesc.trim()) {
+    if (!cvText.trim() || !jobDesc.trim()) {
       setError(t('cv_error'));
       return;
     }
@@ -38,7 +38,7 @@ export default function CVTailoringPage() {
         body: JSON.stringify({ cvText, jobDescription: jobDesc, language }),
       });
       const data = await res.json();
-      if (\!res.ok) throw new Error(data.error || 'Error');
+      if (!res.ok) throw new Error(data.error || 'Error');
       setResult(data.tailoredCV);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Error');
