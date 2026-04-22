@@ -52,8 +52,7 @@ export default function HomePage() {
 
         <div className="relative max-w-5xl mx-auto text-center">
           <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-indigo-500/10 border border-indigo-500/20 text-indigo-400 text-xs font-semibold mb-6">
-            <Zap size={12} />
-            Powered by Claude AI · CareerStrategy Studio
+            CareerStrategy Studio
           </div>
 
           <h1 className="text-5xl sm:text-6xl lg:text-7xl font-bold text-white leading-[1.1] mb-6">
