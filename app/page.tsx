@@ -1,48 +1,52 @@
+'use client';
 import Link from 'next/link';
 import { FileText, Linkedin, Search, Zap, ArrowRight, Star } from 'lucide-react';
-
-const features = [
-  {
-    icon: FileText,
-    color: 'bg-indigo-500/10 text-indigo-400',
-    title: 'CV Tailoring con IA',
-    desc: 'Sube tu CV, pega la descripción del puesto y nuestra IA lo reescribe adaptado exactamente a ese trabajo. Pasa filtros ATS y llega a reclutadores reales.',
-    href: '/cv',
-    cta: 'Tailorear mi CV',
-  },
-  {
-    icon: Linkedin,
-    color: 'bg-blue-500/10 text-blue-400',
-    title: 'LinkedIn Optimizer',
-    desc: 'Pega tu perfil de LinkedIn y recibí un análisis completo con mejoras específicas: headline, about, experiencia y keywords para aparecer en más búsquedas.',
-    href: '/linkedin',
-    cta: 'Optimizar LinkedIn',
-  },
-  {
-    icon: Search,
-    color: 'bg-emerald-500/10 text-emerald-400',
-    title: 'Job Search Global',
-    desc: 'Buscador de empleos internacionales integrado. Irlanda, España, UK, LATAM y más. Próximamente disponible.',
-    href: '#',
-    cta: 'Próximamente',
-    soon: true,
-  },
-];
-
-const stats = [
-  { value: '2 min', label: 'para tailorear un CV' },
-  { value: '95%', label: 'tasa de paso en ATS' },
-  { value: '3x', label: 'más entrevistas' },
-  { value: 'Gratis', label: 'para empezar' },
-];
-
-const testimonials = [
-  { name: 'María García', role: 'Software Engineer · Dublin', text: 'En 2 minutos tenía un CV adaptado para Google. Conseguí la entrevista en menos de una semana.' },
-  { name: 'Carlos Ruiz', role: 'Sales Manager · Londres', text: 'Mi LinkedIn pasó de 5 a 50 visitas semanales de reclutadores. Increíble herramienta.' },
-  { name: 'Ana Martínez', role: 'Data Analyst · Amsterdam', text: 'El CV tailoring es brutalmente bueno. Diferente a todo lo que había probado antes.' },
-];
+import { useLang } from '@/lib/i18n';
 
 export default function HomePage() {
+  const { t } = useLang();
+
+  const features = [
+    {
+      icon: FileText,
+      color: 'bg-indigo-500/10 text-indigo-400',
+      title: t('feat1_title'),
+      desc: t('feat1_desc'),
+      href: '/cv',
+      cta: t('feat1_cta'),
+    },
+    {
+      icon: Linkedin,
+      color: 'bg-blue-500/10 text-blue-400',
+      title: t('feat2_title'),
+      desc: t('feat2_desc'),
+      href: '/linkedin',
+      cta: t('feat2_cta'),
+    },
+    {
+      icon: Search,
+      color: 'bg-emerald-500/10 text-emerald-400',
+      title: t('feat3_title'),
+      desc: t('feat3_desc'),
+      href: '#',
+      cta: t('feat3_cta'),
+      soon: true,
+    },
+  ];
+
+  const stats = [
+    { value: t('stat1_val'), label: t('stat1_lbl') },
+    { value: t('stat2_val'), label: t('stat2_lbl') },
+    { value: t('stat3_val'), label: t('stat3_lbl') },
+    { value: t('stat4_val'), label: t('stat4_lbl') },
+  ];
+
+  const testimonials = [
+    { name: 'María García', role: 'Software Engineer · Dublin', text: 'En 2 minutos tenía un CV adaptado para Google. Conseguí la entrevista en menos de una semana.' },
+    { name: 'Carlos Ruiz', role: 'Sales Manager · Londres', text: 'Mi LinkedIn pasó de 5 a 50 visitas semanales de reclutadores. Increíble herramienta.' },
+    { name: 'Ana Martínez', role: 'Data Analyst · Amsterdam', text: 'El CV tailoring es brutalmente bueno. Diferente a todo lo que había probado antes.' },
+  ];
+
   return (
     <div className="min-h-screen">
       {/* Hero */}
@@ -52,29 +56,28 @@ export default function HomePage() {
 
         <div className="relative max-w-5xl mx-auto text-center">
           <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-indigo-500/10 border border-indigo-500/20 text-indigo-400 text-xs font-semibold mb-6">
-            CareerStrategy Studio
+            {t('home_badge')}
           </div>
 
           <h1 className="text-5xl sm:text-6xl lg:text-7xl font-bold text-white leading-[1.1] mb-6">
-            Tu próximo trabajo,<br />
+            {t('home_h1a')}<br />
             <span className="bg-gradient-to-r from-indigo-400 to-purple-400 bg-clip-text text-transparent">
-              conseguido con IA
+              {t('home_h1b')}
             </span>
           </h1>
 
           <p className="text-xl text-gray-400 max-w-2xl mx-auto mb-10 leading-relaxed">
-            Tailorea tu CV para cada puesto, optimiza tu LinkedIn y consigue más entrevistas.
-            Diseñado para profesionales hispanos que quieren trabajar en cualquier parte del mundo.
+            {t('home_desc')}
           </p>
 
           <div className="flex flex-col sm:flex-row gap-4 justify-center mb-16">
             <Link href="/cv" className="btn-primary text-base px-8 py-3.5">
               <FileText size={18} />
-              Tailorear mi CV gratis
+              {t('home_cta1')}
             </Link>
             <Link href="/linkedin" className="btn-outline text-base px-8 py-3.5">
               <Linkedin size={18} />
-              Optimizar LinkedIn
+              {t('home_cta2')}
             </Link>
           </div>
 
@@ -93,8 +96,8 @@ export default function HomePage() {
       {/* Features */}
       <section className="py-20 px-4">
         <div className="max-w-6xl mx-auto">
-          <h2 className="text-3xl font-bold text-white text-center mb-4">Todo lo que necesitás para conseguir el trabajo</h2>
-          <p className="text-gray-400 text-center mb-14 max-w-xl mx-auto">Herramientas de IA que hacen el trabajo pesado por vos.</p>
+          <h2 className="text-3xl font-bold text-white text-center mb-4">{t('features_h2')}</h2>
+          <p className="text-gray-400 text-center mb-14 max-w-xl mx-auto">{t('features_sub')}</p>
 
           <div className="grid md:grid-cols-3 gap-6">
             {features.map(f => {
@@ -108,7 +111,7 @@ export default function HomePage() {
                   <p className="text-gray-400 text-sm leading-relaxed mb-6">{f.desc}</p>
                   {f.soon ? (
                     <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-gray-800 text-gray-500 text-xs font-semibold">
-                      🚀 Próximamente
+                      🚀 {f.cta}
                     </span>
                   ) : (
                     <Link href={f.href} className="btn-primary text-xs">
@@ -125,13 +128,13 @@ export default function HomePage() {
       {/* How it works */}
       <section className="py-20 px-4 bg-gray-900/50">
         <div className="max-w-4xl mx-auto text-center">
-          <h2 className="text-3xl font-bold text-white mb-4">¿Cómo funciona?</h2>
-          <p className="text-gray-400 mb-14">Tres pasos. Menos de 3 minutos.</p>
+          <h2 className="text-3xl font-bold text-white mb-4">{t('how_h2')}</h2>
+          <p className="text-gray-400 mb-14">{t('how_sub')}</p>
           <div className="grid md:grid-cols-3 gap-8">
             {[
-              { n: '01', title: 'Subí tu CV', desc: 'Subí tu CV actual en PDF o Word. También podés pegar el texto directamente.' },
-              { n: '02', title: 'Pegá el trabajo', desc: 'Copiá la descripción del puesto al que querés aplicar. Cualquier idioma.' },
-              { n: '03', title: 'Descargá el resultado', desc: 'La IA tailorea tu CV en segundos. Listo para enviar.' },
+              { n: '01', title: t('step1_title'), desc: t('step1_desc') },
+              { n: '02', title: t('step2_title'), desc: t('step2_desc') },
+              { n: '03', title: t('step3_title'), desc: t('step3_desc') },
             ].map(step => (
               <div key={step.n} className="relative">
                 <div className="text-6xl font-black text-gray-800 mb-3">{step.n}</div>
@@ -142,7 +145,7 @@ export default function HomePage() {
           </div>
           <div className="mt-12">
             <Link href="/cv" className="btn-primary text-base px-8 py-3.5">
-              Empezar ahora — es gratis <ArrowRight size={16} />
+              {t('how_cta')} <ArrowRight size={16} />
             </Link>
           </div>
         </div>
@@ -151,17 +154,17 @@ export default function HomePage() {
       {/* Testimonials */}
       <section className="py-20 px-4">
         <div className="max-w-5xl mx-auto">
-          <h2 className="text-3xl font-bold text-white text-center mb-14">Lo que dicen nuestros usuarios</h2>
+          <h2 className="text-3xl font-bold text-white text-center mb-14">{t('test_h2')}</h2>
           <div className="grid md:grid-cols-3 gap-6">
-            {testimonials.map(t => (
-              <div key={t.name} className="card">
+            {testimonials.map(t2 => (
+              <div key={t2.name} className="card">
                 <div className="flex gap-1 mb-3">
                   {[...Array(5)].map((_, i) => <Star key={i} size={14} className="fill-yellow-400 text-yellow-400" />)}
                 </div>
-                <p className="text-gray-300 text-sm leading-relaxed mb-4 italic">&ldquo;{t.text}&rdquo;</p>
+                <p className="text-gray-300 text-sm leading-relaxed mb-4 italic">&ldquo;{t2.text}&rdquo;</p>
                 <div>
-                  <div className="font-semibold text-white text-sm">{t.name}</div>
-                  <div className="text-gray-500 text-xs">{t.role}</div>
+                  <div className="font-semibold text-white text-sm">{t2.name}</div>
+                  <div className="text-gray-500 text-xs">{t2.role}</div>
                 </div>
               </div>
             ))}
@@ -172,11 +175,11 @@ export default function HomePage() {
       {/* CTA Banner */}
       <section className="py-20 px-4">
         <div className="max-w-4xl mx-auto bg-gradient-to-r from-indigo-600 to-purple-600 rounded-3xl p-12 text-center">
-          <h2 className="text-3xl font-bold text-white mb-4">¿Listo para conseguir más entrevistas?</h2>
-          <p className="text-indigo-200 mb-8 max-w-xl mx-auto">Tailorea tu primer CV gratis. Sin tarjeta de crédito. Sin registros.</p>
+          <h2 className="text-3xl font-bold text-white mb-4">{t('cta_h2')}</h2>
+          <p className="text-indigo-200 mb-8 max-w-xl mx-auto">{t('cta_sub')}</p>
           <Link href="/cv" className="inline-flex items-center gap-2 px-8 py-3.5 rounded-xl bg-white text-indigo-700 font-bold text-base hover:bg-gray-100 transition-all">
             <Zap size={18} />
-            Empezar gratis ahora
+            {t('cta_btn')}
           </Link>
         </div>
       </section>
