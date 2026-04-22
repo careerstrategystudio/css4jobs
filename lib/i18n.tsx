@@ -6,7 +6,7 @@ export type Lang = 'es' | 'en';
 const translations = {
   es: {
     // Navbar
-    nav_cv: 'Adaptación de CV',
+    nav_cv: 'Optimización de CV',
     nav_linkedin: 'LinkedIn AI',
     nav_pricing: 'Precios',
     nav_cta: 'Empezar gratis',
@@ -16,7 +16,7 @@ const translations = {
     home_h1a: 'Tu próximo trabajo,',
     home_h1b: 'conseguido con IA',
     home_desc: 'Adaptá tu CV para cada puesto, optimizá tu LinkedIn y conseguí más entrevistas. Diseñado para profesionales hispanos que quieren trabajar en cualquier parte del mundo.',
-    home_cta1: 'Adaptar mi CV gratis',
+    home_cta1: 'Optimizar mi CV gratis',
     home_cta2: 'Optimizar LinkedIn',
 
     // Stats
@@ -34,7 +34,7 @@ const translations = {
     features_sub: 'Herramientas de IA que hacen el trabajo pesado por vos.',
     feat1_title: 'Adaptación de CV con IA',
     feat1_desc: 'Subí tu CV, pegá la descripción del puesto y nuestra IA lo reescribe adaptado exactamente a ese trabajo. Pasá filtros ATS y llegá a reclutadores reales.',
-    feat1_cta: 'Adaptar mi CV',
+    feat1_cta: 'Optimizar mi CV',
     feat2_title: 'LinkedIn Optimizer',
     feat2_desc: 'Pegá tu perfil de LinkedIn y recibí un análisis completo con mejoras específicas: headline, about, experiencia y keywords para aparecer en más búsquedas.',
     feat2_cta: 'Optimizar LinkedIn',
