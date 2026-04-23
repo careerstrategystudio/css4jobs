@@ -90,6 +90,15 @@ const translations = {
     cv_download: 'Descargar .txt',
     cv_download_pdf: 'Descargar PDF',
 
+    // Pro unlock
+    pro_locked_label: 'Solo Plan Pro',
+    pro_unlock_title: 'Activar Plan Pro',
+    pro_unlock_desc: 'Ingresá tu código de acceso Pro para habilitar la descarga en PDF.',
+    pro_unlock_placeholder: 'Código Pro...',
+    pro_unlock_btn: 'Activar',
+    pro_unlock_error: 'Código incorrecto. Contactá a Javier para obtenerlo.',
+    pro_unlocked_msg: '¡Plan Pro activado!',
+
     // Cover letter
     cl_title: 'Carta de Presentación',
     cl_desc: 'Generá una carta de presentación personalizada para este puesto en segundos.',
@@ -144,7 +153,7 @@ const translations = {
     pr_free_f2: '1 análisis de LinkedIn por mes',
     pr_free_f3: 'Exportar en .txt',
     pr_free_f4: 'Soporte por email',
-    pr_free_m1: 'Sin exportar en PDF/Word',
+    pr_free_m1: 'Sin descarga en PDF',
     pr_free_m2: 'Sin acceso a Job Search',
     // Pro plan features
     pr_pro_f1: 'Adaptaciones de CV ilimitadas',
@@ -281,6 +290,15 @@ const translations = {
     cv_download: 'Download .txt',
     cv_download_pdf: 'Download PDF',
 
+    // Pro unlock
+    pro_locked_label: 'Pro Plan only',
+    pro_unlock_title: 'Activate Pro Plan',
+    pro_unlock_desc: 'Enter your Pro access code to enable PDF download.',
+    pro_unlock_placeholder: 'Pro code...',
+    pro_unlock_btn: 'Activate',
+    pro_unlock_error: 'Incorrect code. Contact Javier to get yours.',
+    pro_unlocked_msg: 'Pro Plan activated!',
+
     // Cover letter
     cl_title: 'Cover Letter',
     cl_desc: 'Generate a personalized cover letter for this position in seconds.',
@@ -335,7 +353,7 @@ const translations = {
     pr_free_f2: '1 LinkedIn analysis per month',
     pr_free_f3: 'Export as .txt',
     pr_free_f4: 'Email support',
-    pr_free_m1: 'No PDF/Word export',
+    pr_free_m1: 'No PDF download',
     pr_free_m2: 'No Job Search access',
     // Pro plan features
     pr_pro_f1: 'Unlimited CV tailorings',

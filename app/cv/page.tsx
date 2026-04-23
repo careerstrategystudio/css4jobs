@@ -1,10 +1,10 @@
 'use client';
 import { useState, useRef } from 'react';
-import { Upload, FileText, Clipboard, Download, Zap, AlertCircle, CheckCircle, Copy, Mail } from 'lucide-react';
+import { Upload, FileText, Clipboard, Download, Zap, AlertCircle, CheckCircle, Copy, Mail, Lock, Star } from 'lucide-react';
 import { useLang } from '@/lib/i18n';
+import { usePro } from '@/lib/pro';
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
-// Load jsPDF from CDN and generate a PDF download
 async function downloadAsPDF(text: string, filename: string) {
   const win = window as any;
   if (!win.jspdf) {
@@ -12,48 +12,219 @@ async function downloadAsPDF(text: string, filename: string) {
       const script = document.createElement('script');
       script.src = 'https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js';
       script.onload = () => resolve();
-      script.onerror = () => reject(new Error('Failed to load jsPDF'));
+      script.onerror = () => reject(new Error('jsPDF load failed'));
       document.head.appendChild(script);
     });
   }
+
   const { jsPDF } = win.jspdf;
   const doc = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
-  doc.setFont('helvetica', 'normal');
-  doc.setFontSize(10.5);
-  const margin = 20;
-  const maxWidth = 210 - margin * 2;
-  const lineHeight = 5.5;
-  let y = margin;
+  const ML = 20, MR = 20, PW = 210;
+  const CW = PW - ML - MR;
+  let y = 22;
+  const newPage = () => { doc.addPage(); y = 22; };
+  const checkY = (h: number) => { if (y + h > 280) newPage(); };
 
-  const paragraphs = text.split('\n');
-  for (const para of paragraphs) {
-    if (para.trim() === '') {
-      y += lineHeight * 0.5;
-      if (y > 277) { doc.addPage(); y = margin; }
+  const rawLines = text.split('\n');
+  let headersDone = false;
+  let nameWritten = false;
+  let titleWritten = false;
+
+  for (let i = 0; i < rawLines.length; i++) {
+    const line = rawLines[i].trim();
+    if (!line) {
+      if (headersDone) y += 2.5;
       continue;
     }
-    const lines = doc.splitTextToSize(para, maxWidth);
-    for (const line of lines) {
-      if (y > 277) { doc.addPage(); y = margin; }
-      doc.text(line, margin, y);
-      y += lineHeight;
+
+    // — NAME (first non-empty line) —
+    if (!nameWritten) {
+      doc.setFontSize(24);
+      doc.setFont('helvetica', 'bold');
+      doc.setTextColor(15, 15, 15);
+      checkY(12);
+      doc.text(line, ML, y);
+      y += 9;
+      nameWritten = true;
+      continue;
+    }
+
+    // — TITLE (second non-empty line, not all caps) —
+    if (!titleWritten) {
+      doc.setFontSize(11);
+      doc.setFont('helvetica', 'normal');
+      doc.setTextColor(79, 70, 229); // indigo-600
+      checkY(7);
+      doc.text(line, ML, y);
+      y += 5;
+      // Separator line
+      doc.setDrawColor(220, 220, 220);
+      doc.setLineWidth(0.4);
+      doc.line(ML, y, PW - MR, y);
+      y += 7;
+      doc.setTextColor(40, 40, 40);
+      titleWritten = true;
+      headersDone = true;
+      continue;
+    }
+
+    // — Contact line (phone, email, linkedin — short line with | or @) —
+    const isContact = (line.includes('@') || line.includes('linkedin') || line.match(/\+\d/)) && line.length < 120;
+    if (isContact && y < 50) {
+      doc.setFontSize(9);
+      doc.setFont('helvetica', 'normal');
+      doc.setTextColor(100, 100, 100);
+      const parts = doc.splitTextToSize(line, CW);
+      for (const p of parts) {
+        checkY(5);
+        doc.text(p, ML, y);
+        y += 4.5;
+      }
+      y += 2;
+      doc.setTextColor(40, 40, 40);
+      continue;
+    }
+
+    // — SECTION HEADER (all caps, short, no bullets) —
+    const isBullet = line.startsWith('•') || line.startsWith('-') || line.startsWith('*');
+    const isHeader =
+      !isBullet &&
+      line.length < 55 &&
+      line === line.toUpperCase() &&
+      /[A-ZÁÉÍÓÚÑ]/.test(line) &&
+      !line.match(/^\d/);
+
+    if (isHeader) {
+      y += 4;
+      checkY(10);
+      doc.setFontSize(11);
+      doc.setFont('helvetica', 'bold');
+      doc.setTextColor(15, 15, 15);
+      doc.text(line, ML, y);
+      y += 2;
+      doc.setDrawColor(80, 80, 80);
+      doc.setLineWidth(0.5);
+      doc.line(ML, y, PW - MR, y);
+      y += 5;
+      doc.setFont('helvetica', 'normal');
+      doc.setFontSize(10);
+      doc.setTextColor(50, 50, 50);
+      continue;
+    }
+
+    // — Bullet point —
+    if (isBullet) {
+      const indent = ML + 5;
+      const bw = CW - 5;
+      const bulletText = line.replace(/^[•\-\*]\s*/, '');
+      doc.setFontSize(10);
+      doc.setFont('helvetica', 'normal');
+      doc.setTextColor(50, 50, 50);
+      // Draw bullet dot
+      checkY(5);
+      doc.setFillColor(79, 70, 229);
+      doc.circle(ML + 1.5, y - 1.2, 0.8, 'F');
+      const wrapped = doc.splitTextToSize(bulletText, bw);
+      for (let wi = 0; wi < wrapped.length; wi++) {
+        checkY(5);
+        doc.text(wrapped[wi], indent, y);
+        y += 5;
+      }
+      continue;
+    }
+
+    // — Date / company line (contains date patterns) —
+    const isDateLine = line.match(/\d{2}\/\d{4}|\d{4}\s*[-–]\s*(\d{4}|present|presente|actual)/i);
+    if (isDateLine) {
+      checkY(6);
+      doc.setFontSize(9.5);
+      doc.setFont('helvetica', 'bold');
+      doc.setTextColor(79, 70, 229);
+      const wrapped = doc.splitTextToSize(line, CW);
+      for (const l of wrapped) {
+        checkY(5);
+        doc.text(l, ML, y);
+        y += 4.8;
+      }
+      doc.setFont('helvetica', 'normal');
+      doc.setTextColor(50, 50, 50);
+      continue;
+    }
+
+    // — Regular body text —
+    doc.setFontSize(10);
+    doc.setFont('helvetica', 'normal');
+    doc.setTextColor(50, 50, 50);
+    const wrapped = doc.splitTextToSize(line, CW);
+    for (const wl of wrapped) {
+      checkY(5);
+      doc.text(wl, ML, y);
+      y += 5;
     }
   }
+
   doc.save(filename);
 }
 /* eslint-enable @typescript-eslint/no-explicit-any */
 
+// Small inline Pro unlock form
+function ProUnlockInline({ onUnlock, t }: { onUnlock: (code: string) => boolean; t: (k: string) => string }) {
+  const [code, setCode] = useState('');
+  const [error, setError] = useState(false);
+  const [success, setSuccess] = useState(false);
+
+  const handle = () => {
+    if (onUnlock(code)) {
+      setSuccess(true);
+      setError(false);
+    } else {
+      setError(true);
+    }
+  };
+
+  if (success) {
+    return (
+      <span className="flex items-center gap-1.5 text-emerald-400 text-xs font-semibold">
+        <Star size={12} className="fill-emerald-400" /> {t('pro_unlocked_msg')}
+      </span>
+    );
+  }
+
+  return (
+    <div className="flex items-center gap-2">
+      <div className="relative">
+        <Lock size={11} className="absolute left-2 top-1/2 -translate-y-1/2 text-gray-500" />
+        <input
+          type="password"
+          value={code}
+          onChange={e => { setCode(e.target.value); setError(false); }}
+          onKeyDown={e => e.key === 'Enter' && handle()}
+          className={`pl-6 pr-2 py-1.5 rounded-lg bg-gray-800 border text-xs text-white placeholder-gray-500 outline-none focus:border-indigo-500 w-36 ${error ? 'border-red-500/50' : 'border-gray-600'}`}
+          placeholder={t('pro_unlock_placeholder')}
+        />
+      </div>
+      <button onClick={handle} className="btn-primary text-xs py-1.5 px-3">
+        {t('pro_unlock_btn')}
+      </button>
+      {error && <span className="text-red-400 text-xs">{t('pro_unlock_error')}</span>}
+    </div>
+  );
+}
+
 export default function CVTailoringPage() {
   const { t } = useLang();
-  const [cvText, setCvText]             = useState('');
-  const [jobDesc, setJobDesc]           = useState('');
-  const [result, setResult]             = useState('');
-  const [loading, setLoading]           = useState(false);
-  const [error, setError]               = useState('');
-  const [copied, setCopied]             = useState(false);
-  const [language, setLanguage]         = useState('es');
-  const [activeTab, setActiveTab]       = useState<'paste'|'upload'>('paste');
-  const [pdfLoading, setPdfLoading]     = useState(false);
+  const { isPro, ready, unlockPro } = usePro();
+
+  const [cvText, setCvText]           = useState('');
+  const [jobDesc, setJobDesc]         = useState('');
+  const [result, setResult]           = useState('');
+  const [loading, setLoading]         = useState(false);
+  const [error, setError]             = useState('');
+  const [copied, setCopied]           = useState(false);
+  const [language, setLanguage]       = useState('es');
+  const [activeTab, setActiveTab]     = useState<'paste'|'upload'>('paste');
+  const [pdfLoading, setPdfLoading]   = useState(false);
+  const [showProForm, setShowProForm] = useState(false);
 
   // Cover letter state
   const [clResult, setClResult]         = useState('');
@@ -73,13 +244,8 @@ export default function CVTailoringPage() {
   };
 
   const handleSubmit = async () => {
-    if (!cvText.trim() || !jobDesc.trim()) {
-      setError(t('cv_error'));
-      return;
-    }
-    setError('');
-    setResult('');
-    setClResult('');
+    if (!cvText.trim() || !jobDesc.trim()) { setError(t('cv_error')); return; }
+    setError(''); setResult(''); setClResult('');
     setLoading(true);
     try {
       const res = await fetch('/api/tailor-cv', {
@@ -107,29 +273,20 @@ export default function CVTailoringPage() {
     const blob = new Blob([result], { type: 'text/plain;charset=utf-8' });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
-    a.href = url;
-    a.download = 'CV-CSS4JOBS.txt';
-    a.click();
+    a.href = url; a.download = 'CV-CSS4JOBS.txt'; a.click();
     URL.revokeObjectURL(url);
   };
 
   const downloadCVPDF = async () => {
     setPdfLoading(true);
-    try {
-      await downloadAsPDF(result, 'CV-CSS4JOBS.pdf');
-    } catch {
-      alert('Error generating PDF. Please try again.');
-    } finally {
-      setPdfLoading(false);
-    }
+    try { await downloadAsPDF(result, 'CV-CSS4JOBS.pdf'); }
+    catch { alert('Error al generar PDF. Intentá de nuevo.'); }
+    finally { setPdfLoading(false); }
   };
 
-  // Cover letter handlers
   const generateCoverLetter = async () => {
     if (!result.trim() || !jobDesc.trim()) return;
-    setClError('');
-    setClResult('');
-    setClLoading(true);
+    setClError(''); setClResult(''); setClLoading(true);
     try {
       const res = await fetch('/api/generate-cover-letter', {
         method: 'POST',
@@ -154,13 +311,9 @@ export default function CVTailoringPage() {
 
   const downloadClPDF = async () => {
     setClPdfLoading(true);
-    try {
-      await downloadAsPDF(clResult, 'CoverLetter-CSS4JOBS.pdf');
-    } catch {
-      alert('Error generating PDF. Please try again.');
-    } finally {
-      setClPdfLoading(false);
-    }
+    try { await downloadAsPDF(clResult, 'CoverLetter-CSS4JOBS.pdf'); }
+    catch { alert('Error al generar PDF. Intentá de nuevo.'); }
+    finally { setClPdfLoading(false); }
   };
 
   return (
@@ -178,7 +331,9 @@ export default function CVTailoringPage() {
           <div className="space-y-5">
             <div className="card">
               <div className="flex items-center justify-between mb-4">
-                <h2 className="font-bold text-white flex items-center gap-2"><FileText size={16} className="text-indigo-400" /> {t('cv_label')}</h2>
+                <h2 className="font-bold text-white flex items-center gap-2">
+                  <FileText size={16} className="text-indigo-400" /> {t('cv_label')}
+                </h2>
                 <div className="flex gap-1">
                   <button onClick={() => setActiveTab('paste')} className={`px-3 py-1 rounded-lg text-xs font-semibold transition-all ${activeTab === 'paste' ? 'bg-indigo-600 text-white' : 'text-gray-400 hover:text-white'}`}>
                     <Clipboard size={12} className="inline mr-1" />{t('cv_paste')}
@@ -234,23 +389,42 @@ export default function CVTailoringPage() {
         {/* Tailored CV Result */}
         {result && (
           <div className="mt-8 card">
-            <div className="flex items-center justify-between mb-4">
+            <div className="flex items-center justify-between mb-4 flex-wrap gap-3">
               <h2 className="font-bold text-white flex items-center gap-2">
                 <CheckCircle size={16} className="text-emerald-400" /> {t('cv_result_title')}
               </h2>
-              <div className="flex gap-2 flex-wrap justify-end">
+              <div className="flex items-center gap-2 flex-wrap">
                 <button onClick={copyResult} className="btn-outline text-xs py-1.5 px-3">
                   {copied ? <><CheckCircle size={12} /> {t('cv_copied')}</> : <><Copy size={12} /> {t('cv_copy')}</>}
                 </button>
                 <button onClick={downloadTxt} className="btn-outline text-xs py-1.5 px-3">
                   <Download size={12} /> {t('cv_download')}
                 </button>
-                <button onClick={downloadCVPDF} disabled={pdfLoading} className="btn-primary text-xs py-1.5 px-3 disabled:opacity-60">
-                  {pdfLoading
-                    ? <><svg className="animate-spin h-3 w-3" viewBox="0 0 24 24" fill="none"><circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"/><path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"/></svg> PDF...</>
-                    : <><Download size={12} /> {t('cv_download_pdf')}</>
-                  }
-                </button>
+
+                {/* PDF — Pro only */}
+                {ready && (
+                  isPro ? (
+                    <button onClick={downloadCVPDF} disabled={pdfLoading} className="btn-primary text-xs py-1.5 px-3 disabled:opacity-60">
+                      {pdfLoading
+                        ? <><svg className="animate-spin h-3 w-3" viewBox="0 0 24 24" fill="none"><circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"/><path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"/></svg> PDF...</>
+                        : <><Download size={12} /> {t('cv_download_pdf')}</>
+                      }
+                    </button>
+                  ) : (
+                    <div className="flex items-center gap-2">
+                      {!showProForm ? (
+                        <button
+                          onClick={() => setShowProForm(true)}
+                          className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-gray-800 border border-gray-600 text-xs text-gray-400 hover:border-indigo-500 hover:text-indigo-400 transition-all"
+                        >
+                          <Lock size={11} /> {t('cv_download_pdf')} <span className="ml-1 px-1.5 py-0.5 rounded bg-indigo-500/20 text-indigo-400 text-[10px] font-bold">{t('pro_locked_label')}</span>
+                        </button>
+                      ) : (
+                        <ProUnlockInline onUnlock={unlockPro} t={t} />
+                      )}
+                    </div>
+                  )
+                )}
               </div>
             </div>
             <pre className="text-gray-300 text-sm leading-relaxed whitespace-pre-wrap font-mono bg-gray-800/50 rounded-xl p-6 max-h-[600px] overflow-y-auto">{result}</pre>
@@ -278,11 +452,7 @@ export default function CVTailoringPage() {
             )}
 
             {!clResult && (
-              <button
-                onClick={generateCoverLetter}
-                disabled={clLoading}
-                className="btn-primary w-full justify-center py-3 text-sm disabled:opacity-50 disabled:cursor-not-allowed"
-              >
+              <button onClick={generateCoverLetter} disabled={clLoading} className="btn-primary w-full justify-center py-3 text-sm disabled:opacity-50 disabled:cursor-not-allowed">
                 {clLoading ? (
                   <><svg className="animate-spin h-4 w-4" viewBox="0 0 24 24" fill="none"><circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"/><path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"/></svg>{t('cl_loading')}</>
                 ) : (
@@ -293,27 +463,26 @@ export default function CVTailoringPage() {
 
             {clResult && (
               <div>
-                <div className="flex items-center justify-between mb-3">
+                <div className="flex items-center justify-between mb-3 flex-wrap gap-2">
                   <span className="text-sm font-semibold text-white flex items-center gap-2">
                     <CheckCircle size={14} className="text-emerald-400" /> {t('cl_result_title')}
                   </span>
-                  <div className="flex gap-2">
+                  <div className="flex gap-2 flex-wrap">
                     <button onClick={copyClResult} className="btn-outline text-xs py-1.5 px-3">
                       {clCopied ? <><CheckCircle size={12} /> {t('cl_copied')}</> : <><Copy size={12} /> {t('cl_copy')}</>}
                     </button>
-                    <button onClick={downloadClPDF} disabled={clPdfLoading} className="btn-primary text-xs py-1.5 px-3 disabled:opacity-60">
-                      {clPdfLoading
-                        ? <><svg className="animate-spin h-3 w-3" viewBox="0 0 24 24" fill="none"><circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"/><path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"/></svg> PDF...</>
-                        : <><Download size={12} /> {t('cl_download_pdf')}</>
-                      }
-                    </button>
+                    {ready && isPro && (
+                      <button onClick={downloadClPDF} disabled={clPdfLoading} className="btn-primary text-xs py-1.5 px-3 disabled:opacity-60">
+                        {clPdfLoading
+                          ? <><svg className="animate-spin h-3 w-3" viewBox="0 0 24 24" fill="none"><circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"/><path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"/></svg> PDF...</>
+                          : <><Download size={12} /> {t('cl_download_pdf')}</>
+                        }
+                      </button>
+                    )}
                   </div>
                 </div>
                 <pre className="text-gray-300 text-sm leading-relaxed whitespace-pre-wrap font-mono bg-gray-800/50 rounded-xl p-6 max-h-[500px] overflow-y-auto">{clResult}</pre>
-                <button
-                  onClick={() => { setClResult(''); setClError(''); }}
-                  className="mt-3 text-xs text-gray-500 hover:text-gray-300 transition-colors"
-                >
+                <button onClick={() => { setClResult(''); setClError(''); }} className="mt-3 text-xs text-gray-500 hover:text-gray-300 transition-colors">
                   ↺ {language === 'en' ? 'Regenerate' : 'Regenerar'}
                 </button>
               </div>

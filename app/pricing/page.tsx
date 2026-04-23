@@ -21,7 +21,7 @@ export default function PricingPage() {
     },
     {
       name: 'Pro',
-      price: '19',
+      price: '20',
       period: t('pr_period'),
       desc: t('pr_pro_desc'),
       color: 'border-indigo-500',
@@ -35,7 +35,7 @@ export default function PricingPage() {
     },
     {
       name: 'Teams',
-      price: '49',
+      price: '45',
       period: t('pr_period'),
       desc: t('pr_teams_desc'),
       color: 'border-purple-500/50',
@@ -94,7 +94,7 @@ export default function PricingPage() {
                 <h2 className="text-xl font-bold text-white mb-1">{plan.name}</h2>
                 <p className="text-gray-400 text-sm mb-4">{plan.desc}</p>
                 <div className="flex items-end gap-1">
-                  <span className="text-gray-400 text-lg">$</span>
+                  <span className="text-gray-400 text-lg">€</span>
                   <span className="text-5xl font-black text-white">{plan.price}</span>
                   {plan.period && <span className="text-gray-400 mb-1">{plan.period}</span>}
                 </div>
