@@ -168,7 +168,8 @@ async function downloadAsPDF(text: string, filename: string) {
 /* eslint-enable @typescript-eslint/no-explicit-any */
 
 // Small inline Pro unlock form
-function ProUnlockInline({ onUnlock, t }: { onUnlock: (code: string) => boolean; t: (k: string) => string }) {
+function ProUnlockInline({ onUnlock }: { onUnlock: (code: string) => boolean }) {
+  const { t } = useLang();
   const [code, setCode] = useState('');
   const [error, setError] = useState(false);
   const [success, setSuccess] = useState(false);
@@ -420,7 +421,7 @@ export default function CVTailoringPage() {
                           <Lock size={11} /> {t('cv_download_pdf')} <span className="ml-1 px-1.5 py-0.5 rounded bg-indigo-500/20 text-indigo-400 text-[10px] font-bold">{t('pro_locked_label')}</span>
                         </button>
                       ) : (
-                        <ProUnlockInline onUnlock={unlockPro} t={t} />
+                        <ProUnlockInline onUnlock={unlockPro} />
                       )}
                     </div>
                   )
