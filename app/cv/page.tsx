@@ -117,7 +117,7 @@ export default function CVTailoringPage() {
     setPdfLoading(true);
     try {
       await downloadAsPDF(result, 'CV-CSS4JOBS.pdf');
-    } catch (_err) {
+    } catch {
       alert('Error generating PDF. Please try again.');
     } finally {
       setPdfLoading(false);
@@ -156,7 +156,7 @@ export default function CVTailoringPage() {
     setClPdfLoading(true);
     try {
       await downloadAsPDF(clResult, 'CoverLetter-CSS4JOBS.pdf');
-    } catch (_err) {
+    } catch {
       alert('Error generating PDF. Please try again.');
     } finally {
       setClPdfLoading(false);
