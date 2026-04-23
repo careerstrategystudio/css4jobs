@@ -3,9 +3,11 @@ import { useState, useRef } from 'react';
 import { Upload, FileText, Clipboard, Download, Zap, AlertCircle, CheckCircle, Copy, Mail } from 'lucide-react';
 import { useLang } from '@/lib/i18n';
 
+/* eslint-disable @typescript-eslint/no-explicit-any */
 // Load jsPDF from CDN and generate a PDF download
 async function downloadAsPDF(text: string, filename: string) {
-  if (!(window as any).jspdf) {
+  const win = window as any;
+  if (!win.jspdf) {
     await new Promise<void>((resolve, reject) => {
       const script = document.createElement('script');
       script.src = 'https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js';
@@ -14,7 +16,7 @@ async function downloadAsPDF(text: string, filename: string) {
       document.head.appendChild(script);
     });
   }
-  const { jsPDF } = (window as any).jspdf;
+  const { jsPDF } = win.jspdf;
   const doc = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
   doc.setFont('helvetica', 'normal');
   doc.setFontSize(10.5);
@@ -39,6 +41,7 @@ async function downloadAsPDF(text: string, filename: string) {
   }
   doc.save(filename);
 }
+/* eslint-enable @typescript-eslint/no-explicit-any */
 
 export default function CVTailoringPage() {
   const { t } = useLang();
@@ -114,7 +117,7 @@ export default function CVTailoringPage() {
     setPdfLoading(true);
     try {
       await downloadAsPDF(result, 'CV-CSS4JOBS.pdf');
-    } catch {
+    } catch (_err) {
       alert('Error generating PDF. Please try again.');
     } finally {
       setPdfLoading(false);
@@ -153,7 +156,7 @@ export default function CVTailoringPage() {
     setClPdfLoading(true);
     try {
       await downloadAsPDF(clResult, 'CoverLetter-CSS4JOBS.pdf');
-    } catch {
+    } catch (_err) {
       alert('Error generating PDF. Please try again.');
     } finally {
       setClPdfLoading(false);

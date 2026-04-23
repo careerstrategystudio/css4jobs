@@ -48,7 +48,8 @@ Write a professional, compelling cover letter tailored to this specific job.`;
       system: systemPrompt,
     });
 
-    const coverLetter = (message.content[0] as { type: string; text: string }).text;
+    const block = message.content[0];
+    const coverLetter = block.type === 'text' ? block.text : '';
 
     return NextResponse.json({ coverLetter });
   } catch (err) {
