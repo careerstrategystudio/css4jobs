@@ -88,6 +88,17 @@ const translations = {
     cv_copy: 'Copiar',
     cv_copied: '¡Copiado!',
     cv_download: 'Descargar .txt',
+    cv_download_pdf: 'Descargar PDF',
+
+    // Cover letter
+    cl_title: 'Carta de Presentación',
+    cl_desc: 'Generá una carta de presentación personalizada para este puesto en segundos.',
+    cl_generate: 'Generar Carta de Presentación',
+    cl_loading: 'Generando carta con IA...',
+    cl_result_title: 'Carta de Presentación — Lista para enviar',
+    cl_copy: 'Copiar',
+    cl_copied: '¡Copiada!',
+    cl_download_pdf: 'Descargar PDF',
 
     // LinkedIn page
     li_badge: 'LinkedIn Optimizer · con Claude AI',
@@ -268,6 +279,17 @@ const translations = {
     cv_copy: 'Copy',
     cv_copied: 'Copied!',
     cv_download: 'Download .txt',
+    cv_download_pdf: 'Download PDF',
+
+    // Cover letter
+    cl_title: 'Cover Letter',
+    cl_desc: 'Generate a personalized cover letter for this position in seconds.',
+    cl_generate: 'Generate Cover Letter',
+    cl_loading: 'Generating cover letter with AI...',
+    cl_result_title: 'Cover Letter — Ready to send',
+    cl_copy: 'Copy',
+    cl_copied: 'Copied!',
+    cl_download_pdf: 'Download PDF',
 
     // LinkedIn page
     li_badge: 'LinkedIn Optimizer · Powered by Claude AI',
