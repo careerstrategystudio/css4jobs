@@ -1,5 +1,6 @@
 'use client';
-import { CheckCircle, Zap, Star, X } from 'lucide-react';
+import { useState } from 'react';
+import { CheckCircle, Zap, Star, X, Loader2 } from 'lucide-react';
 import { useLang } from '@/lib/i18n';
 
 const PRO_FEATURES = [
@@ -64,6 +65,30 @@ const faqs = [
 export default function PricingPage() {
   const { lang } = useLang();
   const es = lang === 'es';
+  const [loadingPlan, setLoadingPlan] = useState<string | null>(null);
+  const [checkoutError, setCheckoutError] = useState('');
+
+  const handleCheckout = async (planId: string) => {
+    setLoadingPlan(planId);
+    setCheckoutError('');
+    try {
+      const res  = await fetch('/api/stripe/checkout', {
+        method:  'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body:    JSON.stringify({ planId }),
+      });
+      const data = await res.json();
+      if (data.url) {
+        window.location.href = data.url;
+      } else {
+        setCheckoutError(es ? 'Error al iniciar el pago. Inténtalo de nuevo.' : 'Payment error. Please try again.');
+      }
+    } catch {
+      setCheckoutError(es ? 'Error de conexión.' : 'Connection error.');
+    } finally {
+      setLoadingPlan(null);
+    }
+  };
 
   const plans = [
     {
@@ -122,11 +147,24 @@ export default function PricingPage() {
           <h1 className="text-4xl font-bold text-white mb-3">
             {es ? 'Invierte en tu carrera' : 'Invest in your career'}
           </h1>
-          <p className="text-gray-400 max-w-xl mx-auto">
+          <p className="text-gray-400 max-w-xl mx-auto mb-5">
             {es
               ? 'Accede a todas las herramientas Pro y consigue más entrevistas. Todos los planes incluyen las mismas funcionalidades.'
               : 'Access all Pro tools and land more interviews. All plans include the same features.'}
           </p>
+          {/* Payment methods */}
+          <div className="inline-flex items-center gap-2 flex-wrap justify-center">
+            <span className="text-gray-600 text-xs">{es ? 'Pago seguro con' : 'Secure payment with'}</span>
+            {['💳 Tarjeta', 'G Google Pay', '🔺 Klarna (3 cuotas)'].map(m => (
+              <span key={m} className="px-2.5 py-1 rounded-lg bg-gray-800 border border-gray-700 text-gray-400 text-xs font-medium">{m}</span>
+            ))}
+          </div>
+
+          {checkoutError && (
+            <div className="mt-4 inline-block px-4 py-2 rounded-xl bg-red-500/10 border border-red-500/20 text-red-400 text-sm">
+              {checkoutError}
+            </div>
+          )}
         </div>
 
         {/* Pro Features Banner */}
@@ -216,11 +254,10 @@ export default function PricingPage() {
                 ))}
               </div>
 
-              <a
-                href={plan.href}
-                target="_blank"
-                rel="noopener noreferrer"
-                className={`flex items-center justify-center gap-2 w-full py-2.5 rounded-xl text-sm font-bold transition-all ${
+              <button
+                onClick={() => handleCheckout(plan.id)}
+                disabled={loadingPlan !== null}
+                className={`flex items-center justify-center gap-2 w-full py-2.5 rounded-xl text-sm font-bold transition-all disabled:opacity-60 ${
                   plan.highlight
                     ? 'bg-emerald-600 hover:bg-emerald-500 text-white'
                     : plan.id === 'semestral'
@@ -228,8 +265,10 @@ export default function PricingPage() {
                     : 'bg-gray-700 hover:bg-gray-600 text-white'
                 }`}
               >
-                <Zap size={13} /> {plan.cta}
-              </a>
+                {loadingPlan === plan.id
+                  ? <><Loader2 size={13} className="animate-spin" /> {es ? 'Redirigiendo...' : 'Redirecting...'}</>
+                  : <><Zap size={13} /> {plan.cta}</>}
+              </button>
 
               {plan.highlight && (
                 <p className="text-center text-[10px] text-gray-600 mt-2">
@@ -298,3 +337,5 @@ export default function PricingPage() {
 // build
 
 // build
+
+// stripe
