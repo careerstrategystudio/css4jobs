@@ -426,3 +426,5 @@ export function LangProvider({ children }: { children: ReactNode }) {
 }
 
 export const useLang = () => useContext(LangContext);
+
+// build

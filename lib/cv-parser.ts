@@ -81,3 +81,5 @@ export function parseEducation(lines: string[]): EduEntry[] {
   if (edu) list.push(edu);
   return list;
 }
+
+// build

@@ -463,3 +463,5 @@ export default function CVPreview({ text, template = 'modern-sidebar' }: Props) 
     </div>
   );
 }
+
+// build

@@ -433,4 +433,73 @@ export default function JobsPage() {
                             setClCopied(job.id);
                             setTimeout(() => setClCopied(null), 2000);
                           }} className="flex items-center gap-1 text-gray-400 hover:text-white text-xs transition-colors">
-                            {clCopied === job.id ? <><CheckCircle size={11} className="text-emerald-400" /> {lang === 'es' ? 'Copiada' : 'Copied'}</> : <><Copy size={11} /> {lang === 'es' ?
+                            {clCopied === job.id ? <><CheckCircle size={11} className="text-emerald-400" /> {lang === 'es' ? 'Copiada' : 'Copied'}</> : <><Copy size={11} /> {lang === 'es' ? 'Copiar' : 'Copy'}</>}
+                          </button>
+                        </div>
+                        <pre className="text-gray-300 text-xs leading-relaxed whitespace-pre-wrap max-h-48 overflow-y-auto">{clTexts[job.id]}</pre>
+                      </div>
+                    )}
+
+                    {/* Adaptar CV — show when score < 89, Pro only */}
+                    {match.score < 89 && cvText.trim() && ready && !adaptedCVs[job.id] && (
+                      isPro ? (
+                        <button onClick={() => adaptCV(job)} disabled={adaptLoading === job.id}
+                          className="mt-3 flex items-center gap-2 px-4 py-2 rounded-lg bg-amber-500/10 border border-amber-500/30 text-amber-400 text-xs font-semibold hover:bg-amber-500/20 transition-all disabled:opacity-50 w-full justify-center">
+                          {adaptLoading === job.id
+                            ? <><svg className="animate-spin h-3 w-3" viewBox="0 0 24 24" fill="none"><circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"/><path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"/></svg> {lang === 'es' ? 'Adaptando CV...' : 'Tailoring CV...'}</>
+                            : <><Zap size={12} /> {lang === 'es' ? `⚡ Adaptar CV para este cargo (match actual: ${match.score}%)` : `⚡ Tailor CV for this job (current match: ${match.score}%)`}</>
+                          }
+                        </button>
+                      ) : (
+                        <div className="mt-3 flex items-center gap-2 px-4 py-2 rounded-lg bg-gray-800/50 border border-gray-700/50">
+                          <Lock size={12} className="text-gray-500 flex-shrink-0" />
+                          <span className="text-gray-500 text-xs">{lang === 'es' ? 'Adaptar CV — ' : 'Tailor CV — '}</span>
+                          <a href="/pricing" className="text-indigo-400 text-xs font-semibold hover:text-indigo-300 flex items-center gap-1 transition-colors">
+                            <Star size={10} className="fill-indigo-400" /> {lang === 'es' ? 'Solo Plan Pro' : 'Pro plan only'}
+                          </a>
+                        </div>
+                      )
+                    )}
+
+                    {/* Adapted CV result */}
+                    {adaptedCVs[job.id] && (
+                      <div className="mt-3 p-4 rounded-xl bg-amber-500/5 border border-amber-500/20">
+                        <div className="flex items-center justify-between mb-2">
+                          <span className="text-xs font-semibold text-amber-400 flex items-center gap-1.5">
+                            <Zap size={11} /> {lang === 'es' ? 'CV Adaptado para este cargo' : 'Tailored CV for this job'}
+                          </span>
+                          <button onClick={() => {
+                            navigator.clipboard.writeText(adaptedCVs[job.id]);
+                            setAdaptCopied(job.id);
+                            setTimeout(() => setAdaptCopied(null), 2000);
+                          }} className="flex items-center gap-1 text-gray-400 hover:text-white text-xs transition-colors">
+                            {adaptCopied === job.id
+                              ? <><CheckCircle size={11} className="text-emerald-400" /> {lang === 'es' ? 'Copiado' : 'Copied'}</>
+                              : <><Copy size={11} /> {lang === 'es' ? 'Copiar' : 'Copy'}</>}
+                          </button>
+                        </div>
+                        <pre className="text-gray-300 text-xs leading-relaxed whitespace-pre-wrap max-h-60 overflow-y-auto">{adaptedCVs[job.id]}</pre>
+                      </div>
+                    )}
+                  </div>
+                )}
+
+                {/* Expanded description */}
+                {isOpen && (
+                  <div className="mt-4 pt-4 border-t border-gray-700/50">
+                    <p className="text-sm text-gray-400 leading-relaxed line-clamp-6">{job.description}</p>
+                    <button onClick={() => setExpanded(null)} className="mt-2 text-xs text-gray-500 hover:text-gray-300 flex items-center gap-1">
+                      <X size={11} /> {lang === 'es' ? 'Cerrar' : 'Close'}
+                    </button>
+                  </div>
+                )}
+              </div>
+            );
+          })}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// build
