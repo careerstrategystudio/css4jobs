@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import Stripe from 'stripe';
 import { generateKey } from '@/lib/keys';
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, { apiVersion: '2026-04-22.dahlia' });
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
 
 // Send Pro key email via Resend
 async function sendProKeyEmail(email: string, key: string, months: number, planId: string) {
