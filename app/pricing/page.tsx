@@ -149,4 +149,146 @@ export default function PricingPage() {
           {plans.map(plan => (
             <div
               key={plan.id}
-              className={`card 
+              className={`card relative flex flex-col border-2 ${plan.color} ${plan.highlight ? 'ring-2 ring-emerald-500/30 scale-[1.02]' : ''}`}
+            >
+              {plan.badge && (
+                <div className={`absolute -top-3.5 left-1/2 -translate-x-1/2 px-3 py-1 rounded-full text-[11px] font-bold tracking-wide ${plan.badgeColor}`}>
+                  {plan.badge}
+                </div>
+              )}
+
+              <div className="mb-5 mt-2">
+                <h2 className="text-base font-bold text-white mb-1">{plan.name}</h2>
+                <p className="text-gray-500 text-xs mb-4">{plan.desc}</p>
+
+                {/* Price */}
+                <div className="flex items-end gap-1 mb-1">
+                  <span className="text-gray-400 text-base font-semibold mb-0.5">€</span>
+                  <span className="text-4xl font-black text-white">{plan.monthly}</span>
+                  <span className="text-gray-400 text-sm mb-1">/mo</span>
+                </div>
+                {plan.total ? (
+                  <p className="text-xs text-gray-500">
+                    <span className="text-gray-400 font-semibold">€{plan.total}</span> {plan.period}
+                  </p>
+                ) : (
+                  <p className="text-xs text-gray-500">{plan.period}</p>
+                )}
+              </div>
+
+              {/* Features */}
+              <div className="space-y-2 flex-1 mb-6">
+                {PRO_FEATURES.map((f, i) => (
+                  <div key={i} className="flex items-center gap-2 text-xs text-gray-400">
+                    <CheckCircle size={12} className="text-emerald-400 flex-shrink-0" />
+                    {es ? f.es : f.en}
+                  </div>
+                ))}
+              </div>
+
+              {/* CTA */}
+              <a
+                href={plan.href}
+                target="_blank"
+                rel="noopener noreferrer"
+                className={`flex items-center justify-center gap-2 w-full py-2.5 rounded-xl text-sm font-bold transition-all ${
+                  plan.highlight
+                    ? 'bg-emerald-600 hover:bg-emerald-500 text-white'
+                    : plan.id === 'semestral'
+                    ? 'bg-indigo-600 hover:bg-indigo-500 text-white'
+                    : 'bg-gray-700 hover:bg-gray-600 text-white'
+                }`}
+              >
+                <Zap size={13} /> {plan.cta}
+              </a>
+
+              {plan.highlight && (
+                <p className="text-center text-[10px] text-gray-600 mt-2">
+                  {es ? 'Más elegido por profesionales' : 'Most chosen by professionals'}
+                </p>
+              )}
+            </div>
+          ))}
+        </div>
+
+        {/* Free Plan Note */}
+        <div className="max-w-4xl mx-auto mb-16">
+          <div className="card border border-gray-700/50 flex flex-col sm:flex-row items-start sm:items-center gap-4">
+            <div className="flex-1">
+              <h3 className="text-white font-bold mb-1 text-sm">Free</h3>
+              <p className="text-gray-500 text-xs mb-3">{es ? 'Empieza sin costo. Sin tarjeta de crédito.' : 'Start free. No credit card required.'}</p>
+              <div className="flex flex-wrap gap-x-4 gap-y-1">
+                {FREE_FEATURES.map((f, i) => (
+                  <div key={i} className="flex items-center gap-1.5 text-xs text-gray-400">
+                    <CheckCircle size={11} className="text-gray-500" /> {es ? f.es : f.en}
+                  </div>
+                ))}
+                {FREE_MISSING.map((f, i) => (
+                  <div key={i} className="flex items-center gap-1.5 text-xs text-gray-600">
+                    <X size={11} className="text-gray-700" /> {es ? f.es : f.en}
+                  </div>
+                ))}
+              </div>
+            </div>
+            <a href="/cv" className="flex-shrink-0 flex items-center gap-1.5 px-5 py-2.5 rounded-xl border border-gray-600 text-gray-300 hover:text-white hover:border-gray-400 text-sm font-semibold transition-all">
+              {es ? 'Probar gratis' : 'Try for free'}
+            </a>
+          </div>
+        </div>
+
+        {/* Testimonials */}
+        <div className="mb-16">
+          <h2 className="text-2xl font-bold text-white text-center mb-8">
+            {es ? 'Lo que dicen nuestros usuarios' : 'What our users say'}
+          </h2>
+          <div className="grid md:grid-cols-3 gap-5">
+            {testimonials.map((tm, i) => (
+              <div key={i} className="card">
+                <div className="flex gap-1 mb-3">
+                  {[...Array(5)].map((_, j) => <Star key={j} size={12} className="fill-yellow-400 text-yellow-400" />)}
+                </div>
+                <p className="text-gray-300 text-sm leading-relaxed mb-4 italic">&ldquo;{es ? tm.text.es : tm.text.en}&rdquo;</p>
+                <div>
+                  <div className="font-semibold text-white text-sm">{tm.name}</div>
+                  <div className="text-gray-500 text-xs">{es ? tm.role.es : tm.role.en}</div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* FAQ */}
+        <div className="max-w-2xl mx-auto mb-16">
+          <h2 className="text-2xl font-bold text-white text-center mb-8">
+            {es ? 'Preguntas frecuentes' : 'Frequently asked questions'}
+          </h2>
+          <div className="space-y-3">
+            {faqs.map((faq, i) => (
+              <div key={i} className="card py-4">
+                <h3 className="font-semibold text-white mb-1.5 text-sm">{es ? faq.q.es : faq.q.en}</h3>
+                <p className="text-gray-400 text-sm leading-relaxed">{es ? faq.a.es : faq.a.en}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* CTA Banner */}
+        <div className="bg-gradient-to-r from-indigo-600 to-purple-600 rounded-3xl p-12 text-center">
+          <h2 className="text-2xl font-bold text-white mb-3">
+            {es ? '¿Listo para conseguir más entrevistas?' : 'Ready to land more interviews?'}
+          </h2>
+          <p className="text-indigo-200 mb-6">
+            {es ? 'Únete a miles de profesionales que ya usan CSS PRO.' : 'Join thousands of professionals already using CSS PRO.'}
+          </p>
+          <a href="/cv" className="inline-flex items-center gap-2 px-8 py-3.5 rounded-xl bg-white text-indigo-700 font-bold text-base hover:bg-gray-100 transition-all">
+            <Zap size={18} />
+            {es ? 'Crear mi CV ahora' : 'Build my CV now'}
+          </a>
+        </div>
+
+      </div>
+    </div>
+  );
+}
+
+// build
