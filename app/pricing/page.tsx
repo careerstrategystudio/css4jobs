@@ -3,7 +3,7 @@ import { CheckCircle, Zap, Star, X } from 'lucide-react';
 import { useLang } from '@/lib/i18n';
 
 const PRO_FEATURES = [
-  { es: 'Land more Interviews with CSS PRO',     en: 'Land more Interviews with CSS PRO' },
+  { es: 'Consigue más entrevistas con CSS PRO',   en: 'Land more Interviews with CSS PRO' },
   { es: 'Evita errores críticos en tu CV',        en: 'Avoid critical resume mistakes' },
   { es: 'Escribe más rápido y mejor con IA',      en: 'Write faster & better with AI' },
   { es: 'Sugerencias de contenido en tiempo real',en: 'Real-time content suggestions' },
@@ -144,8 +144,41 @@ export default function PricingPage() {
           </div>
         </div>
 
-        {/* Plans Grid */}
-        <div className="grid md:grid-cols-3 gap-5 mb-16 max-w-4xl mx-auto">
+        {/* All Plans Grid: Free + 3 Pro */}
+        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-5 mb-16 max-w-6xl mx-auto">
+
+          {/* Free plan card */}
+          <div className="card relative flex flex-col border-2 border-gray-700/60">
+            <div className="mb-5 mt-2">
+              <h2 className="text-base font-bold text-white mb-1">Free</h2>
+              <p className="text-gray-500 text-xs mb-4">
+                {es ? 'Empieza sin costo. Sin tarjeta.' : 'Start free. No credit card.'}
+              </p>
+              <div className="flex items-end gap-1 mb-1">
+                <span className="text-4xl font-black text-white">€0</span>
+              </div>
+              <p className="text-xs text-gray-600">{es ? 'siempre gratis' : 'always free'}</p>
+            </div>
+            <div className="space-y-2 flex-1 mb-6">
+              {FREE_FEATURES.map((f, i) => (
+                <div key={i} className="flex items-center gap-2 text-xs text-gray-400">
+                  <CheckCircle size={12} className="text-gray-600 flex-shrink-0" />
+                  {es ? f.es : f.en}
+                </div>
+              ))}
+              {FREE_MISSING.map((f, i) => (
+                <div key={i} className="flex items-center gap-2 text-xs text-gray-600 line-through">
+                  <X size={12} className="text-gray-700 flex-shrink-0" />
+                  {es ? f.es : f.en}
+                </div>
+              ))}
+            </div>
+            <a href="/cv" className="flex items-center justify-center gap-2 w-full py-2.5 rounded-xl text-sm font-bold transition-all bg-gray-800 hover:bg-gray-700 text-gray-300 border border-gray-700">
+              {es ? 'Empezar gratis' : 'Start free'}
+            </a>
+          </div>
+
+          {/* Pro plans */}
           {plans.map(plan => (
             <div
               key={plan.id}
@@ -160,8 +193,6 @@ export default function PricingPage() {
               <div className="mb-5 mt-2">
                 <h2 className="text-base font-bold text-white mb-1">{plan.name}</h2>
                 <p className="text-gray-500 text-xs mb-4">{plan.desc}</p>
-
-                {/* Price */}
                 <div className="flex items-end gap-1 mb-1">
                   <span className="text-gray-400 text-base font-semibold mb-0.5">€</span>
                   <span className="text-4xl font-black text-white">{plan.monthly}</span>
@@ -176,7 +207,6 @@ export default function PricingPage() {
                 )}
               </div>
 
-              {/* Features */}
               <div className="space-y-2 flex-1 mb-6">
                 {PRO_FEATURES.map((f, i) => (
                   <div key={i} className="flex items-center gap-2 text-xs text-gray-400">
@@ -186,7 +216,6 @@ export default function PricingPage() {
                 ))}
               </div>
 
-              {/* CTA */}
               <a
                 href={plan.href}
                 target="_blank"
@@ -209,31 +238,6 @@ export default function PricingPage() {
               )}
             </div>
           ))}
-        </div>
-
-        {/* Free Plan Note */}
-        <div className="max-w-4xl mx-auto mb-16">
-          <div className="card border border-gray-700/50 flex flex-col sm:flex-row items-start sm:items-center gap-4">
-            <div className="flex-1">
-              <h3 className="text-white font-bold mb-1 text-sm">Free</h3>
-              <p className="text-gray-500 text-xs mb-3">{es ? 'Empieza sin costo. Sin tarjeta de crédito.' : 'Start free. No credit card required.'}</p>
-              <div className="flex flex-wrap gap-x-4 gap-y-1">
-                {FREE_FEATURES.map((f, i) => (
-                  <div key={i} className="flex items-center gap-1.5 text-xs text-gray-400">
-                    <CheckCircle size={11} className="text-gray-500" /> {es ? f.es : f.en}
-                  </div>
-                ))}
-                {FREE_MISSING.map((f, i) => (
-                  <div key={i} className="flex items-center gap-1.5 text-xs text-gray-600">
-                    <X size={11} className="text-gray-700" /> {es ? f.es : f.en}
-                  </div>
-                ))}
-              </div>
-            </div>
-            <a href="/cv" className="flex-shrink-0 flex items-center gap-1.5 px-5 py-2.5 rounded-xl border border-gray-600 text-gray-300 hover:text-white hover:border-gray-400 text-sm font-semibold transition-all">
-              {es ? 'Probar gratis' : 'Try for free'}
-            </a>
-          </div>
         </div>
 
         {/* Testimonials */}
@@ -290,5 +294,7 @@ export default function PricingPage() {
     </div>
   );
 }
+
+// build
 
 // build
