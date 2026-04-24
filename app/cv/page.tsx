@@ -916,4 +916,42 @@ export default function CVTailoringPage() {
                   </span>
                   <div className="flex gap-2 flex-wrap">
                     <button onClick={copyClResult} className="btn-outline text-xs py-1.5 px-3">
-          
+                      {clCopied
+                        ? <><CheckCircle size={12} /> {t('cl_copied')}</>
+                        : <><Copy size={12} /> {t('cl_copy')}</>}
+                    </button>
+                    {ready && isPro && (
+                      <button
+                        onClick={downloadClPDF}
+                        disabled={clPdfLoading}
+                        className="btn-primary text-xs py-1.5 px-3 disabled:opacity-60"
+                      >
+                        {clPdfLoading
+                          ? <><Spinner size="h-3 w-3" /> PDF...</>
+                          : <><Download size={12} /> {t('cl_download_pdf')}</>}
+                      </button>
+                    )}
+                  </div>
+                </div>
+                <pre className="text-gray-300 text-sm leading-relaxed whitespace-pre-wrap font-mono bg-gray-800/50 rounded-xl p-6 max-h-[500px] overflow-y-auto">
+                  {clResult}
+                </pre>
+                <button
+                  onClick={() => { setClResult(''); setClError(''); }}
+                  className="mt-3 text-xs text-gray-500 hover:text-gray-300 transition-colors"
+                >
+                  &#8635; {language === 'en' ? 'Regenerate' : 'Regenerar'}
+                </button>
+              </div>
+            )}
+          </div>
+        )}
+
+      </div>
+    </div>
+  );
+}
+
+// build
+
+// build
