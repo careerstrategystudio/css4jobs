@@ -156,7 +156,7 @@ const translations = {
     pr_free_m1: 'Sin descarga en PDF',
     pr_free_m2: 'Sin acceso a Job Search',
     // Pro plan features
-    pr_pro_f1: 'Adaptaciones de CV ilimitadas',
+    pr_pro_f1: 'Hasta 10 adaptaciones de CV por mes',
     pr_pro_f2: 'Analisis de LinkedIn ilimitados',
     pr_pro_f3: 'Exportar en PDF y Word',
     pr_pro_f4: 'Job Search Global (proximamente)',
@@ -356,7 +356,7 @@ const translations = {
     pr_free_m1: 'No PDF download',
     pr_free_m2: 'No Job Search access',
     // Pro plan features
-    pr_pro_f1: 'Unlimited CV tailorings',
+    pr_pro_f1: 'Up to 10 CV tailorings per month',
     pr_pro_f2: 'Unlimited LinkedIn analyses',
     pr_pro_f3: 'Export as PDF and Word',
     pr_pro_f4: 'Global Job Search (coming soon)',

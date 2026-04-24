@@ -1,0 +1,17 @@
+{
+  "name": "CSS 4 JOBS — AI Career Tools",
+  "short_name": "CSS4JOBS",
+  "description": "Tailor your CV, optimize LinkedIn, search jobs and prepare interviews with AI.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#030712",
+  "theme_color": "#4f46e5",
+  "orientation": "portrait-primary",
+  "icons": [
+    { "src": "/images/logo.png", "sizes": "192x192", "type": "image/png", "purpose": "any maskable" },
+    { "src": "/images/logo.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" }
+  ],
+  "categories": ["productivity", "business"],
+  "lang": "en",
+  "scope": "/"
+}
