@@ -72,4 +72,5 @@ export async function GET(req: NextRequest) {
     });
   }
 
-  return NextResponse.json({ results: results.slice(0, 60) }
+  return NextResponse.json({ results: results.slice(0, 60) });
+}
