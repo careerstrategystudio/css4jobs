@@ -3,6 +3,7 @@ import { useState, useCallback } from 'react';
 import {
   Search, MapPin, Building2, Zap, Target, CheckCircle, XCircle,
   Mail, Copy, Globe, Lock, Star, Bookmark, Heart, ChevronDown, ChevronUp, X, AlertCircle,
+  Link2, ExternalLink, AlignLeft,
 } from 'lucide-react';
 import { useLang } from '@/lib/i18n';
 import { usePro } from '@/lib/pro';
@@ -149,6 +150,35 @@ export default function JobsPage() {
   const [adaptLoading, setAdaptLoading] = useState<string | null>(null);
   const [adaptCopied,  setAdaptCopied]  = useState<string | null>(null);
 
+  // LinkedIn import state
+  const [cvTab,        setCvTab]        = useState<'text' | 'linkedin'>('text');
+  const [linkedinUrl,  setLinkedinUrl]  = useState('');
+  const [liLoading,    setLiLoading]    = useState(false);
+  const [liMessage,    setLiMessage]    = useState<{ type: 'blocked' | 'partial'; text: string } | null>(null);
+
+  const importLinkedIn = async () => {
+    if (!linkedinUrl.trim()) return;
+    setLiLoading(true); setLiMessage(null);
+    try {
+      const res  = await fetch('/api/linkedin', {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ url: linkedinUrl.trim() }),
+      });
+      const data = await res.json();
+      if (data.success && data.cvText) {
+        setCvText(data.cvText);
+        setCvTab('text');
+        setLiMessage({ type: 'partial', text: es ? '✅ Perfil importado. Completa los detalles que faltan.' : '✅ Profile imported. Fill in the missing details.' });
+      } else if (data.blocked) {
+        setLiMessage({ type: 'blocked', text: data.message });
+      } else if (data.error) {
+        setLiMessage({ type: 'blocked', text: data.error });
+      }
+    } catch {
+      setLiMessage({ type: 'blocked', text: es ? 'Error de conexión.' : 'Connection error.' });
+    } finally { setLiLoading(false); }
+  };
+
   const search = useCallback(async () => {
     if (!query.trim()) return;
     setLoading(true); setError(''); setSearched(true);
@@ -252,21 +282,84 @@ export default function JobsPage() {
           </p>
         </div>
 
-        {/* ── CV paste ── */}
+        {/* ── CV input ── */}
         <div className="card mb-5 border border-violet-500/20 bg-gradient-to-br from-gray-900 to-violet-950/20">
-          <div className="flex items-center gap-2 mb-2">
-            <Target size={14} className="text-violet-400" />
-            <span className="text-sm font-semibold text-white">
-              {es ? 'Tu CV — para calcular el % de match' : 'Your CV — to calculate match %'}
-            </span>
+          <div className="flex items-center justify-between mb-3">
+            <div className="flex items-center gap-2">
+              <Target size={14} className="text-violet-400" />
+              <span className="text-sm font-semibold text-white">
+                {es ? 'Tu CV — para calcular el % de match' : 'Your CV — to calculate match %'}
+              </span>
+            </div>
+            {/* Tab switcher */}
+            <div className="flex gap-1 bg-gray-800 rounded-lg p-1">
+              <button onClick={() => setCvTab('text')}
+                className={`flex items-center gap-1.5 px-3 py-1 rounded-md text-xs font-semibold transition-all ${cvTab === 'text' ? 'bg-violet-600 text-white' : 'text-gray-400 hover:text-white'}`}>
+                <AlignLeft size={11} /> {es ? 'Texto' : 'Text'}
+              </button>
+              <button onClick={() => setCvTab('linkedin')}
+                className={`flex items-center gap-1.5 px-3 py-1 rounded-md text-xs font-semibold transition-all ${cvTab === 'linkedin' ? 'bg-violet-600 text-white' : 'text-gray-400 hover:text-white'}`}>
+                <Link2 size={11} /> LinkedIn
+              </button>
+            </div>
           </div>
-          <textarea
-            value={cvText}
-            onChange={e => setCvText(e.target.value)}
-            rows={3}
-            placeholder={es ? 'Pega tu CV aquí para ver cuánto haces match con cada empleo...' : 'Paste your CV here to see how well you match each job...'}
-            className="textarea text-sm"
-          />
+
+          {cvTab === 'text' ? (
+            <textarea
+              value={cvText}
+              onChange={e => setCvText(e.target.value)}
+              rows={3}
+              placeholder={es ? 'Pega tu CV aquí para ver cuánto haces match con cada empleo...' : 'Paste your CV here to see how well you match each job...'}
+              className="textarea text-sm"
+            />
+          ) : (
+            <div className="space-y-3">
+              <div className="flex gap-2">
+                <input
+                  value={linkedinUrl}
+                  onChange={e => setLinkedinUrl(e.target.value)}
+                  onKeyDown={e => e.key === 'Enter' && importLinkedIn()}
+                  placeholder="https://www.linkedin.com/in/tu-perfil"
+                  className="flex-1 px-3 py-2 rounded-xl bg-gray-800 border border-gray-700 text-white placeholder-gray-500 focus:outline-none focus:border-violet-500 text-sm"
+                />
+                <button
+                  onClick={importLinkedIn}
+                  disabled={liLoading || !linkedinUrl.trim()}
+                  className="flex items-center gap-1.5 px-4 py-2 rounded-xl bg-violet-600 hover:bg-violet-500 text-white text-xs font-bold transition-all disabled:opacity-50"
+                >
+                  {liLoading ? <Spinner /> : <Link2 size={13} />}
+                  {es ? 'Importar' : 'Import'}
+                </button>
+              </div>
+
+              {liMessage?.type === 'partial' && (
+                <p className="text-xs text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 rounded-lg px-3 py-2">{liMessage.text}</p>
+              )}
+
+              {liMessage?.type === 'blocked' && (
+                <div className="bg-violet-500/5 border border-violet-500/20 rounded-xl p-4">
+                  <p className="text-xs text-gray-300 mb-3">{liMessage.text}</p>
+                  <p className="text-xs font-semibold text-violet-400 mb-2">{es ? '📱 Cómo exportar tu perfil de LinkedIn como PDF:' : '📱 How to export your LinkedIn profile as PDF:'}</p>
+                  <div className="space-y-1.5 text-xs text-gray-400">
+                    <p>1. {es ? 'Abre LinkedIn → tu foto de perfil → "Ver perfil"' : 'Open LinkedIn → profile photo → "View profile"'}</p>
+                    <p>2. {es ? 'Toca el botón "Más" (···)' : 'Tap the "More" button (···)'}</p>
+                    <p>3. {es ? 'Selecciona "Guardar como PDF"' : 'Select "Save to PDF"'}</p>
+                    <p>4. {es ? 'Sube el PDF en la pestaña de tu CV ↗' : 'Upload the PDF in the CV tab ↗'}</p>
+                  </div>
+                  <a href="https://www.linkedin.com/in/" target="_blank" rel="noopener noreferrer"
+                    className="inline-flex items-center gap-1.5 mt-3 text-xs text-violet-400 hover:text-violet-300 font-semibold">
+                    <ExternalLink size={11} /> {es ? 'Abrir LinkedIn' : 'Open LinkedIn'}
+                  </a>
+                </div>
+              )}
+
+              {!liMessage && (
+                <p className="text-[11px] text-gray-600">
+                  {es ? 'Pega tu URL de perfil público de LinkedIn. Si no funciona automáticamente, te guiaremos para exportar el PDF.' : 'Paste your public LinkedIn profile URL. If auto-import fails, we\'ll guide you to export the PDF.'}
+                </p>
+              )}
+            </div>
+          )}
         </div>
 
         {/* ── Search + filters ── */}

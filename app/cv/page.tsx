@@ -578,7 +578,10 @@ export default function CVTailoringPage() {
   const [error, setError]                         = useState('');
   const [copied, setCopied]                       = useState(false);
   const [language, setLanguage]                   = useState('es');
-  const [activeTab, setActiveTab]                 = useState<'paste' | 'upload'>('paste');
+  const [activeTab, setActiveTab]                 = useState<'paste' | 'upload' | 'linkedin'>('paste');
+  const [linkedinUrl, setLinkedinUrl]             = useState('');
+  const [liLoading, setLiLoading]                 = useState(false);
+  const [liMsg, setLiMsg]                         = useState<{ type: 'ok' | 'blocked' | 'error'; text: string } | null>(null);
   const [pdfLoading, setPdfLoading]               = useState(false);
   const [showProForm, setShowProForm]             = useState(false);
 
@@ -600,6 +603,29 @@ export default function CVTailoringPage() {
     if (!file) return;
     setCvText(await file.text());
     setActiveTab('paste');
+  };
+
+  const importLinkedIn = async () => {
+    if (!linkedinUrl.trim()) return;
+    setLiLoading(true); setLiMsg(null);
+    try {
+      const res  = await fetch('/api/linkedin', {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ url: linkedinUrl.trim() }),
+      });
+      const data = await res.json();
+      if (data.success && data.cvText) {
+        setCvText(data.cvText);
+        setActiveTab('paste');
+        setLiMsg({ type: 'ok', text: '✅ Perfil importado. Revisa y completa los detalles abajo.' });
+      } else if (data.blocked) {
+        setLiMsg({ type: 'blocked', text: data.message });
+      } else {
+        setLiMsg({ type: 'error', text: data.error || 'No se pudo importar el perfil.' });
+      }
+    } catch {
+      setLiMsg({ type: 'error', text: 'Error de conexión.' });
+    } finally { setLiLoading(false); }
   };
 
   const handleSubmit = async () => {
@@ -714,18 +740,83 @@ export default function CVTailoringPage() {
                 <h2 className="font-bold text-white flex items-center gap-2">
                   <FileText size={16} className="text-indigo-400" /> {t('cv_label')}
                 </h2>
-                <div className="flex gap-1">
-                  <button onClick={() => setActiveTab('paste')} className={`px-3 py-1 rounded-lg text-xs font-semibold transition-all ${activeTab === 'paste' ? 'bg-indigo-600 text-white' : 'text-gray-400 hover:text-white'}`}>
-                    <Clipboard size={12} className="inline mr-1" />{t('cv_paste')}
+                <div className="flex gap-1 bg-gray-800 rounded-lg p-1">
+                  <button onClick={() => setActiveTab('paste')} className={`px-3 py-1 rounded-md text-xs font-semibold transition-all flex items-center gap-1 ${activeTab === 'paste' ? 'bg-violet-600 text-white' : 'text-gray-400 hover:text-white'}`}>
+                    <Clipboard size={11} />{t('cv_paste')}
                   </button>
-                  <button onClick={() => fileRef.current?.click()} className={`px-3 py-1 rounded-lg text-xs font-semibold transition-all ${activeTab === 'upload' ? 'bg-indigo-600 text-white' : 'text-gray-400 hover:text-white'}`}>
-                    <Upload size={12} className="inline mr-1" />{t('cv_upload')}
+                  <button onClick={() => { setActiveTab('upload'); fileRef.current?.click(); }} className={`px-3 py-1 rounded-md text-xs font-semibold transition-all flex items-center gap-1 ${activeTab === 'upload' ? 'bg-violet-600 text-white' : 'text-gray-400 hover:text-white'}`}>
+                    <Upload size={11} />{t('cv_upload')}
+                  </button>
+                  <button onClick={() => setActiveTab('linkedin')} className={`px-3 py-1 rounded-md text-xs font-semibold transition-all flex items-center gap-1 ${activeTab === 'linkedin' ? 'bg-violet-600 text-white' : 'text-gray-400 hover:text-white'}`}>
+                    <svg viewBox="0 0 24 24" fill="currentColor" className="w-3 h-3"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+                    LinkedIn
                   </button>
                   <input ref={fileRef} type="file" accept=".txt,.pdf,.doc,.docx" className="hidden" onChange={handleFile} />
                 </div>
               </div>
-              <textarea value={cvText} onChange={e => setCvText(e.target.value)} className="textarea" rows={14} placeholder={t('cv_placeholder')} />
-              <p className="text-xs text-gray-600 mt-2">{cvText.length} chars</p>
+
+              {/* Paste tab */}
+              {activeTab !== 'linkedin' && (
+                <>
+                  <textarea value={cvText} onChange={e => setCvText(e.target.value)} className="textarea" rows={14} placeholder={t('cv_placeholder')} />
+                  <p className="text-xs text-gray-600 mt-2">{cvText.length} chars</p>
+                </>
+              )}
+
+              {/* LinkedIn tab */}
+              {activeTab === 'linkedin' && (
+                <div className="space-y-3">
+                  <div className="flex gap-2">
+                    <input
+                      value={linkedinUrl}
+                      onChange={e => setLinkedinUrl(e.target.value)}
+                      onKeyDown={e => e.key === 'Enter' && importLinkedIn()}
+                      placeholder="https://www.linkedin.com/in/tu-perfil"
+                      className="flex-1 px-3 py-2.5 rounded-xl bg-gray-800 border border-gray-700 text-white placeholder-gray-500 focus:outline-none focus:border-violet-500 text-sm"
+                    />
+                    <button
+                      onClick={importLinkedIn}
+                      disabled={liLoading || !linkedinUrl.trim()}
+                      className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-violet-600 hover:bg-violet-500 text-white text-sm font-bold transition-all disabled:opacity-50"
+                    >
+                      {liLoading
+                        ? <svg className="animate-spin h-4 w-4" viewBox="0 0 24 24" fill="none"><circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"/><path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"/></svg>
+                        : <svg viewBox="0 0 24 24" fill="currentColor" className="w-4 h-4"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+                      }
+                      Importar
+                    </button>
+                  </div>
+
+                  {liMsg?.type === 'ok' && (
+                    <p className="text-xs text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 rounded-lg px-3 py-2">{liMsg.text}</p>
+                  )}
+
+                  {liMsg?.type === 'blocked' && (
+                    <div className="bg-violet-500/5 border border-violet-500/20 rounded-xl p-4">
+                      <p className="text-sm text-gray-300 mb-3">{liMsg.text}</p>
+                      <p className="text-xs font-semibold text-violet-400 mb-2">📱 Cómo exportar tu perfil de LinkedIn como PDF:</p>
+                      <div className="space-y-1.5 text-xs text-gray-400">
+                        <p>1. Abre LinkedIn → toca tu foto de perfil → <strong className="text-gray-200">"Ver perfil"</strong></p>
+                        <p>2. Toca el botón <strong className="text-gray-200">"Más"</strong> (···) debajo de tu nombre</p>
+                        <p>3. Selecciona <strong className="text-gray-200">"Guardar como PDF"</strong></p>
+                        <p>4. Vuelve aquí y súbelo con el botón <strong className="text-violet-400">"Subir archivo"</strong> ↑</p>
+                      </div>
+                      <a href="https://www.linkedin.com/" target="_blank" rel="noopener noreferrer"
+                        className="inline-flex items-center gap-1.5 mt-3 text-xs text-violet-400 hover:text-violet-300 font-semibold">
+                        Abrir LinkedIn →
+                      </a>
+                    </div>
+                  )}
+
+                  {liMsg?.type === 'error' && (
+                    <p className="text-xs text-red-400 bg-red-500/10 border border-red-500/20 rounded-lg px-3 py-2">{liMsg.text}</p>
+                  )}
+
+                  {!liMsg && (
+                    <p className="text-xs text-gray-600">Pega tu URL de LinkedIn. Si el perfil es privado, te mostramos cómo exportar el PDF en segundos.</p>
+                  )}
+                </div>
+              )}
             </div>
             {/* Language */}
             <div className="card py-4">
