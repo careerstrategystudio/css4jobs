@@ -9,7 +9,8 @@ import { useLang } from '@/lib/i18n';
 import { usePro } from '@/lib/pro';
 import { parseCV, parseExperience, parseEducation } from '@/lib/cv-parser';
 
-const CVPreview = lazy(() => import('@/components/CVPreview'));
+const CVPreview        = lazy(() => import('@/components/CVPreview'));
+const QuickProfileForm = lazy(() => import('@/components/QuickProfileForm'));
 
 // ─────────────────────────────────────────────────────────────────────────────
 // TEMPLATES CONFIG
@@ -582,6 +583,7 @@ export default function CVTailoringPage() {
   const [linkedinUrl, setLinkedinUrl]             = useState('');
   const [liLoading, setLiLoading]                 = useState(false);
   const [liMsg, setLiMsg]                         = useState<{ type: 'ok' | 'blocked' | 'error'; text: string } | null>(null);
+  const [liShowForm, setLiShowForm]               = useState(false);
   const [pdfLoading, setPdfLoading]               = useState(false);
   const [showProForm, setShowProForm]             = useState(false);
 
@@ -848,20 +850,52 @@ export default function CVTailoringPage() {
                     <p className="text-xs text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 rounded-lg px-3 py-2">{liMsg.text}</p>
                   )}
 
-                  {liMsg?.type === 'blocked' && (
-                    <div className="bg-violet-500/5 border border-violet-500/20 rounded-xl p-4">
-                      <p className="text-sm text-gray-300 mb-3">{liMsg.text}</p>
-                      <p className="text-xs font-semibold text-violet-400 mb-2">📱 Cómo exportar tu perfil de LinkedIn como PDF:</p>
-                      <div className="space-y-1.5 text-xs text-gray-400">
-                        <p>1. Abre LinkedIn → toca tu foto de perfil → <strong className="text-gray-200">"Ver perfil"</strong></p>
-                        <p>2. Toca el botón <strong className="text-gray-200">"Más"</strong> (···) debajo de tu nombre</p>
-                        <p>3. Selecciona <strong className="text-gray-200">"Guardar como PDF"</strong></p>
-                        <p>4. Vuelve aquí y súbelo con el botón <strong className="text-violet-400">"Subir archivo"</strong> ↑</p>
+                  {liMsg?.type === 'blocked' && !liShowForm && (
+                    <div className="bg-violet-500/5 border border-violet-500/20 rounded-xl p-4 space-y-3">
+                      <p className="text-sm font-semibold text-white">¿Cómo prefieres continuar?</p>
+
+                      {/* Option A: Upload PDF */}
+                      <button onClick={() => { fileRef.current?.click(); }}
+                        className="flex items-center gap-3 w-full p-3 rounded-xl bg-gray-800 border border-gray-700 hover:border-violet-500/50 text-left transition-all">
+                        <div className="w-9 h-9 rounded-lg bg-gray-700 flex items-center justify-center flex-shrink-0">
+                          <Upload size={15} className="text-gray-300" />
+                        </div>
+                        <div>
+                          <p className="text-sm font-semibold text-white">Subir PDF de LinkedIn</p>
+                          <p className="text-[11px] text-gray-500">Perfil → Más (···) → Guardar como PDF · Ideal desde ordenador</p>
+                        </div>
+                      </button>
+
+                      {/* Option B: Fill form */}
+                      <button onClick={() => setLiShowForm(true)}
+                        className="flex items-center gap-3 w-full p-3 rounded-xl bg-violet-600/20 border border-violet-500/40 hover:bg-violet-600/30 text-left transition-all">
+                        <div className="w-9 h-9 rounded-lg bg-violet-600/40 flex items-center justify-center flex-shrink-0">
+                          <AlignLeft size={15} className="text-violet-300" />
+                        </div>
+                        <div>
+                          <p className="text-sm font-semibold text-white">Completar perfil aquí ✦ Recomendado móvil</p>
+                          <p className="text-[11px] text-gray-400">Rellena un formulario rápido — sin archivos</p>
+                        </div>
+                      </button>
+                    </div>
+                  )}
+
+                  {liMsg?.type === 'blocked' && liShowForm && (
+                    <div className="space-y-3">
+                      <div className="flex items-center gap-3 mb-1">
+                        <button onClick={() => setLiShowForm(false)}
+                          className="text-[11px] text-gray-500 hover:text-gray-300 transition-colors">
+                          ← Volver
+                        </button>
+                        <p className="text-sm font-semibold text-white">Completa tu perfil</p>
                       </div>
-                      <a href="https://www.linkedin.com/" target="_blank" rel="noopener noreferrer"
-                        className="inline-flex items-center gap-1.5 mt-3 text-xs text-violet-400 hover:text-violet-300 font-semibold">
-                        Abrir LinkedIn →
-                      </a>
+                      <Suspense fallback={<div className="h-20 flex items-center justify-center text-gray-500 text-sm">Cargando formulario…</div>}>
+                        <QuickProfileForm
+                          lang="es"
+                          onSubmit={(text) => { setCvText(text); setActiveTab('paste'); setLiMsg({ type: 'ok', text: '✅ Perfil completado. Revisa y edita lo que necesites.' }); setLiShowForm(false); }}
+                          onCancel={() => setLiShowForm(false)}
+                        />
+                      </Suspense>
                     </div>
                   )}
 

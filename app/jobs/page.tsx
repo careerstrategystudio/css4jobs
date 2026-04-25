@@ -3,10 +3,11 @@ import { useState, useCallback, useEffect, useRef } from 'react';
 import {
   Search, MapPin, Building2, Zap, Target, CheckCircle, XCircle,
   Mail, Copy, Globe, Lock, Star, Bookmark, Heart, ChevronDown, ChevronUp, X, AlertCircle,
-  Link2, ExternalLink, AlignLeft,
+  Link2, ExternalLink, AlignLeft, Upload,
 } from 'lucide-react';
 import { useLang } from '@/lib/i18n';
 import { usePro } from '@/lib/pro';
+import QuickProfileForm from '@/components/QuickProfileForm';
 
 const COUNTRY_FLAGS: Record<string, string> = {
   us:'🇺🇸',gb:'🇬🇧',au:'🇦🇺',ca:'🇨🇦',de:'🇩🇪',fr:'🇫🇷',
@@ -218,7 +219,7 @@ export default function JobsPage() {
   const [liLoading,    setLiLoading]    = useState(false);
   const [liMessage,    setLiMessage]    = useState<{ type: 'blocked' | 'partial'; text: string } | null>(null);
 
-  const [liStep, setLiStep] = useState<'idle' | 'loading' | 'done' | 'pdf'>('idle');
+  const [liStep, setLiStep] = useState<'idle' | 'loading' | 'done' | 'pdf' | 'form'>('idle');
 
   const importLinkedIn = async () => {
     if (!linkedinUrl.trim()) return;
@@ -234,10 +235,9 @@ export default function JobsPage() {
         setCvTab('text');
         setLiStep('done');
       } else if (data.blocked) {
-        // Open LinkedIn automatically + show upload option (no error message)
+        // Open LinkedIn in background, let user choose: upload PDF or fill form
         window.open(linkedinUrl.trim(), '_blank');
         setLiStep('pdf');
-        setTimeout(() => fileRef.current?.click(), 600);
       } else if (data.error) {
         setLiMessage({ type: 'blocked', text: data.error });
         setLiStep('idle');
@@ -444,24 +444,67 @@ export default function JobsPage() {
                   </button>
                 </div>
               ) : liStep === 'pdf' ? (
-                <div className="rounded-xl border border-violet-500/30 bg-violet-500/5 p-4">
-                  <div className="flex items-center gap-2 mb-3">
-                    <div className="w-2 h-2 rounded-full bg-violet-400 animate-pulse" />
-                    <p className="text-sm font-semibold text-white">{es ? 'LinkedIn abierto en otra pestaña' : 'LinkedIn opened in another tab'}</p>
-                  </div>
-                  <p className="text-xs text-gray-400 mb-4">
-                    {es ? 'Descarga tu perfil → Más (···) → Guardar como PDF → súbelo aquí:' : 'Download your profile → More (···) → Save to PDF → upload here:'}
+                <div className="rounded-xl border border-violet-500/30 bg-violet-500/5 p-4 space-y-3">
+                  <p className="text-sm font-semibold text-white">
+                    {es ? '¿Cómo prefieres continuar?' : 'How would you like to continue?'}
                   </p>
-                  <button
-                    onClick={() => fileRef.current?.click()}
-                    className="flex items-center justify-center gap-2 w-full py-2.5 rounded-xl bg-violet-600 hover:bg-violet-500 text-white text-sm font-bold transition-all"
-                  >
-                    <ExternalLink size={14} />
-                    {es ? 'Subir PDF de LinkedIn' : 'Upload LinkedIn PDF'}
+
+                  {/* Option A: Upload PDF (desktop) */}
+                  <button onClick={() => fileRef.current?.click()}
+                    className="flex items-center gap-3 w-full p-3 rounded-xl bg-gray-800 border border-gray-700 hover:border-violet-500/50 text-left transition-all">
+                    <div className="w-9 h-9 rounded-lg bg-gray-700 flex items-center justify-center flex-shrink-0">
+                      <Upload size={15} className="text-gray-300" />
+                    </div>
+                    <div>
+                      <p className="text-sm font-semibold text-white">
+                        {es ? 'Subir PDF de LinkedIn' : 'Upload LinkedIn PDF'}
+                      </p>
+                      <p className="text-[11px] text-gray-500">
+                        {es ? 'Perfil → Más (···) → Guardar como PDF · Ideal desde ordenador'
+                             : 'Profile → More (···) → Save to PDF · Best from desktop'}
+                      </p>
+                    </div>
                   </button>
-                  <button onClick={() => setLiStep('idle')} className="mt-2 w-full text-center text-xs text-gray-600 hover:text-gray-400">
+
+                  {/* Option B: Quick form (mobile) */}
+                  <button onClick={() => setLiStep('form')}
+                    className="flex items-center gap-3 w-full p-3 rounded-xl bg-violet-600/20 border border-violet-500/40 hover:bg-violet-600/30 text-left transition-all">
+                    <div className="w-9 h-9 rounded-lg bg-violet-600/40 flex items-center justify-center flex-shrink-0">
+                      <AlignLeft size={15} className="text-violet-300" />
+                    </div>
+                    <div>
+                      <p className="text-sm font-semibold text-white">
+                        {es ? 'Completar perfil aquí ✦ Recomendado móvil' : 'Fill profile here ✦ Mobile-friendly'}
+                      </p>
+                      <p className="text-[11px] text-gray-400">
+                        {es ? 'Rellena un formulario rápido — sin archivos'
+                             : 'Quick form — no file needed'}
+                      </p>
+                    </div>
+                  </button>
+
+                  <button onClick={() => setLiStep('idle')}
+                    className="w-full text-center text-xs text-gray-600 hover:text-gray-400 transition-colors pt-1">
                     {es ? 'Volver' : 'Back'}
                   </button>
+                </div>
+
+              ) : liStep === 'form' ? (
+                <div className="space-y-3">
+                  <div className="flex items-center gap-3 mb-1">
+                    <button onClick={() => setLiStep('pdf')}
+                      className="text-[11px] text-gray-500 hover:text-gray-300 transition-colors">
+                      ← {es ? 'Volver' : 'Back'}
+                    </button>
+                    <p className="text-sm font-semibold text-white">
+                      {es ? 'Completa tu perfil' : 'Fill your profile'}
+                    </p>
+                  </div>
+                  <QuickProfileForm
+                    lang={lang}
+                    onSubmit={(text) => { setCvText(text); setCvTab('text'); setLiStep('done'); }}
+                    onCancel={() => setLiStep('pdf')}
+                  />
                 </div>
               ) : (
                 <>
