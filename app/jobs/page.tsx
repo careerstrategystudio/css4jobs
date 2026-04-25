@@ -1,5 +1,5 @@
 'use client';
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect, useRef } from 'react';
 import {
   Search, MapPin, Building2, Zap, Target, CheckCircle, XCircle,
   Mail, Copy, Globe, Lock, Star, Bookmark, Heart, ChevronDown, ChevronUp, X, AlertCircle,
@@ -52,6 +52,22 @@ interface MatchResult {
   strengths: string[];
   gaps: string[];
   topKeywords: string[];
+}
+
+// ── Gauge loading skeleton ────────────────────────────────────────────────────
+function MatchGaugeLoading() {
+  return (
+    <div className="flex flex-col items-center gap-1">
+      <svg width="90" height="90" viewBox="0 0 90 90">
+        <circle cx="45" cy="45" r="38" fill="none" stroke="#1f2937" strokeWidth="8" />
+        <circle cx="45" cy="45" r="38" fill="none" stroke="#7c3aed" strokeWidth="8"
+          strokeDasharray="239" strokeDashoffset="180" strokeLinecap="round"
+          transform="rotate(-90 45 45)" className="animate-pulse" />
+        <text x="45" y="49" textAnchor="middle" fill="#6b7280" fontSize="13" fontWeight="700">···</text>
+      </svg>
+      <span className="text-[10px] font-bold text-violet-500 animate-pulse">ANALIZANDO</span>
+    </div>
+  );
 }
 
 // ── Circular match gauge ──────────────────────────────────────────────────────
@@ -150,6 +166,20 @@ export default function JobsPage() {
   const [adaptLoading, setAdaptLoading] = useState<string | null>(null);
   const [adaptCopied,  setAdaptCopied]  = useState<string | null>(null);
 
+  // Auto-matching (runs silently after search)
+  const [autoMatching, setAutoMatching] = useState<Set<string>>(new Set());
+  const cvRef = useRef(cvText);
+  useEffect(() => { cvRef.current = cvText; }, [cvText]);
+
+  // Persist CV in localStorage
+  useEffect(() => {
+    const saved = localStorage.getItem('css4jobs_cv');
+    if (saved) setCvText(saved);
+  }, []);
+  useEffect(() => {
+    if (cvText) localStorage.setItem('css4jobs_cv', cvText);
+  }, [cvText]);
+
   // LinkedIn import state
   const [cvTab,        setCvTab]        = useState<'text' | 'linkedin'>('text');
   const [linkedinUrl,  setLinkedinUrl]  = useState('');
@@ -179,6 +209,28 @@ export default function JobsPage() {
     } finally { setLiLoading(false); }
   };
 
+  // Silent auto-match for a list of jobs
+  const autoMatchJobs = useCallback(async (jobList: Job[], cv: string) => {
+    const calls = jobList.map(async (job) => {
+      setAutoMatching(prev => new Set([...prev, job.id]));
+      try {
+        const res  = await fetch('/api/job-match', {
+          method: 'POST', headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            cvText: cv,
+            jobDescription: job.title + '\n' + job.company.display_name + '\n' + job.description,
+            language: 'es',
+          }),
+        });
+        const data = await res.json();
+        setMatches(prev => ({ ...prev, [job.id]: data }));
+      } catch { /* silent */ } finally {
+        setAutoMatching(prev => { const s = new Set(prev); s.delete(job.id); return s; });
+      }
+    });
+    await Promise.all(calls);
+  }, []);
+
   const search = useCallback(async () => {
     if (!query.trim()) return;
     setLoading(true); setError(''); setSearched(true);
@@ -191,13 +243,20 @@ export default function JobsPage() {
       if (country)  params.set('country', country);
       const res  = await fetch(`/api/search-jobs?${params}`);
       const data = await res.json();
-      setJobs(data.results || []);
+      const results: Job[] = data.results || [];
+      setJobs(results);
+      setMatches({});
+      // Auto-match first 8 jobs if CV is loaded
+      const cv = cvRef.current.trim();
+      if (cv && results.length > 0) {
+        autoMatchJobs(results.slice(0, 8), cv);
+      }
     } catch {
       setError(es ? 'Error al buscar empleos.' : 'Error searching jobs.');
     } finally {
       setLoading(false);
     }
-  }, [query, days, jobType, workMode, expLevel, country, es]);
+  }, [query, days, jobType, workMode, expLevel, country, es, autoMatchJobs]);
 
   const generateCoverLetter = async (job: Job) => {
     if (!cvText.trim()) return;
@@ -241,11 +300,12 @@ export default function JobsPage() {
   };
 
   const fmtDate = (d: string) => {
-    const diff = Math.floor((Date.now() - new Date(d).getTime()) / 86400000);
+    const diff = Math.max(0, Math.floor((Date.now() - new Date(d).getTime()) / 86400000));
     if (diff === 0) return es ? 'Hoy' : 'Today';
     if (diff === 1) return es ? 'Ayer' : 'Yesterday';
     if (diff < 7)   return es ? `Hace ${diff} días` : `${diff}d ago`;
-    return es ? `Hace ${Math.ceil(diff / 7)} sem.` : `${Math.ceil(diff / 7)}w ago`;
+    if (diff < 30)  return es ? `Hace ${Math.ceil(diff / 7)} sem.` : `${Math.ceil(diff / 7)}w ago`;
+    return es ? `Hace ${Math.ceil(diff / 30)} mes.` : `${Math.ceil(diff / 30)}mo ago`;
   };
 
   const fmtSalary = (min?: number, max?: number) => {
@@ -290,6 +350,11 @@ export default function JobsPage() {
               <span className="text-sm font-semibold text-white">
                 {es ? 'Tu CV — para calcular el % de match' : 'Your CV — to calculate match %'}
               </span>
+              {cvText.trim() && (
+                <span className="flex items-center gap-1 text-[10px] text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-2 py-0.5 rounded-full">
+                  <CheckCircle size={9} /> {es ? 'Guardado' : 'Saved'}
+                </span>
+              )}
             </div>
             {/* Tab switcher */}
             <div className="flex gap-1 bg-gray-800 rounded-lg p-1">
@@ -462,12 +527,13 @@ export default function JobsPage() {
         {/* ── Job cards ── */}
         <div className="space-y-3">
           {jobs.map(job => {
-            const isOpen  = expanded === job.id;
-            const match   = matches[job.id];
-            const salary  = fmtSalary(job.salary_min, job.salary_max);
-            const isMatch = matching === job.id;
-            const isSaved = saved[job.id];
-            const isLiked = liked[job.id];
+            const isOpen      = expanded === job.id;
+            const match       = matches[job.id];
+            const salary      = fmtSalary(job.salary_min, job.salary_max);
+            const isMatch     = matching === job.id;
+            const isAutoMatch = autoMatching.has(job.id);
+            const isSaved     = saved[job.id];
+            const isLiked     = liked[job.id];
 
             return (
               <div key={job.id} className="card border border-gray-700/50 hover:border-violet-700/40 transition-all p-0 overflow-hidden">
@@ -519,16 +585,23 @@ export default function JobsPage() {
                     </div>
                   </div>
 
-                  {/* Match gauge panel */}
-                  {match && (
+                  {/* Match gauge panel — loading or result */}
+                  {(isAutoMatch || match) && (
                     <div className="flex-shrink-0 bg-gray-950 border border-violet-700/30 rounded-2xl p-3 flex flex-col items-center gap-2 min-w-[110px] shadow-lg shadow-violet-900/20">
-                      <MatchGauge score={match.score} />
-                      {match.strengths?.slice(0, 2).map((s, i) => (
-                        <div key={i} className="flex items-start gap-1 text-[10px] text-gray-400 w-full">
-                          <span className="text-violet-400 font-bold flex-shrink-0">✓</span>
-                          <span className="leading-tight">{s}</span>
-                        </div>
-                      ))}
+                      {isAutoMatch && !match
+                        ? <MatchGaugeLoading />
+                        : match && (
+                          <>
+                            <MatchGauge score={match.score} />
+                            {match.strengths?.slice(0, 2).map((s, i) => (
+                              <div key={i} className="flex items-start gap-1 text-[10px] text-gray-400 w-full">
+                                <span className="text-violet-400 font-bold flex-shrink-0">✓</span>
+                                <span className="leading-tight">{s}</span>
+                              </div>
+                            ))}
+                          </>
+                        )
+                      }
                     </div>
                   )}
                 </div>
@@ -558,7 +631,7 @@ export default function JobsPage() {
                     {es ? 'Descripción' : 'Description'}
                   </button>
 
-                  {cvText.trim() && !match && (
+                  {cvText.trim() && !match && !isAutoMatch && (
                     <button
                       onClick={() => matchCV(job)}
                       disabled={isMatch}
