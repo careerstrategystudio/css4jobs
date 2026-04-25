@@ -180,6 +180,38 @@ export default function JobsPage() {
     if (cvText) localStorage.setItem('css4jobs_cv', cvText);
   }, [cvText]);
 
+  // File upload with OCR fallback
+  const fileRef = useRef<HTMLInputElement>(null);
+  const [ocrLoading, setOcrLoading] = useState(false);
+
+  const handleFile = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    e.target.value = '';
+    const isPdf   = file.type === 'application/pdf' || file.name.endsWith('.pdf');
+    const isImage = file.type.startsWith('image/');
+    if (!isPdf && !isImage) {
+      setCvText(await file.text());
+      setCvTab('text');
+      return;
+    }
+    if (isPdf) {
+      try {
+        const raw = await file.text();
+        const readable = raw.replace(/[^\x20-\x7E\n\r\t]/g, '').trim();
+        if (readable.length > 200) { setCvText(readable); setCvTab('text'); return; }
+      } catch { /* fall through */ }
+    }
+    setOcrLoading(true); setCvTab('text');
+    try {
+      const form = new FormData();
+      form.append('file', file);
+      const res  = await fetch('/api/ocr-cv', { method: 'POST', body: form });
+      const data = await res.json();
+      if (data.text) setCvText(data.text);
+    } catch { /* ignore */ } finally { setOcrLoading(false); }
+  };
+
   // LinkedIn import state
   const [cvTab,        setCvTab]        = useState<'text' | 'linkedin'>('text');
   const [linkedinUrl,  setLinkedinUrl]  = useState('');
@@ -362,21 +394,36 @@ export default function JobsPage() {
                 className={`flex items-center gap-1.5 px-3 py-1 rounded-md text-xs font-semibold transition-all ${cvTab === 'text' ? 'bg-violet-600 text-white' : 'text-gray-400 hover:text-white'}`}>
                 <AlignLeft size={11} /> {es ? 'Texto' : 'Text'}
               </button>
+              <button onClick={() => fileRef.current?.click()}
+                className="flex items-center gap-1.5 px-3 py-1 rounded-md text-xs font-semibold text-gray-400 hover:text-white transition-all">
+                <ExternalLink size={11} /> {es ? 'Archivo' : 'File'}
+              </button>
               <button onClick={() => setCvTab('linkedin')}
                 className={`flex items-center gap-1.5 px-3 py-1 rounded-md text-xs font-semibold transition-all ${cvTab === 'linkedin' ? 'bg-violet-600 text-white' : 'text-gray-400 hover:text-white'}`}>
                 <Link2 size={11} /> LinkedIn
               </button>
             </div>
+            <input ref={fileRef} type="file" accept=".txt,.pdf,.doc,.docx,.png,.jpg,.jpeg,.webp" className="hidden" onChange={handleFile} />
           </div>
 
           {cvTab === 'text' ? (
-            <textarea
-              value={cvText}
-              onChange={e => setCvText(e.target.value)}
-              rows={3}
-              placeholder={es ? 'Pega tu CV aquí para ver cuánto haces match con cada empleo...' : 'Paste your CV here to see how well you match each job...'}
-              className="textarea text-sm"
-            />
+            ocrLoading ? (
+              <div className="flex flex-col items-center justify-center h-24 gap-2 rounded-xl bg-gray-800/50 border border-violet-500/20">
+                <svg className="animate-spin h-6 w-6 text-violet-500" viewBox="0 0 24 24" fill="none">
+                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"/>
+                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"/>
+                </svg>
+                <p className="text-xs text-violet-400 font-semibold">{es ? 'Leyendo tu CV con IA…' : 'Reading your CV with AI…'}</p>
+              </div>
+            ) : (
+              <textarea
+                value={cvText}
+                onChange={e => setCvText(e.target.value)}
+                rows={3}
+                placeholder={es ? 'Pega tu CV aquí para ver cuánto haces match con cada empleo...' : 'Paste your CV here to see how well you match each job...'}
+                className="textarea text-sm"
+              />
+            )
           ) : (
             <div className="space-y-3">
               <div className="flex gap-2">

@@ -598,11 +598,55 @@ export default function CVTailoringPage() {
 
   const fileRef = useRef<HTMLInputElement>(null);
 
+  const [ocrLoading, setOcrLoading] = useState(false);
+
   const handleFile = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
-    setCvText(await file.text());
+    e.target.value = '';
+
+    const isPdf   = file.type === 'application/pdf' || file.name.endsWith('.pdf');
+    const isImage = file.type.startsWith('image/');
+
+    // Plain text / Word — read directly
+    if (!isPdf && !isImage) {
+      setCvText(await file.text());
+      setActiveTab('paste');
+      return;
+    }
+
+    // For PDFs: try text extraction first, fall back to Claude Vision OCR
+    if (isPdf) {
+      try {
+        const raw = await file.text();
+        // If we got reasonable text (not garbled binary), use it
+        const readable = raw.replace(/[^\x20-\x7E\n\r\t]/g, '').trim();
+        if (readable.length > 200) {
+          setCvText(readable);
+          setActiveTab('paste');
+          return;
+        }
+      } catch { /* fall through to OCR */ }
+    }
+
+    // Image PDF or image file → Claude Vision OCR
+    setOcrLoading(true);
     setActiveTab('paste');
+    try {
+      const form = new FormData();
+      form.append('file', file);
+      const res  = await fetch('/api/ocr-cv', { method: 'POST', body: form });
+      const data = await res.json();
+      if (data.text) {
+        setCvText(data.text);
+      } else {
+        setError(data.error || 'No se pudo leer el archivo.');
+      }
+    } catch {
+      setError('Error al procesar el archivo.');
+    } finally {
+      setOcrLoading(false);
+    }
   };
 
   const importLinkedIn = async () => {
@@ -758,8 +802,21 @@ export default function CVTailoringPage() {
               {/* Paste tab */}
               {activeTab !== 'linkedin' && (
                 <>
-                  <textarea value={cvText} onChange={e => setCvText(e.target.value)} className="textarea" rows={14} placeholder={t('cv_placeholder')} />
-                  <p className="text-xs text-gray-600 mt-2">{cvText.length} chars</p>
+                  {ocrLoading ? (
+                    <div className="flex flex-col items-center justify-center h-48 gap-3 rounded-xl bg-gray-800/50 border border-violet-500/20">
+                      <svg className="animate-spin h-8 w-8 text-violet-500" viewBox="0 0 24 24" fill="none">
+                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"/>
+                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"/>
+                      </svg>
+                      <p className="text-sm text-violet-400 font-semibold">Leyendo tu CV con IA…</p>
+                      <p className="text-xs text-gray-500">Extrayendo texto del diseño visual</p>
+                    </div>
+                  ) : (
+                    <>
+                      <textarea value={cvText} onChange={e => setCvText(e.target.value)} className="textarea" rows={14} placeholder={t('cv_placeholder')} />
+                      <p className="text-xs text-gray-600 mt-2">{cvText.length} chars</p>
+                    </>
+                  )}
                 </>
               )}
 
