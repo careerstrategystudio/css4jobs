@@ -852,7 +852,7 @@ export default function CVTailoringPage() {
 
                   {liMsg?.type === 'blocked' && !liShowForm && (
                     <div className="bg-violet-500/5 border border-violet-500/20 rounded-xl p-4 space-y-3">
-                      <p className="text-sm font-semibold text-white">¿Cómo prefieres continuar?</p>
+                      <p className="text-sm font-semibold text-white">LinkedIn requiere inicio de sesión — elige cómo continuar:</p>
 
                       {/* Option A: Upload PDF */}
                       <button onClick={() => { fileRef.current?.click(); }}

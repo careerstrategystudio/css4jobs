@@ -235,8 +235,6 @@ export default function JobsPage() {
         setCvTab('text');
         setLiStep('done');
       } else if (data.blocked) {
-        // Open LinkedIn in background, let user choose: upload PDF or fill form
-        window.open(linkedinUrl.trim(), '_blank');
         setLiStep('pdf');
       } else if (data.error) {
         setLiMessage({ type: 'blocked', text: data.error });
@@ -446,7 +444,7 @@ export default function JobsPage() {
               ) : liStep === 'pdf' ? (
                 <div className="rounded-xl border border-violet-500/30 bg-violet-500/5 p-4 space-y-3">
                   <p className="text-sm font-semibold text-white">
-                    {es ? '¿Cómo prefieres continuar?' : 'How would you like to continue?'}
+                    {es ? 'LinkedIn requiere inicio de sesión — elige cómo continuar:' : 'LinkedIn requires login — choose how to continue:'}
                   </p>
 
                   {/* Option A: Upload PDF (desktop) */}
