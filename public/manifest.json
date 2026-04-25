@@ -1,17 +1,31 @@
 {
-  "name": "CSS 4 JOBS — AI Career Tools",
-  "short_name": "CSS4JOBS",
-  "description": "Tailor your CV, optimize LinkedIn, search jobs and prepare interviews with AI.",
+  "name": "CSS 4 JOBS — Empleos con IA",
+  "short_name": "CSS 4 JOBS",
+  "description": "Busca empleo, analiza tu match con IA y genera cartas de presentación en segundos.",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#030712",
-  "theme_color": "#4f46e5",
+  "theme_color": "#7c3aed",
   "orientation": "portrait-primary",
+  "lang": "es",
+  "scope": "/",
+  "categories": ["productivity", "business"],
   "icons": [
     { "src": "/images/logo.png", "sizes": "192x192", "type": "image/png", "purpose": "any maskable" },
     { "src": "/images/logo.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" }
   ],
-  "categories": ["productivity", "business"],
-  "lang": "en",
-  "scope": "/"
+  "shortcuts": [
+    {
+      "name": "Buscar Empleo",
+      "short_name": "Empleos",
+      "url": "/jobs",
+      "icons": [{ "src": "/images/logo.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "Crear CV",
+      "short_name": "Mi CV",
+      "url": "/cv",
+      "icons": [{ "src": "/images/logo.png", "sizes": "192x192" }]
+    }
+  ]
 }
