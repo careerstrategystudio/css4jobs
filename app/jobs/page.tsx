@@ -218,9 +218,11 @@ export default function JobsPage() {
   const [liLoading,    setLiLoading]    = useState(false);
   const [liMessage,    setLiMessage]    = useState<{ type: 'blocked' | 'partial'; text: string } | null>(null);
 
+  const [liStep, setLiStep] = useState<'idle' | 'loading' | 'done' | 'pdf'>('idle');
+
   const importLinkedIn = async () => {
     if (!linkedinUrl.trim()) return;
-    setLiLoading(true); setLiMessage(null);
+    setLiStep('loading'); setLiMessage(null);
     try {
       const res  = await fetch('/api/linkedin', {
         method: 'POST', headers: { 'Content-Type': 'application/json' },
@@ -230,14 +232,18 @@ export default function JobsPage() {
       if (data.success && data.cvText) {
         setCvText(data.cvText);
         setCvTab('text');
-        setLiMessage({ type: 'partial', text: es ? '✅ Perfil importado. Completa los detalles que faltan.' : '✅ Profile imported. Fill in the missing details.' });
+        setLiStep('done');
       } else if (data.blocked) {
-        setLiMessage({ type: 'blocked', text: data.message });
+        // Open LinkedIn automatically + show upload option (no error message)
+        window.open(linkedinUrl.trim(), '_blank');
+        setLiStep('pdf');
+        setTimeout(() => fileRef.current?.click(), 600);
       } else if (data.error) {
         setLiMessage({ type: 'blocked', text: data.error });
+        setLiStep('idle');
       }
     } catch {
-      setLiMessage({ type: 'blocked', text: es ? 'Error de conexión.' : 'Connection error.' });
+      setLiStep('idle');
     } finally { setLiLoading(false); }
   };
 
@@ -426,49 +432,63 @@ export default function JobsPage() {
             )
           ) : (
             <div className="space-y-3">
-              <div className="flex gap-2">
-                <input
-                  value={linkedinUrl}
-                  onChange={e => setLinkedinUrl(e.target.value)}
-                  onKeyDown={e => e.key === 'Enter' && importLinkedIn()}
-                  placeholder="https://www.linkedin.com/in/tu-perfil"
-                  className="flex-1 px-3 py-2 rounded-xl bg-gray-800 border border-gray-700 text-white placeholder-gray-500 focus:outline-none focus:border-violet-500 text-sm"
-                />
-                <button
-                  onClick={importLinkedIn}
-                  disabled={liLoading || !linkedinUrl.trim()}
-                  className="flex items-center gap-1.5 px-4 py-2 rounded-xl bg-violet-600 hover:bg-violet-500 text-white text-xs font-bold transition-all disabled:opacity-50"
-                >
-                  {liLoading ? <Spinner /> : <Link2 size={13} />}
-                  {es ? 'Importar' : 'Import'}
-                </button>
-              </div>
-
-              {liMessage?.type === 'partial' && (
-                <p className="text-xs text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 rounded-lg px-3 py-2">{liMessage.text}</p>
-              )}
-
-              {liMessage?.type === 'blocked' && (
-                <div className="bg-violet-500/5 border border-violet-500/20 rounded-xl p-4">
-                  <p className="text-xs text-gray-300 mb-3">{liMessage.text}</p>
-                  <p className="text-xs font-semibold text-violet-400 mb-2">{es ? '📱 Cómo exportar tu perfil de LinkedIn como PDF:' : '📱 How to export your LinkedIn profile as PDF:'}</p>
-                  <div className="space-y-1.5 text-xs text-gray-400">
-                    <p>1. {es ? 'Abre LinkedIn → tu foto de perfil → "Ver perfil"' : 'Open LinkedIn → profile photo → "View profile"'}</p>
-                    <p>2. {es ? 'Toca el botón "Más" (···)' : 'Tap the "More" button (···)'}</p>
-                    <p>3. {es ? 'Selecciona "Guardar como PDF"' : 'Select "Save to PDF"'}</p>
-                    <p>4. {es ? 'Sube el PDF en la pestaña de tu CV ↗' : 'Upload the PDF in the CV tab ↗'}</p>
+              {liStep === 'done' ? (
+                <div className="flex items-center gap-3 px-4 py-3 rounded-xl bg-emerald-500/10 border border-emerald-500/20">
+                  <CheckCircle size={16} className="text-emerald-400 flex-shrink-0" />
+                  <div>
+                    <p className="text-sm font-semibold text-emerald-400">{es ? '¡Perfil importado!' : 'Profile imported!'}</p>
+                    <p className="text-xs text-gray-400">{es ? 'Tu CV está listo. Revisa y completa si hace falta.' : 'Your CV is ready. Review and fill in if needed.'}</p>
                   </div>
-                  <a href="https://www.linkedin.com/in/" target="_blank" rel="noopener noreferrer"
-                    className="inline-flex items-center gap-1.5 mt-3 text-xs text-violet-400 hover:text-violet-300 font-semibold">
-                    <ExternalLink size={11} /> {es ? 'Abrir LinkedIn' : 'Open LinkedIn'}
-                  </a>
+                  <button onClick={() => { setLiStep('idle'); setLinkedinUrl(''); }} className="ml-auto text-xs text-gray-500 hover:text-gray-300">
+                    <X size={13} />
+                  </button>
                 </div>
-              )}
-
-              {!liMessage && (
-                <p className="text-[11px] text-gray-600">
-                  {es ? 'Pega tu URL de perfil público de LinkedIn. Si no funciona automáticamente, te guiaremos para exportar el PDF.' : 'Paste your public LinkedIn profile URL. If auto-import fails, we\'ll guide you to export the PDF.'}
-                </p>
+              ) : liStep === 'pdf' ? (
+                <div className="rounded-xl border border-violet-500/30 bg-violet-500/5 p-4">
+                  <div className="flex items-center gap-2 mb-3">
+                    <div className="w-2 h-2 rounded-full bg-violet-400 animate-pulse" />
+                    <p className="text-sm font-semibold text-white">{es ? 'LinkedIn abierto en otra pestaña' : 'LinkedIn opened in another tab'}</p>
+                  </div>
+                  <p className="text-xs text-gray-400 mb-4">
+                    {es ? 'Descarga tu perfil → Más (···) → Guardar como PDF → súbelo aquí:' : 'Download your profile → More (···) → Save to PDF → upload here:'}
+                  </p>
+                  <button
+                    onClick={() => fileRef.current?.click()}
+                    className="flex items-center justify-center gap-2 w-full py-2.5 rounded-xl bg-violet-600 hover:bg-violet-500 text-white text-sm font-bold transition-all"
+                  >
+                    <ExternalLink size={14} />
+                    {es ? 'Subir PDF de LinkedIn' : 'Upload LinkedIn PDF'}
+                  </button>
+                  <button onClick={() => setLiStep('idle')} className="mt-2 w-full text-center text-xs text-gray-600 hover:text-gray-400">
+                    {es ? 'Volver' : 'Back'}
+                  </button>
+                </div>
+              ) : (
+                <>
+                  <div className="flex gap-2">
+                    <input
+                      value={linkedinUrl}
+                      onChange={e => setLinkedinUrl(e.target.value)}
+                      onKeyDown={e => e.key === 'Enter' && importLinkedIn()}
+                      placeholder="https://www.linkedin.com/in/tu-perfil"
+                      className="flex-1 px-3 py-2 rounded-xl bg-gray-800 border border-gray-700 text-white placeholder-gray-500 focus:outline-none focus:border-violet-500 text-sm"
+                    />
+                    <button
+                      onClick={importLinkedIn}
+                      disabled={liStep === 'loading' || !linkedinUrl.trim()}
+                      className="flex items-center gap-1.5 px-4 py-2 rounded-xl bg-violet-600 hover:bg-violet-500 text-white text-xs font-bold transition-all disabled:opacity-50"
+                    >
+                      {liStep === 'loading' ? <Spinner /> : <Link2 size={13} />}
+                      {es ? 'Importar' : 'Import'}
+                    </button>
+                  </div>
+                  {liMessage?.type === 'blocked' && (
+                    <p className="text-xs text-red-400 bg-red-500/10 border border-red-500/20 rounded-lg px-3 py-2">{liMessage.text}</p>
+                  )}
+                  <p className="text-[11px] text-gray-600">
+                    {es ? 'Pega tu URL de LinkedIn y lo importamos automáticamente.' : 'Paste your LinkedIn URL and we import it automatically.'}
+                  </p>
+                </>
               )}
             </div>
           )}
