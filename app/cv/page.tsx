@@ -866,9 +866,9 @@ export default function CVTailoringPage() {
                         </div>
                       </button>
 
-                      {/* Option B: Fill form */}
+                      {/* Option B: Fill form (mobile only) */}
                       <button onClick={() => setLiShowForm(true)}
-                        className="flex items-center gap-3 w-full p-3 rounded-xl bg-violet-600/20 border border-violet-500/40 hover:bg-violet-600/30 text-left transition-all">
+                        className="md:hidden flex items-center gap-3 w-full p-3 rounded-xl bg-violet-600/20 border border-violet-500/40 hover:bg-violet-600/30 text-left transition-all">
                         <div className="w-9 h-9 rounded-lg bg-violet-600/40 flex items-center justify-center flex-shrink-0">
                           <AlignLeft size={15} className="text-violet-300" />
                         </div>
