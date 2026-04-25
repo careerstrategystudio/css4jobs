@@ -55,10 +55,10 @@ interface MatchResult {
 
 // ── Circular match gauge ──────────────────────────────────────────────────────
 function MatchGauge({ score }: { score: number }) {
-  const r   = 38;
-  const circ = 2 * Math.PI * r;
+  const r     = 38;
+  const circ  = 2 * Math.PI * r;
   const offset = circ * (1 - score / 100);
-  const color  = score >= 80 ? '#10b981' : score >= 60 ? '#f59e0b' : '#ef4444';
+  const color  = score >= 80 ? '#10b981' : score >= 60 ? '#a78bfa' : '#f59e0b';
   const label  = score >= 80 ? 'STRONG MATCH' : score >= 60 ? 'GOOD MATCH' : 'FAIR MATCH';
 
   return (
@@ -86,20 +86,20 @@ function MatchGauge({ score }: { score: number }) {
 
 // ── Company logo initial ──────────────────────────────────────────────────────
 const LOGO_COLORS = [
-  'bg-indigo-600','bg-purple-600','bg-emerald-600','bg-blue-600',
-  'bg-rose-600','bg-amber-600','bg-cyan-600','bg-pink-600',
+  'bg-violet-700','bg-purple-700','bg-fuchsia-700','bg-violet-600',
+  'bg-purple-600','bg-fuchsia-600','bg-violet-800','bg-purple-800',
 ];
 function CompanyLogo({ name }: { name: string }) {
   const idx   = name.charCodeAt(0) % LOGO_COLORS.length;
   const color = LOGO_COLORS[idx];
   return (
-    <div className={`w-12 h-12 rounded-xl ${color} flex items-center justify-center flex-shrink-0 text-white font-black text-lg`}>
+    <div className={`w-12 h-12 rounded-xl ${color} flex items-center justify-center flex-shrink-0 text-white font-black text-lg shadow-lg`}>
       {name.charAt(0).toUpperCase()}
     </div>
   );
 }
 
-// ── Chip button ───────────────────────────────────────────────────────────────
+// ── Filter chip ───────────────────────────────────────────────────────────────
 function Chip({ value, current, set, label }: { value: string; current: string; set: (v: string) => void; label: string }) {
   const active = current === value;
   return (
@@ -107,8 +107,8 @@ function Chip({ value, current, set, label }: { value: string; current: string; 
       onClick={() => set(active ? '' : value)}
       className={`px-3 py-1 rounded-full text-xs font-semibold transition-all border whitespace-nowrap ${
         active
-          ? 'bg-indigo-600 border-indigo-500 text-white'
-          : 'bg-gray-800 border-gray-700 text-gray-400 hover:text-white hover:border-gray-600'
+          ? 'bg-violet-600 border-violet-500 text-white shadow-sm shadow-violet-500/30'
+          : 'bg-gray-800 border-gray-700 text-gray-400 hover:text-white hover:border-violet-600/50'
       }`}
     >
       {label}
@@ -215,7 +215,7 @@ export default function JobsPage() {
     if (diff === 0) return es ? 'Hoy' : 'Today';
     if (diff === 1) return es ? 'Ayer' : 'Yesterday';
     if (diff < 7)   return es ? `Hace ${diff} días` : `${diff}d ago`;
-    return es ? `Hace ${Math.ceil(diff/7)} sem.` : `${Math.ceil(diff/7)}w ago`;
+    return es ? `Hace ${Math.ceil(diff / 7)} sem.` : `${Math.ceil(diff / 7)}w ago`;
   };
 
   const fmtSalary = (min?: number, max?: number) => {
@@ -239,7 +239,7 @@ export default function JobsPage() {
 
         {/* ── Header ── */}
         <div className="text-center mb-8">
-          <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-indigo-500/10 border border-indigo-500/20 text-indigo-400 text-xs font-semibold mb-4">
+          <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-violet-500/10 border border-violet-500/20 text-violet-400 text-xs font-semibold mb-4">
             <Search size={12} /> {es ? 'Búsqueda Global de Empleo' : 'Global Job Search'}
           </div>
           <h1 className="text-4xl font-bold text-white mb-2">
@@ -253,9 +253,9 @@ export default function JobsPage() {
         </div>
 
         {/* ── CV paste ── */}
-        <div className="card mb-5 border border-indigo-500/20">
+        <div className="card mb-5 border border-violet-500/20 bg-gradient-to-br from-gray-900 to-violet-950/20">
           <div className="flex items-center gap-2 mb-2">
-            <Target size={14} className="text-indigo-400" />
+            <Target size={14} className="text-violet-400" />
             <span className="text-sm font-semibold text-white">
               {es ? 'Tu CV — para calcular el % de match' : 'Your CV — to calculate match %'}
             </span>
@@ -280,7 +280,7 @@ export default function JobsPage() {
                 onChange={e => setQuery(e.target.value)}
                 onKeyDown={e => e.key === 'Enter' && search()}
                 placeholder={es ? 'Cargo, habilidad o empresa...' : 'Job title, skill or company...'}
-                className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-gray-800 border border-gray-700 text-white placeholder-gray-500 focus:outline-none focus:border-indigo-500 text-sm"
+                className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-gray-800 border border-gray-700 text-white placeholder-gray-500 focus:outline-none focus:border-violet-500 focus:ring-1 focus:ring-violet-500/30 text-sm transition-all"
               />
             </div>
             <button
@@ -303,8 +303,8 @@ export default function JobsPage() {
                 <button key={cf.id} onClick={() => setCountry(cf.id)}
                   className={`flex items-center gap-1 px-3 py-1 rounded-full text-xs font-semibold transition-all border ${
                     country === cf.id
-                      ? 'bg-indigo-600 border-indigo-500 text-white'
-                      : 'bg-gray-800 border-gray-700 text-gray-400 hover:text-white hover:border-gray-600'
+                      ? 'bg-violet-600 border-violet-500 text-white shadow-sm shadow-violet-500/30'
+                      : 'bg-gray-800 border-gray-700 text-gray-400 hover:text-white hover:border-violet-600/40'
                   }`}>
                   <span>{cf.flag}</span>{cf.label}
                 </button>
@@ -369,32 +369,32 @@ export default function JobsPage() {
         {/* ── Job cards ── */}
         <div className="space-y-3">
           {jobs.map(job => {
-            const isOpen   = expanded === job.id;
-            const match    = matches[job.id];
-            const salary   = fmtSalary(job.salary_min, job.salary_max);
-            const isMatch  = matching === job.id;
-            const isSaved  = saved[job.id];
-            const isLiked  = liked[job.id];
+            const isOpen  = expanded === job.id;
+            const match   = matches[job.id];
+            const salary  = fmtSalary(job.salary_min, job.salary_max);
+            const isMatch = matching === job.id;
+            const isSaved = saved[job.id];
+            const isLiked = liked[job.id];
 
             return (
-              <div key={job.id} className="card border border-gray-700/50 hover:border-gray-600/70 transition-all p-0 overflow-hidden">
+              <div key={job.id} className="card border border-gray-700/50 hover:border-violet-700/40 transition-all p-0 overflow-hidden">
 
-                {/* Main card body */}
+                {/* Top accent line */}
+                <div className="h-0.5 bg-gradient-to-r from-violet-600 via-purple-600 to-fuchsia-600 opacity-0 group-hover:opacity-100" />
+
+                {/* Main body */}
                 <div className="flex items-start gap-4 p-5">
-
-                  {/* Company logo */}
                   <CompanyLogo name={job.company.display_name} />
 
-                  {/* Job info */}
                   <div className="flex-1 min-w-0">
-                    {/* Time + badges */}
+                    {/* Meta row */}
                     <div className="flex items-center gap-2 mb-1.5 flex-wrap">
                       <span className="text-[11px] text-gray-500">{fmtDate(job.created)}</span>
-                      <span className="text-[11px] text-gray-600">·</span>
+                      <span className="text-gray-600">·</span>
                       <span className="text-[11px]">{COUNTRY_FLAGS[job._country] || '🌍'} {COUNTRY_NAMES[job._country] || job._country.toUpperCase()}</span>
                       {!match && cvText.trim() && (
-                        <span className="px-2 py-0.5 rounded-full bg-indigo-500/10 border border-indigo-500/20 text-indigo-400 text-[10px] font-semibold">
-                          {es ? '⚡ Analiza tu match' : '⚡ Check your match'}
+                        <span className="px-2 py-0.5 rounded-full bg-violet-500/10 border border-violet-500/20 text-violet-400 text-[10px] font-semibold">
+                          ⚡ {es ? 'Analiza tu match' : 'Check your match'}
                         </span>
                       )}
                     </div>
@@ -408,7 +408,7 @@ export default function JobsPage() {
                       {job.company.display_name}
                     </p>
 
-                    {/* Metadata pills */}
+                    {/* Pills */}
                     <div className="flex flex-wrap gap-1.5">
                       <span className="flex items-center gap-1 px-2.5 py-1 rounded-full bg-gray-800 border border-gray-700 text-gray-400 text-[11px]">
                         <MapPin size={10} /> {job.location.display_name}
@@ -426,13 +426,13 @@ export default function JobsPage() {
                     </div>
                   </div>
 
-                  {/* Match gauge — only when matched */}
+                  {/* Match gauge panel */}
                   {match && (
-                    <div className="flex-shrink-0 bg-gray-900 border border-gray-700/60 rounded-2xl p-3 flex flex-col items-center gap-2 min-w-[110px]">
+                    <div className="flex-shrink-0 bg-gray-950 border border-violet-700/30 rounded-2xl p-3 flex flex-col items-center gap-2 min-w-[110px] shadow-lg shadow-violet-900/20">
                       <MatchGauge score={match.score} />
                       {match.strengths?.slice(0, 2).map((s, i) => (
                         <div key={i} className="flex items-start gap-1 text-[10px] text-gray-400 w-full">
-                          <span className="text-emerald-400 font-bold flex-shrink-0">✓</span>
+                          <span className="text-violet-400 font-bold flex-shrink-0">✓</span>
                           <span className="leading-tight">{s}</span>
                         </div>
                       ))}
@@ -442,23 +442,21 @@ export default function JobsPage() {
 
                 {/* Action bar */}
                 <div className="flex items-center gap-2 px-5 pb-4 flex-wrap">
-                  {/* Icon actions */}
                   <button
                     onClick={() => setSaved(prev => ({ ...prev, [job.id]: !prev[job.id] }))}
-                    className={`p-2 rounded-lg border transition-all ${isSaved ? 'bg-indigo-500/20 border-indigo-500/40 text-indigo-400' : 'bg-gray-800 border-gray-700 text-gray-500 hover:text-gray-300'}`}
+                    className={`p-2 rounded-lg border transition-all ${isSaved ? 'bg-violet-500/20 border-violet-500/40 text-violet-400' : 'bg-gray-800 border-gray-700 text-gray-500 hover:text-violet-400 hover:border-violet-700/50'}`}
                     title={es ? 'Guardar' : 'Save'}
                   >
-                    <Bookmark size={13} className={isSaved ? 'fill-indigo-400' : ''} />
+                    <Bookmark size={13} className={isSaved ? 'fill-violet-400' : ''} />
                   </button>
                   <button
                     onClick={() => setLiked(prev => ({ ...prev, [job.id]: !prev[job.id] }))}
-                    className={`p-2 rounded-lg border transition-all ${isLiked ? 'bg-rose-500/20 border-rose-500/40 text-rose-400' : 'bg-gray-800 border-gray-700 text-gray-500 hover:text-gray-300'}`}
+                    className={`p-2 rounded-lg border transition-all ${isLiked ? 'bg-fuchsia-500/20 border-fuchsia-500/40 text-fuchsia-400' : 'bg-gray-800 border-gray-700 text-gray-500 hover:text-fuchsia-400 hover:border-fuchsia-700/50'}`}
                     title={es ? 'Me gusta' : 'Like'}
                   >
-                    <Heart size={13} className={isLiked ? 'fill-rose-400' : ''} />
+                    <Heart size={13} className={isLiked ? 'fill-fuchsia-400' : ''} />
                   </button>
 
-                  {/* Description toggle */}
                   <button
                     onClick={() => setExpanded(isOpen ? null : job.id)}
                     className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-gray-800 border border-gray-700 text-gray-400 hover:text-white text-xs transition-all"
@@ -467,31 +465,29 @@ export default function JobsPage() {
                     {es ? 'Descripción' : 'Description'}
                   </button>
 
-                  {/* Match CV button */}
                   {cvText.trim() && !match && (
                     <button
                       onClick={() => matchCV(job)}
                       disabled={isMatch}
-                      className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-semibold transition-all disabled:opacity-50"
+                      className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-violet-600 hover:bg-violet-500 text-white text-xs font-semibold transition-all disabled:opacity-50 shadow-sm shadow-violet-500/20"
                     >
                       {isMatch ? <Spinner /> : <Target size={12} />}
                       {es ? 'Analizar Match' : 'Match my CV'}
                     </button>
                   )}
 
-                  {/* Apply button */}
                   <a
                     href={job.redirect_url}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex items-center gap-1.5 px-4 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold transition-all ml-auto"
+                    className="flex items-center gap-1.5 px-4 py-1.5 rounded-lg bg-gradient-to-r from-violet-600 to-purple-600 hover:from-violet-500 hover:to-purple-500 text-white text-xs font-bold transition-all ml-auto shadow-sm shadow-violet-500/25"
                   >
                     <Zap size={12} />
                     {es ? 'Aplicar →' : 'Apply →'}
                   </a>
                 </div>
 
-                {/* ── Expanded: description ── */}
+                {/* Expanded description */}
                 {isOpen && (
                   <div className="px-5 pb-5 pt-3 border-t border-gray-700/50">
                     <p className="text-sm text-gray-400 leading-relaxed line-clamp-6">{job.description}</p>
@@ -501,15 +497,15 @@ export default function JobsPage() {
                   </div>
                 )}
 
-                {/* ── Match detail panel ── */}
+                {/* Match detail panel */}
                 {match && (
                   <div className="px-5 pb-5 border-t border-gray-700/50 pt-4">
                     <p className="text-sm text-gray-300 italic mb-3">{match.summary}</p>
                     <div className="grid sm:grid-cols-2 gap-3 mb-3">
                       <div>
-                        <p className="text-xs font-semibold text-emerald-400 mb-2 flex items-center gap-1"><CheckCircle size={11} /> {es ? 'Fortalezas' : 'Strengths'}</p>
+                        <p className="text-xs font-semibold text-violet-400 mb-2 flex items-center gap-1"><CheckCircle size={11} /> {es ? 'Fortalezas' : 'Strengths'}</p>
                         {match.strengths?.map((s, i) => (
-                          <p key={i} className="text-xs text-gray-400 mb-1 pl-3 border-l border-emerald-500/30">{s}</p>
+                          <p key={i} className="text-xs text-gray-400 mb-1 pl-3 border-l border-violet-500/30">{s}</p>
                         ))}
                       </div>
                       <div>
@@ -521,7 +517,7 @@ export default function JobsPage() {
                     </div>
                     <div className="flex flex-wrap gap-1.5 mb-4">
                       {match.topKeywords?.map((k, i) => (
-                        <span key={i} className="px-2 py-0.5 rounded-full bg-gray-700 text-gray-300 text-[10px] font-medium">{k}</span>
+                        <span key={i} className="px-2 py-0.5 rounded-full bg-violet-500/10 border border-violet-500/20 text-violet-300 text-[10px] font-medium">{k}</span>
                       ))}
                     </div>
 
@@ -529,23 +525,23 @@ export default function JobsPage() {
                     {cvText.trim() && !clTexts[job.id] && ready && (
                       isPro ? (
                         <button onClick={() => generateCoverLetter(job)} disabled={clLoading === job.id}
-                          className="flex items-center gap-2 px-4 py-2 rounded-lg bg-indigo-500/10 border border-indigo-500/20 text-indigo-400 text-xs font-semibold hover:bg-indigo-500/20 transition-all disabled:opacity-50 mb-2">
+                          className="flex items-center gap-2 px-4 py-2 rounded-lg bg-violet-500/10 border border-violet-500/20 text-violet-400 text-xs font-semibold hover:bg-violet-500/20 transition-all disabled:opacity-50 mb-2">
                           {clLoading === job.id ? <><Spinner /> {es ? 'Generando...' : 'Generating...'}</> : <><Mail size={12} /> {es ? 'Generar carta de presentación' : 'Generate cover letter'}</>}
                         </button>
                       ) : (
                         <div className="flex items-center gap-2 px-4 py-2 rounded-lg bg-gray-800/50 border border-gray-700/50 mb-2">
                           <Lock size={12} className="text-gray-500 flex-shrink-0" />
                           <span className="text-gray-500 text-xs">{es ? 'Carta de presentación — ' : 'Cover letter — '}</span>
-                          <a href="/pricing" className="text-indigo-400 text-xs font-semibold hover:text-indigo-300 flex items-center gap-1">
-                            <Star size={10} className="fill-indigo-400" /> {es ? 'Solo Pro' : 'Pro only'}
+                          <a href="/pricing" className="text-violet-400 text-xs font-semibold hover:text-violet-300 flex items-center gap-1">
+                            <Star size={10} className="fill-violet-400" /> {es ? 'Solo Pro' : 'Pro only'}
                           </a>
                         </div>
                       )
                     )}
                     {clTexts[job.id] && (
-                      <div className="p-4 rounded-xl bg-gray-800/50 border border-indigo-500/20 mb-2">
+                      <div className="p-4 rounded-xl bg-gray-800/50 border border-violet-500/20 mb-2">
                         <div className="flex items-center justify-between mb-2">
-                          <span className="text-xs font-semibold text-indigo-400 flex items-center gap-1.5"><Mail size={11} /> {es ? 'Carta de Presentación' : 'Cover Letter'}</span>
+                          <span className="text-xs font-semibold text-violet-400 flex items-center gap-1.5"><Mail size={11} /> {es ? 'Carta de Presentación' : 'Cover Letter'}</span>
                           <button onClick={() => { navigator.clipboard.writeText(clTexts[job.id]); setClCopied(job.id); setTimeout(() => setClCopied(null), 2000); }}
                             className="flex items-center gap-1 text-gray-400 hover:text-white text-xs">
                             {clCopied === job.id ? <><CheckCircle size={11} className="text-emerald-400" /> {es ? 'Copiada' : 'Copied'}</> : <><Copy size={11} /> {es ? 'Copiar' : 'Copy'}</>}
@@ -559,7 +555,7 @@ export default function JobsPage() {
                     {match.score < 89 && cvText.trim() && ready && !adaptedCVs[job.id] && (
                       isPro ? (
                         <button onClick={() => adaptCV(job)} disabled={adaptLoading === job.id}
-                          className="flex items-center gap-2 px-4 py-2 rounded-lg bg-amber-500/10 border border-amber-500/30 text-amber-400 text-xs font-semibold hover:bg-amber-500/20 transition-all disabled:opacity-50 w-full justify-center">
+                          className="flex items-center gap-2 px-4 py-2 rounded-lg bg-fuchsia-500/10 border border-fuchsia-500/30 text-fuchsia-400 text-xs font-semibold hover:bg-fuchsia-500/20 transition-all disabled:opacity-50 w-full justify-center">
                           {adaptLoading === job.id
                             ? <><Spinner /> {es ? 'Adaptando CV...' : 'Tailoring CV...'}</>
                             : <><Zap size={12} /> {es ? `Adaptar CV para este cargo (match: ${match.score}%)` : `Tailor CV for this job (match: ${match.score}%)`}</>}
@@ -568,16 +564,16 @@ export default function JobsPage() {
                         <div className="flex items-center gap-2 px-4 py-2 rounded-lg bg-gray-800/50 border border-gray-700/50">
                           <Lock size={12} className="text-gray-500 flex-shrink-0" />
                           <span className="text-gray-500 text-xs">{es ? 'Adaptar CV — ' : 'Tailor CV — '}</span>
-                          <a href="/pricing" className="text-indigo-400 text-xs font-semibold hover:text-indigo-300 flex items-center gap-1">
-                            <Star size={10} className="fill-indigo-400" /> {es ? 'Solo Pro' : 'Pro only'}
+                          <a href="/pricing" className="text-violet-400 text-xs font-semibold hover:text-violet-300 flex items-center gap-1">
+                            <Star size={10} className="fill-violet-400" /> {es ? 'Solo Pro' : 'Pro only'}
                           </a>
                         </div>
                       )
                     )}
                     {adaptedCVs[job.id] && (
-                      <div className="p-4 rounded-xl bg-amber-500/5 border border-amber-500/20 mt-2">
+                      <div className="p-4 rounded-xl bg-fuchsia-500/5 border border-fuchsia-500/20 mt-2">
                         <div className="flex items-center justify-between mb-2">
-                          <span className="text-xs font-semibold text-amber-400 flex items-center gap-1.5"><Zap size={11} /> {es ? 'CV Adaptado' : 'Tailored CV'}</span>
+                          <span className="text-xs font-semibold text-fuchsia-400 flex items-center gap-1.5"><Zap size={11} /> {es ? 'CV Adaptado' : 'Tailored CV'}</span>
                           <button onClick={() => { navigator.clipboard.writeText(adaptedCVs[job.id]); setAdaptCopied(job.id); setTimeout(() => setAdaptCopied(null), 2000); }}
                             className="flex items-center gap-1 text-gray-400 hover:text-white text-xs">
                             {adaptCopied === job.id ? <><CheckCircle size={11} className="text-emerald-400" /> {es ? 'Copiado' : 'Copied'}</> : <><Copy size={11} /> {es ? 'Copiar' : 'Copy'}</>}
@@ -592,7 +588,6 @@ export default function JobsPage() {
             );
           })}
         </div>
-
       </div>
     </div>
   );
