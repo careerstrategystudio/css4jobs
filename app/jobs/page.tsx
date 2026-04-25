@@ -182,8 +182,10 @@ export default function JobsPage() {
   }, [cvText]);
 
   // File upload with OCR fallback
-  const fileRef = useRef<HTMLInputElement>(null);
-  const [ocrLoading, setOcrLoading] = useState(false);
+  const fileRef      = useRef<HTMLInputElement>(null);
+  const liScreenRef  = useRef<HTMLInputElement>(null);   // screenshot upload for LinkedIn
+  const [ocrLoading,    setOcrLoading]    = useState(false);
+  const [liOcrLoading,  setLiOcrLoading]  = useState(false);
 
   const handleFile = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -211,6 +213,27 @@ export default function JobsPage() {
       const data = await res.json();
       if (data.text) setCvText(data.text);
     } catch { /* ignore */ } finally { setOcrLoading(false); }
+  };
+
+  // LinkedIn screenshot handler (mobile: user takes screenshot of their profile)
+  const handleLinkedInScreenshot = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    e.target.value = '';
+    setLiOcrLoading(true);
+    try {
+      const form = new FormData();
+      form.append('file', file);
+      const res  = await fetch('/api/linkedin-ocr', { method: 'POST', body: form });
+      const data = await res.json();
+      if (data.success && data.cvText) {
+        setCvText(data.cvText);
+        setCvTab('text');
+        setLiStep('done');
+      } else {
+        setLiStep('pdf'); // show options again
+      }
+    } catch { setLiStep('pdf'); } finally { setLiOcrLoading(false); }
   };
 
   // LinkedIn import state
@@ -442,12 +465,38 @@ export default function JobsPage() {
                   </button>
                 </div>
               ) : liStep === 'pdf' ? (
-                <div className="rounded-xl border border-violet-500/30 bg-violet-500/5 p-4 space-y-3">
-                  <p className="text-sm font-semibold text-white">
-                    {es ? 'LinkedIn requiere inicio de sesión — elige cómo continuar:' : 'LinkedIn requires login — choose how to continue:'}
+                <div className="rounded-xl border border-violet-500/30 bg-violet-500/5 p-4 space-y-2.5">
+                  <p className="text-sm font-semibold text-white mb-1">
+                    {es ? 'LinkedIn requiere sesión iniciada — elige cómo continuar:' : 'LinkedIn requires login — choose how to continue:'}
                   </p>
 
-                  {/* Option A: Upload PDF (desktop) */}
+                  {/* Option A: Screenshot — AI reads it (mobile & desktop) */}
+                  {liOcrLoading ? (
+                    <div className="flex items-center gap-3 w-full p-3 rounded-xl bg-violet-600/20 border border-violet-500/40">
+                      <Spinner />
+                      <p className="text-sm text-violet-300 font-semibold">
+                        {es ? 'Leyendo tu perfil con IA…' : 'Reading your profile with AI…'}
+                      </p>
+                    </div>
+                  ) : (
+                    <button onClick={() => liScreenRef.current?.click()}
+                      className="flex items-center gap-3 w-full p-3 rounded-xl bg-violet-600/20 border border-violet-500/40 hover:bg-violet-600/30 text-left transition-all">
+                      <div className="w-9 h-9 rounded-lg bg-violet-600/40 flex items-center justify-center flex-shrink-0 text-lg">
+                        📸
+                      </div>
+                      <div>
+                        <p className="text-sm font-semibold text-white">
+                          {es ? 'Subir captura de pantalla de LinkedIn' : 'Upload LinkedIn screenshot'}
+                        </p>
+                        <p className="text-[11px] text-gray-400">
+                          {es ? 'La IA lee tu perfil de la imagen — rápido desde móvil o PC'
+                               : 'AI reads your profile from the image — fast on mobile or PC'}
+                        </p>
+                      </div>
+                    </button>
+                  )}
+
+                  {/* Option B: Upload PDF (desktop) */}
                   <button onClick={() => fileRef.current?.click()}
                     className="flex items-center gap-3 w-full p-3 rounded-xl bg-gray-800 border border-gray-700 hover:border-violet-500/50 text-left transition-all">
                     <div className="w-9 h-9 rounded-lg bg-gray-700 flex items-center justify-center flex-shrink-0">
@@ -458,25 +507,23 @@ export default function JobsPage() {
                         {es ? 'Subir PDF de LinkedIn' : 'Upload LinkedIn PDF'}
                       </p>
                       <p className="text-[11px] text-gray-500">
-                        {es ? 'Perfil → Más (···) → Guardar como PDF · Ideal desde ordenador'
-                             : 'Profile → More (···) → Save to PDF · Best from desktop'}
+                        {es ? 'Perfil → Más (···) → Guardar como PDF' : 'Profile → More (···) → Save to PDF'}
                       </p>
                     </div>
                   </button>
 
-                  {/* Option B: Quick form (mobile only) */}
+                  {/* Option C: Quick form (mobile only) */}
                   <button onClick={() => setLiStep('form')}
-                    className="md:hidden flex items-center gap-3 w-full p-3 rounded-xl bg-violet-600/20 border border-violet-500/40 hover:bg-violet-600/30 text-left transition-all">
-                    <div className="w-9 h-9 rounded-lg bg-violet-600/40 flex items-center justify-center flex-shrink-0">
-                      <AlignLeft size={15} className="text-violet-300" />
+                    className="md:hidden flex items-center gap-3 w-full p-3 rounded-xl bg-gray-800/60 border border-gray-700 hover:border-violet-500/50 text-left transition-all">
+                    <div className="w-9 h-9 rounded-lg bg-gray-700 flex items-center justify-center flex-shrink-0">
+                      <AlignLeft size={15} className="text-gray-300" />
                     </div>
                     <div>
                       <p className="text-sm font-semibold text-white">
-                        {es ? 'Completar perfil aquí ✦ Recomendado móvil' : 'Fill profile here ✦ Mobile-friendly'}
+                        {es ? 'Completar perfil manualmente' : 'Fill profile manually'}
                       </p>
-                      <p className="text-[11px] text-gray-400">
-                        {es ? 'Rellena un formulario rápido — sin archivos'
-                             : 'Quick form — no file needed'}
+                      <p className="text-[11px] text-gray-500">
+                        {es ? 'Formulario rápido — sin archivos' : 'Quick form — no file needed'}
                       </p>
                     </div>
                   </button>
@@ -485,6 +532,10 @@ export default function JobsPage() {
                     className="w-full text-center text-xs text-gray-600 hover:text-gray-400 transition-colors pt-1">
                     {es ? 'Volver' : 'Back'}
                   </button>
+
+                  {/* Hidden inputs */}
+                  <input ref={liScreenRef} type="file" accept="image/*" capture="environment"
+                    className="hidden" onChange={handleLinkedInScreenshot} />
                 </div>
 
               ) : liStep === 'form' ? (

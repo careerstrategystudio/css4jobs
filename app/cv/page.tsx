@@ -598,9 +598,11 @@ export default function CVTailoringPage() {
   const [clCopied, setClCopied]                   = useState(false);
   const [clPdfLoading, setClPdfLoading]           = useState(false);
 
-  const fileRef = useRef<HTMLInputElement>(null);
+  const fileRef      = useRef<HTMLInputElement>(null);
+  const liScreenRef  = useRef<HTMLInputElement>(null);
 
-  const [ocrLoading, setOcrLoading] = useState(false);
+  const [ocrLoading,   setOcrLoading]   = useState(false);
+  const [liOcrLoading, setLiOcrLoading] = useState(false);
 
   const handleFile = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -649,6 +651,26 @@ export default function CVTailoringPage() {
     } finally {
       setOcrLoading(false);
     }
+  };
+
+  const handleLinkedInScreenshot = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    e.target.value = '';
+    setLiOcrLoading(true);
+    try {
+      const form = new FormData();
+      form.append('file', file);
+      const res  = await fetch('/api/linkedin-ocr', { method: 'POST', body: form });
+      const data = await res.json();
+      if (data.success && data.cvText) {
+        setCvText(data.cvText);
+        setActiveTab('paste');
+        setLiMsg({ type: 'ok', text: '✅ Perfil extraído de la captura. Revisa y edita lo que necesites.' });
+      } else {
+        setLiMsg({ type: 'blocked', text: '' });
+      }
+    } catch { /* ignore */ } finally { setLiOcrLoading(false); }
   };
 
   const importLinkedIn = async () => {
@@ -851,32 +873,56 @@ export default function CVTailoringPage() {
                   )}
 
                   {liMsg?.type === 'blocked' && !liShowForm && (
-                    <div className="bg-violet-500/5 border border-violet-500/20 rounded-xl p-4 space-y-3">
-                      <p className="text-sm font-semibold text-white">LinkedIn requiere inicio de sesión — elige cómo continuar:</p>
+                    <div className="bg-violet-500/5 border border-violet-500/20 rounded-xl p-4 space-y-2.5">
+                      <p className="text-sm font-semibold text-white mb-1">LinkedIn requiere sesión — elige cómo continuar:</p>
 
-                      {/* Option A: Upload PDF */}
-                      <button onClick={() => { fileRef.current?.click(); }}
+                      {/* Option A: Screenshot OCR */}
+                      {liOcrLoading ? (
+                        <div className="flex items-center gap-3 w-full p-3 rounded-xl bg-violet-600/20 border border-violet-500/40">
+                          <svg className="animate-spin h-5 w-5 text-violet-400 flex-shrink-0" viewBox="0 0 24 24" fill="none">
+                            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"/>
+                            <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"/>
+                          </svg>
+                          <p className="text-sm text-violet-300 font-semibold">Leyendo tu perfil con IA…</p>
+                        </div>
+                      ) : (
+                        <button onClick={() => liScreenRef.current?.click()}
+                          className="flex items-center gap-3 w-full p-3 rounded-xl bg-violet-600/20 border border-violet-500/40 hover:bg-violet-600/30 text-left transition-all">
+                          <div className="w-9 h-9 rounded-lg bg-violet-600/40 flex items-center justify-center flex-shrink-0 text-lg">📸</div>
+                          <div>
+                            <p className="text-sm font-semibold text-white">Subir captura de pantalla de LinkedIn</p>
+                            <p className="text-[11px] text-gray-400">La IA lee tu perfil de la imagen — rápido desde móvil o PC</p>
+                          </div>
+                        </button>
+                      )}
+
+                      {/* Option B: Upload PDF */}
+                      <button onClick={() => fileRef.current?.click()}
                         className="flex items-center gap-3 w-full p-3 rounded-xl bg-gray-800 border border-gray-700 hover:border-violet-500/50 text-left transition-all">
                         <div className="w-9 h-9 rounded-lg bg-gray-700 flex items-center justify-center flex-shrink-0">
                           <Upload size={15} className="text-gray-300" />
                         </div>
                         <div>
                           <p className="text-sm font-semibold text-white">Subir PDF de LinkedIn</p>
-                          <p className="text-[11px] text-gray-500">Perfil → Más (···) → Guardar como PDF · Ideal desde ordenador</p>
+                          <p className="text-[11px] text-gray-500">Perfil → Más (···) → Guardar como PDF</p>
                         </div>
                       </button>
 
-                      {/* Option B: Fill form (mobile only) */}
+                      {/* Option C: Manual form (mobile only) */}
                       <button onClick={() => setLiShowForm(true)}
-                        className="md:hidden flex items-center gap-3 w-full p-3 rounded-xl bg-violet-600/20 border border-violet-500/40 hover:bg-violet-600/30 text-left transition-all">
-                        <div className="w-9 h-9 rounded-lg bg-violet-600/40 flex items-center justify-center flex-shrink-0">
-                          <AlignLeft size={15} className="text-violet-300" />
+                        className="md:hidden flex items-center gap-3 w-full p-3 rounded-xl bg-gray-800/60 border border-gray-700 hover:border-violet-500/50 text-left transition-all">
+                        <div className="w-9 h-9 rounded-lg bg-gray-700 flex items-center justify-center flex-shrink-0">
+                          <AlignLeft size={15} className="text-gray-300" />
                         </div>
                         <div>
-                          <p className="text-sm font-semibold text-white">Completar perfil aquí ✦ Recomendado móvil</p>
-                          <p className="text-[11px] text-gray-400">Rellena un formulario rápido — sin archivos</p>
+                          <p className="text-sm font-semibold text-white">Completar perfil manualmente</p>
+                          <p className="text-[11px] text-gray-500">Formulario rápido — sin archivos</p>
                         </div>
                       </button>
+
+                      {/* Hidden input for screenshot */}
+                      <input ref={liScreenRef} type="file" accept="image/*" capture="environment"
+                        className="hidden" onChange={handleLinkedInScreenshot} />
                     </div>
                   )}
 
