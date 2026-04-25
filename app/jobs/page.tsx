@@ -383,55 +383,58 @@ export default function JobsPage() {
   );
 
   return (
-    <div className="min-h-screen py-8 px-4">
+    <div className="min-h-screen py-6 px-3 sm:px-4">
       <div className="max-w-5xl mx-auto">
 
         {/* ── Header ── */}
-        <div className="text-center mb-8">
-          <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-violet-500/10 border border-violet-500/20 text-violet-400 text-xs font-semibold mb-4">
+        <div className="text-center mb-6">
+          <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-violet-500/10 border border-violet-500/20 text-violet-400 text-xs font-semibold mb-3">
             <Search size={12} /> {es ? 'Búsqueda Global de Empleo' : 'Global Job Search'}
           </div>
-          <h1 className="text-4xl font-bold text-white mb-2">
+          <h1 className="text-3xl sm:text-4xl font-bold text-white mb-2 leading-tight">
             {es ? 'Encuentra tu próximo empleo' : 'Find your next job'}
           </h1>
-          <p className="text-gray-400 max-w-lg mx-auto text-sm">
+          <p className="text-gray-400 max-w-lg mx-auto text-sm px-2">
             {es
-              ? 'Busca en más de 10 países. Pega tu CV para ver el % de match con cada oferta.'
-              : 'Search across 10+ countries. Paste your CV to see match % for each job.'}
+              ? 'Busca en más de 10 países. Sube tu CV para ver el % de match.'
+              : 'Search across 10+ countries. Upload your CV to see match %.'}
           </p>
         </div>
 
         {/* ── CV input ── */}
-        <div className="card mb-5 border border-violet-500/20 bg-gradient-to-br from-gray-900 to-violet-950/20">
-          <div className="flex items-center justify-between mb-3">
-            <div className="flex items-center gap-2">
-              <Target size={14} className="text-violet-400" />
-              <span className="text-sm font-semibold text-white">
-                {es ? 'Tu CV — para calcular el % de match' : 'Your CV — to calculate match %'}
+        <div className="card mb-4 border border-violet-500/20 bg-gradient-to-br from-gray-900 to-violet-950/20 p-3 sm:p-5">
+          {/* Row 1: title + saved badge */}
+          <div className="flex items-center gap-2 mb-3">
+            <Target size={14} className="text-violet-400 flex-shrink-0" />
+            <span className="text-sm font-semibold text-white">
+              {es ? 'Tu CV' : 'Your CV'}
+            </span>
+            {cvText.trim() && (
+              <span className="flex items-center gap-1 text-[10px] text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-2 py-0.5 rounded-full">
+                <CheckCircle size={9} /> {es ? 'Guardado' : 'Saved'}
               </span>
-              {cvText.trim() && (
-                <span className="flex items-center gap-1 text-[10px] text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-2 py-0.5 rounded-full">
-                  <CheckCircle size={9} /> {es ? 'Guardado' : 'Saved'}
-                </span>
-              )}
-            </div>
-            {/* Tab switcher */}
-            <div className="flex gap-1 bg-gray-800 rounded-lg p-1">
-              <button onClick={() => setCvTab('text')}
-                className={`flex items-center gap-1.5 px-3 py-1 rounded-md text-xs font-semibold transition-all ${cvTab === 'text' ? 'bg-violet-600 text-white' : 'text-gray-400 hover:text-white'}`}>
-                <AlignLeft size={11} /> {es ? 'Texto' : 'Text'}
-              </button>
-              <button onClick={() => fileRef.current?.click()}
-                className="flex items-center gap-1.5 px-3 py-1 rounded-md text-xs font-semibold text-gray-400 hover:text-white transition-all">
-                <ExternalLink size={11} /> {es ? 'Archivo' : 'File'}
-              </button>
-              <button onClick={() => setCvTab('linkedin')}
-                className={`flex items-center gap-1.5 px-3 py-1 rounded-md text-xs font-semibold transition-all ${cvTab === 'linkedin' ? 'bg-violet-600 text-white' : 'text-gray-400 hover:text-white'}`}>
-                <Link2 size={11} /> LinkedIn
-              </button>
-            </div>
-            <input ref={fileRef} type="file" accept=".txt,.pdf,.doc,.docx,.png,.jpg,.jpeg,.webp" className="hidden" onChange={handleFile} />
+            )}
           </div>
+          {/* Row 2: tabs — full width on mobile */}
+          <div className="flex gap-1 bg-gray-800/80 rounded-xl p-1 mb-3 w-full">
+            <button onClick={() => setCvTab('text')}
+              className={`flex-1 flex items-center justify-center gap-1.5 py-2 rounded-lg text-xs font-semibold transition-all ${cvTab === 'text' ? 'bg-violet-600 text-white shadow-sm' : 'text-gray-400 hover:text-white'}`}>
+              <AlignLeft size={13} />
+              <span>{es ? 'Texto' : 'Text'}</span>
+            </button>
+            <button onClick={() => fileRef.current?.click()}
+              className="flex-1 flex items-center justify-center gap-1.5 py-2 rounded-lg text-xs font-semibold text-gray-400 hover:text-white transition-all">
+              <Upload size={13} />
+              <span>{es ? 'Archivo' : 'File'}</span>
+            </button>
+            <button onClick={() => setCvTab('linkedin')}
+              className={`flex-1 flex items-center justify-center gap-1.5 py-2 rounded-lg text-xs font-semibold transition-all ${cvTab === 'linkedin' ? 'bg-violet-600 text-white shadow-sm' : 'text-gray-400 hover:text-white'}`}>
+              <Link2 size={13} />
+              <span>LinkedIn</span>
+            </button>
+          </div>
+          <input ref={fileRef} type="file" accept=".txt,.pdf,.doc,.docx,.png,.jpg,.jpeg,.webp" className="hidden" onChange={handleFile} />
+
 
           {cvTab === 'text' ? (
             ocrLoading ? (
@@ -587,9 +590,9 @@ export default function JobsPage() {
         </div>
 
         {/* ── Search + filters ── */}
-        <div className="card mb-6 border border-gray-700/50">
-          {/* Search bar */}
-          <div className="flex gap-3 mb-4">
+        <div className="card mb-4 border border-gray-700/50 p-3 sm:p-5">
+          {/* Search bar — stacks on mobile */}
+          <div className="flex flex-col sm:flex-row gap-2 mb-4">
             <div className="flex-1 relative">
               <Search size={15} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500" />
               <input
@@ -597,28 +600,28 @@ export default function JobsPage() {
                 onChange={e => setQuery(e.target.value)}
                 onKeyDown={e => e.key === 'Enter' && search()}
                 placeholder={es ? 'Cargo, habilidad o empresa...' : 'Job title, skill or company...'}
-                className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-gray-800 border border-gray-700 text-white placeholder-gray-500 focus:outline-none focus:border-violet-500 focus:ring-1 focus:ring-violet-500/30 text-sm transition-all"
+                className="w-full pl-10 pr-4 py-3 rounded-xl bg-gray-800 border border-gray-700 text-white placeholder-gray-500 focus:outline-none focus:border-violet-500 focus:ring-1 focus:ring-violet-500/30 text-sm transition-all"
               />
             </div>
             <button
               onClick={search}
               disabled={loading || !query.trim()}
-              className="btn-primary px-5 disabled:opacity-50 flex items-center gap-2"
+              className="btn-primary py-3 px-6 disabled:opacity-50 flex items-center justify-center gap-2 text-sm font-bold"
             >
               {loading ? <Spinner /> : <Search size={15} />}
-              {es ? 'Buscar' : 'Search'}
+              {es ? 'Buscar empleos' : 'Search jobs'}
             </button>
           </div>
 
-          {/* Country chips */}
+          {/* Country chips — scrollable row on mobile */}
           <div className="mb-3">
             <p className="text-[10px] text-gray-500 font-semibold uppercase tracking-wider mb-2 flex items-center gap-1">
               <Globe size={10} /> {es ? 'País' : 'Country'}
             </p>
-            <div className="flex flex-wrap gap-1.5">
+            <div className="flex gap-1.5 overflow-x-auto pb-1 scrollbar-hide -mx-1 px-1">
               {COUNTRY_FILTERS.map(cf => (
                 <button key={cf.id} onClick={() => setCountry(cf.id)}
-                  className={`flex items-center gap-1 px-3 py-1 rounded-full text-xs font-semibold transition-all border ${
+                  className={`flex items-center gap-1 px-3 py-1.5 rounded-full text-xs font-semibold transition-all border whitespace-nowrap flex-shrink-0 ${
                     country === cf.id
                       ? 'bg-violet-600 border-violet-500 text-white shadow-sm shadow-violet-500/30'
                       : 'bg-gray-800 border-gray-700 text-gray-400 hover:text-white hover:border-violet-600/40'
@@ -629,35 +632,35 @@ export default function JobsPage() {
             </div>
           </div>
 
-          {/* Other filters */}
-          <div className="flex flex-wrap gap-x-5 gap-y-3">
-            <div>
+          {/* Other filters — scrollable on mobile */}
+          <div className="flex gap-x-4 gap-y-3 overflow-x-auto pb-1 scrollbar-hide flex-nowrap sm:flex-wrap">
+            <div className="flex-shrink-0">
               <p className="text-[10px] text-gray-500 font-semibold uppercase tracking-wider mb-1.5">{es ? 'Fecha' : 'Date'}</p>
-              <div className="flex gap-1.5 flex-wrap">
+              <div className="flex gap-1.5">
                 <Chip value="1"  current={days}     set={setDays}     label="24h" />
                 <Chip value="7"  current={days}     set={setDays}     label={es ? 'Semana' : 'Week'} />
                 <Chip value="30" current={days}     set={setDays}     label={es ? 'Mes' : 'Month'} />
               </div>
             </div>
-            <div>
+            <div className="flex-shrink-0">
               <p className="text-[10px] text-gray-500 font-semibold uppercase tracking-wider mb-1.5">{es ? 'Modalidad' : 'Mode'}</p>
-              <div className="flex gap-1.5 flex-wrap">
+              <div className="flex gap-1.5">
                 <Chip value="remote"  current={workMode} set={setWorkMode} label="Remote" />
                 <Chip value="hybrid"  current={workMode} set={setWorkMode} label="Hybrid" />
                 <Chip value="on-site" current={workMode} set={setWorkMode} label="On-site" />
               </div>
             </div>
-            <div>
+            <div className="flex-shrink-0">
               <p className="text-[10px] text-gray-500 font-semibold uppercase tracking-wider mb-1.5">{es ? 'Tipo' : 'Type'}</p>
-              <div className="flex gap-1.5 flex-wrap">
+              <div className="flex gap-1.5">
                 <Chip value="full_time" current={jobType} set={setJobType} label={es ? 'Completo' : 'Full-time'} />
                 <Chip value="part_time" current={jobType} set={setJobType} label={es ? 'Parcial' : 'Part-time'} />
                 <Chip value="contract"  current={jobType} set={setJobType} label={es ? 'Contrato' : 'Contract'} />
               </div>
             </div>
-            <div>
+            <div className="flex-shrink-0">
               <p className="text-[10px] text-gray-500 font-semibold uppercase tracking-wider mb-1.5">{es ? 'Nivel' : 'Level'}</p>
-              <div className="flex gap-1.5 flex-wrap">
+              <div className="flex gap-1.5">
                 <Chip value="entry level" current={expLevel} set={setExpLevel} label="Junior" />
                 <Chip value="mid senior"  current={expLevel} set={setExpLevel} label="Senior" />
                 <Chip value="director"    current={expLevel} set={setExpLevel} label="Director" />
@@ -701,63 +704,60 @@ export default function JobsPage() {
                 <div className="h-0.5 bg-gradient-to-r from-violet-600 via-purple-600 to-fuchsia-600 opacity-0 group-hover:opacity-100" />
 
                 {/* Main body */}
-                <div className="flex items-start gap-4 p-5">
+                <div className="flex items-start gap-3 p-3 sm:p-5">
                   <CompanyLogo name={job.company.display_name} />
 
                   <div className="flex-1 min-w-0">
                     {/* Meta row */}
-                    <div className="flex items-center gap-2 mb-1.5 flex-wrap">
-                      <span className="text-[11px] text-gray-500">{fmtDate(job.created)}</span>
-                      <span className="text-gray-600">·</span>
-                      <span className="text-[11px]">{COUNTRY_FLAGS[job._country] || '🌍'} {COUNTRY_NAMES[job._country] || job._country.toUpperCase()}</span>
-                      {!match && cvText.trim() && (
-                        <span className="px-2 py-0.5 rounded-full bg-violet-500/10 border border-violet-500/20 text-violet-400 text-[10px] font-semibold">
-                          ⚡ {es ? 'Analiza tu match' : 'Check your match'}
-                        </span>
-                      )}
+                    <div className="flex items-center gap-1.5 mb-1 flex-wrap">
+                      <span className="text-[10px] text-gray-500">{fmtDate(job.created)}</span>
+                      <span className="text-gray-600 text-[10px]">·</span>
+                      <span className="text-[10px]">{COUNTRY_FLAGS[job._country] || '🌍'} {COUNTRY_NAMES[job._country] || job._country.toUpperCase()}</span>
                     </div>
 
                     {/* Title */}
-                    <h3 className="font-bold text-white text-[15px] leading-snug mb-1">{job.title}</h3>
+                    <h3 className="font-bold text-white text-sm sm:text-[15px] leading-snug mb-1">{job.title}</h3>
 
                     {/* Company */}
-                    <p className="text-sm text-gray-400 mb-2.5 flex items-center gap-1">
-                      <Building2 size={12} className="text-gray-500" />
-                      {job.company.display_name}
+                    <p className="text-xs text-gray-400 mb-2 flex items-center gap-1">
+                      <Building2 size={11} className="text-gray-500 flex-shrink-0" />
+                      <span className="truncate">{job.company.display_name}</span>
                     </p>
 
-                    {/* Pills */}
-                    <div className="flex flex-wrap gap-1.5">
-                      <span className="flex items-center gap-1 px-2.5 py-1 rounded-full bg-gray-800 border border-gray-700 text-gray-400 text-[11px]">
-                        <MapPin size={10} /> {job.location.display_name}
+                    {/* Pills — scroll on mobile */}
+                    <div className="flex gap-1.5 overflow-x-auto scrollbar-hide pb-0.5">
+                      <span className="flex items-center gap-1 px-2 py-0.5 rounded-full bg-gray-800 border border-gray-700 text-gray-400 text-[10px] whitespace-nowrap flex-shrink-0">
+                        <MapPin size={9} /> {job.location.display_name}
                       </span>
                       {job.contract_time && (
-                        <span className="flex items-center gap-1 px-2.5 py-1 rounded-full bg-gray-800 border border-gray-700 text-gray-400 text-[11px]">
+                        <span className="flex items-center gap-1 px-2 py-0.5 rounded-full bg-gray-800 border border-gray-700 text-gray-400 text-[10px] whitespace-nowrap flex-shrink-0">
                           💼 {job.contract_time.replace('_', '-')}
                         </span>
                       )}
                       {salary && (
-                        <span className="flex items-center gap-1 px-2.5 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-[11px] font-semibold">
+                        <span className="flex items-center gap-1 px-2 py-0.5 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-[10px] font-semibold whitespace-nowrap flex-shrink-0">
                           💰 {salary}
                         </span>
                       )}
                     </div>
                   </div>
 
-                  {/* Match gauge panel — loading or result */}
+                  {/* Match gauge — right side */}
                   {(isAutoMatch || match) && (
-                    <div className="flex-shrink-0 bg-gray-950 border border-violet-700/30 rounded-2xl p-3 flex flex-col items-center gap-2 min-w-[110px] shadow-lg shadow-violet-900/20">
+                    <div className="flex-shrink-0 bg-gray-950 border border-violet-700/30 rounded-xl p-2 sm:p-3 flex flex-col items-center gap-1 sm:gap-2 min-w-[80px] sm:min-w-[110px] shadow-lg shadow-violet-900/20">
                       {isAutoMatch && !match
                         ? <MatchGaugeLoading />
                         : match && (
                           <>
                             <MatchGauge score={match.score} />
-                            {match.strengths?.slice(0, 2).map((s, i) => (
-                              <div key={i} className="flex items-start gap-1 text-[10px] text-gray-400 w-full">
-                                <span className="text-violet-400 font-bold flex-shrink-0">✓</span>
-                                <span className="leading-tight">{s}</span>
-                              </div>
-                            ))}
+                            <div className="hidden sm:flex flex-col gap-1 w-full">
+                              {match.strengths?.slice(0, 2).map((s, i) => (
+                                <div key={i} className="flex items-start gap-1 text-[10px] text-gray-400 w-full">
+                                  <span className="text-violet-400 font-bold flex-shrink-0">✓</span>
+                                  <span className="leading-tight">{s}</span>
+                                </div>
+                              ))}
+                            </div>
                           </>
                         )
                       }
@@ -766,7 +766,7 @@ export default function JobsPage() {
                 </div>
 
                 {/* Action bar */}
-                <div className="flex items-center gap-2 px-5 pb-4 flex-wrap">
+                <div className="flex items-center gap-2 px-3 sm:px-5 pb-3 sm:pb-4 flex-wrap">
                   <button
                     onClick={() => setSaved(prev => ({ ...prev, [job.id]: !prev[job.id] }))}
                     className={`p-2 rounded-lg border transition-all ${isSaved ? 'bg-violet-500/20 border-violet-500/40 text-violet-400' : 'bg-gray-800 border-gray-700 text-gray-500 hover:text-violet-400 hover:border-violet-700/50'}`}
