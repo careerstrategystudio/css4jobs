@@ -98,7 +98,7 @@ export default function PricingPage() {
       total:    '81.30',
       period:   es ? 'facturado cada 6 meses' : 'billed every 6 months',
       badge:    es ? 'MEJOR INVERSIÓN' : 'BEST INVESTMENT',
-      badgeColor: 'bg-indigo-600 text-white',
+      badgeColor: 'bg-brand-600 text-white',
       desc:     es ? 'El plan más rentable para tu búsqueda de empleo.' : 'The most cost-effective plan for your job search.',
       color:    'border-indigo-500/40',
       cta:      es ? 'Elegir Semestral' : 'Choose Semiannual',
@@ -128,7 +128,7 @@ export default function PricingPage() {
       badge:    null,
       badgeColor: '',
       desc:     es ? 'Sin compromisos. Cancela cuando quieras.' : 'No commitment. Cancel anytime.',
-      color:    'border-gray-700',
+      color:    'border-slate-300',
       cta:      es ? 'Elegir Mensual' : 'Choose Monthly',
       href:     'https://revolut.me/javier47j',
       highlight: false,
@@ -141,22 +141,22 @@ export default function PricingPage() {
 
         {/* Header */}
         <div className="text-center mb-14">
-          <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-indigo-500/10 border border-indigo-500/20 text-indigo-400 text-xs font-semibold mb-4">
+          <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-brand-500/10 border border-indigo-500/20 text-indigo-400 text-xs font-semibold mb-4">
             <Zap size={12} /> {es ? 'Precios simples y transparentes' : 'Simple, transparent pricing'}
           </div>
-          <h1 className="text-4xl font-bold text-white mb-3">
+          <h1 className="text-4xl font-bold text-slate-900 mb-3">
             {es ? 'Invierte en tu carrera' : 'Invest in your career'}
           </h1>
-          <p className="text-gray-400 max-w-xl mx-auto mb-5">
+          <p className="text-slate-500 max-w-xl mx-auto mb-5">
             {es
               ? 'Accede a todas las herramientas Pro y consigue más entrevistas. Todos los planes incluyen las mismas funcionalidades.'
               : 'Access all Pro tools and land more interviews. All plans include the same features.'}
           </p>
           {/* Payment methods */}
           <div className="inline-flex items-center gap-2 flex-wrap justify-center">
-            <span className="text-gray-600 text-xs">{es ? 'Pago seguro con' : 'Secure payment with'}</span>
+            <span className="text-slate-500 text-xs">{es ? 'Pago seguro con' : 'Secure payment with'}</span>
             {['💳 Tarjeta', 'G Google Pay', '🔺 Klarna (3 cuotas)'].map(m => (
-              <span key={m} className="px-2.5 py-1 rounded-lg bg-gray-800 border border-gray-700 text-gray-400 text-xs font-medium">{m}</span>
+              <span key={m} className="px-2.5 py-1 rounded-lg bg-slate-100 border border-slate-300 text-slate-500 text-xs font-medium">{m}</span>
             ))}
           </div>
 
@@ -168,13 +168,13 @@ export default function PricingPage() {
         </div>
 
         {/* Pro Features Banner */}
-        <div className="card border border-indigo-500/20 bg-indigo-500/5 mb-10 max-w-3xl mx-auto">
+        <div className="card border border-indigo-500/20 bg-brand-500/5 mb-10 max-w-3xl mx-auto">
           <p className="text-xs font-semibold text-indigo-400 uppercase tracking-wider mb-4 text-center">
             {es ? 'Todo incluido en el Plan Pro' : 'Everything included in Pro'}
           </p>
           <div className="grid sm:grid-cols-2 gap-2.5">
             {PRO_FEATURES.map((f, i) => (
-              <div key={i} className="flex items-center gap-2.5 text-sm text-gray-200">
+              <div key={i} className="flex items-center gap-2.5 text-sm text-slate-800">
                 <CheckCircle size={14} className="text-indigo-400 flex-shrink-0" />
                 {es ? f.es : f.en}
               </div>
@@ -186,32 +186,32 @@ export default function PricingPage() {
         <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-5 mb-16 max-w-6xl mx-auto">
 
           {/* Free plan card */}
-          <div className="card relative flex flex-col border-2 border-gray-700/60">
+          <div className="card relative flex flex-col border-2 border-slate-300/60">
             <div className="mb-5 mt-2">
-              <h2 className="text-base font-bold text-white mb-1">Free</h2>
-              <p className="text-gray-500 text-xs mb-4">
+              <h2 className="text-base font-bold text-slate-900 mb-1">Free</h2>
+              <p className="text-slate-400 text-xs mb-4">
                 {es ? 'Empieza sin costo. Sin tarjeta.' : 'Start free. No credit card.'}
               </p>
               <div className="flex items-end gap-1 mb-1">
-                <span className="text-4xl font-black text-white">€0</span>
+                <span className="text-4xl font-black text-slate-900">€0</span>
               </div>
-              <p className="text-xs text-gray-600">{es ? 'siempre gratis' : 'always free'}</p>
+              <p className="text-xs text-slate-500">{es ? 'siempre gratis' : 'always free'}</p>
             </div>
             <div className="space-y-2 flex-1 mb-6">
               {FREE_FEATURES.map((f, i) => (
-                <div key={i} className="flex items-center gap-2 text-xs text-gray-400">
-                  <CheckCircle size={12} className="text-gray-600 flex-shrink-0" />
+                <div key={i} className="flex items-center gap-2 text-xs text-slate-500">
+                  <CheckCircle size={12} className="text-slate-500 flex-shrink-0" />
                   {es ? f.es : f.en}
                 </div>
               ))}
               {FREE_MISSING.map((f, i) => (
-                <div key={i} className="flex items-center gap-2 text-xs text-gray-600 line-through">
-                  <X size={12} className="text-gray-700 flex-shrink-0" />
+                <div key={i} className="flex items-center gap-2 text-xs text-slate-500 line-through">
+                  <X size={12} className="text-slate-700 flex-shrink-0" />
                   {es ? f.es : f.en}
                 </div>
               ))}
             </div>
-            <a href="/cv" className="flex items-center justify-center gap-2 w-full py-2.5 rounded-xl text-sm font-bold transition-all bg-gray-800 hover:bg-gray-700 text-gray-300 border border-gray-700">
+            <a href="/cv" className="flex items-center justify-center gap-2 w-full py-2.5 rounded-xl text-sm font-bold transition-all bg-slate-100 hover:bg-slate-200 text-slate-700 border border-slate-300">
               {es ? 'Empezar gratis' : 'Start free'}
             </a>
           </div>
@@ -229,25 +229,25 @@ export default function PricingPage() {
               )}
 
               <div className="mb-5 mt-2">
-                <h2 className="text-base font-bold text-white mb-1">{plan.name}</h2>
-                <p className="text-gray-500 text-xs mb-4">{plan.desc}</p>
+                <h2 className="text-base font-bold text-slate-900 mb-1">{plan.name}</h2>
+                <p className="text-slate-400 text-xs mb-4">{plan.desc}</p>
                 <div className="flex items-end gap-1 mb-1">
-                  <span className="text-gray-400 text-base font-semibold mb-0.5">€</span>
-                  <span className="text-4xl font-black text-white">{plan.monthly}</span>
-                  <span className="text-gray-400 text-sm mb-1">/mo</span>
+                  <span className="text-slate-500 text-base font-semibold mb-0.5">€</span>
+                  <span className="text-4xl font-black text-slate-900">{plan.monthly}</span>
+                  <span className="text-slate-500 text-sm mb-1">/mo</span>
                 </div>
                 {plan.total ? (
-                  <p className="text-xs text-gray-500">
-                    <span className="text-gray-400 font-semibold">€{plan.total}</span> {plan.period}
+                  <p className="text-xs text-slate-400">
+                    <span className="text-slate-500 font-semibold">€{plan.total}</span> {plan.period}
                   </p>
                 ) : (
-                  <p className="text-xs text-gray-500">{plan.period}</p>
+                  <p className="text-xs text-slate-400">{plan.period}</p>
                 )}
               </div>
 
               <div className="space-y-2 flex-1 mb-6">
                 {PRO_FEATURES.map((f, i) => (
-                  <div key={i} className="flex items-center gap-2 text-xs text-gray-400">
+                  <div key={i} className="flex items-center gap-2 text-xs text-slate-500">
                     <CheckCircle size={12} className="text-emerald-400 flex-shrink-0" />
                     {es ? f.es : f.en}
                   </div>
@@ -261,8 +261,8 @@ export default function PricingPage() {
                   plan.highlight
                     ? 'bg-emerald-600 hover:bg-emerald-500 text-white'
                     : plan.id === 'semestral'
-                    ? 'bg-indigo-600 hover:bg-indigo-500 text-white'
-                    : 'bg-gray-700 hover:bg-gray-600 text-white'
+                    ? 'bg-brand-600 hover:bg-brand-500 text-white'
+                    : 'bg-slate-200 hover:bg-slate-300 text-white'
                 }`}
               >
                 {loadingPlan === plan.id
@@ -271,7 +271,7 @@ export default function PricingPage() {
               </button>
 
               {plan.highlight && (
-                <p className="text-center text-[10px] text-gray-600 mt-2">
+                <p className="text-center text-[10px] text-slate-500 mt-2">
                   {es ? 'Más elegido por profesionales' : 'Most chosen by professionals'}
                 </p>
               )}
@@ -281,7 +281,7 @@ export default function PricingPage() {
 
         {/* Testimonials */}
         <div className="mb-16">
-          <h2 className="text-2xl font-bold text-white text-center mb-8">
+          <h2 className="text-2xl font-bold text-slate-900 text-center mb-8">
             {es ? 'Lo que dicen nuestros usuarios' : 'What our users say'}
           </h2>
           <div className="grid md:grid-cols-3 gap-5">
@@ -290,10 +290,10 @@ export default function PricingPage() {
                 <div className="flex gap-1 mb-3">
                   {[...Array(5)].map((_, j) => <Star key={j} size={12} className="fill-yellow-400 text-yellow-400" />)}
                 </div>
-                <p className="text-gray-300 text-sm leading-relaxed mb-4 italic">&ldquo;{es ? tm.text.es : tm.text.en}&rdquo;</p>
+                <p className="text-slate-700 text-sm leading-relaxed mb-4 italic">&ldquo;{es ? tm.text.es : tm.text.en}&rdquo;</p>
                 <div>
-                  <div className="font-semibold text-white text-sm">{tm.name}</div>
-                  <div className="text-gray-500 text-xs">{es ? tm.role.es : tm.role.en}</div>
+                  <div className="font-semibold text-slate-900 text-sm">{tm.name}</div>
+                  <div className="text-slate-400 text-xs">{es ? tm.role.es : tm.role.en}</div>
                 </div>
               </div>
             ))}
@@ -302,28 +302,28 @@ export default function PricingPage() {
 
         {/* FAQ */}
         <div className="max-w-2xl mx-auto mb-16">
-          <h2 className="text-2xl font-bold text-white text-center mb-8">
+          <h2 className="text-2xl font-bold text-slate-900 text-center mb-8">
             {es ? 'Preguntas frecuentes' : 'Frequently asked questions'}
           </h2>
           <div className="space-y-3">
             {faqs.map((faq, i) => (
               <div key={i} className="card py-4">
-                <h3 className="font-semibold text-white mb-1.5 text-sm">{es ? faq.q.es : faq.q.en}</h3>
-                <p className="text-gray-400 text-sm leading-relaxed">{es ? faq.a.es : faq.a.en}</p>
+                <h3 className="font-semibold text-slate-900 mb-1.5 text-sm">{es ? faq.q.es : faq.q.en}</h3>
+                <p className="text-slate-500 text-sm leading-relaxed">{es ? faq.a.es : faq.a.en}</p>
               </div>
             ))}
           </div>
         </div>
 
         {/* CTA Banner */}
-        <div className="bg-gradient-to-r from-indigo-600 to-purple-600 rounded-3xl p-12 text-center">
+        <div className="bg-gradient-to-r from-brand-600 via-brand-500 to-accent-500 rounded-3xl p-12 text-center shadow-glow">
           <h2 className="text-2xl font-bold text-white mb-3">
             {es ? '¿Listo para conseguir más entrevistas?' : 'Ready to land more interviews?'}
           </h2>
-          <p className="text-indigo-200 mb-6">
+          <p className="text-brand-50 mb-6">
             {es ? 'Únete a miles de profesionales que ya usan CSS PRO.' : 'Join thousands of professionals already using CSS PRO.'}
           </p>
-          <a href="/cv" className="inline-flex items-center gap-2 px-8 py-3.5 rounded-xl bg-white text-indigo-700 font-bold text-base hover:bg-gray-100 transition-all">
+          <a href="/cv" className="inline-flex items-center gap-2 px-8 py-3.5 rounded-xl bg-white text-brand-700 font-bold text-base hover:bg-brand-50 transition-all">
             <Zap size={18} />
             {es ? 'Crear mi CV ahora' : 'Build my CV now'}
           </a>
@@ -337,7 +337,4 @@ export default function PricingPage() {
 // build
 
 // build
-
 // stripe
-
-// build

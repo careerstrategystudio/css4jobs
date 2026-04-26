@@ -33,7 +33,7 @@ function Section({ title, icon, children, color = 'indigo' }: {
           {icon}
           <span>{title}</span>
         </div>
-        {open ? <ChevronUp size={16} className="text-gray-500" /> : <ChevronDown size={16} className="text-gray-500" />}
+        {open ? <ChevronUp size={16} className="text-slate-400" /> : <ChevronDown size={16} className="text-slate-400" />}
       </button>
       {open && <div className="mt-4">{children}</div>}
     </div>
@@ -43,29 +43,29 @@ function Section({ title, icon, children, color = 'indigo' }: {
 function QACard({ q, strategy, answer, focus }: { q: string; strategy?: string; answer?: string; focus?: string }) {
   const [open, setOpen] = useState(false);
   return (
-    <div className="border border-gray-700/50 rounded-xl overflow-hidden mb-3">
-      <button onClick={() => setOpen(o => !o)} className="w-full flex items-start gap-3 p-3 text-left hover:bg-gray-800/40 transition-colors">
-        <span className="text-gray-300 text-sm font-semibold flex-1 leading-relaxed">{q}</span>
-        {open ? <ChevronUp size={14} className="text-gray-500 flex-shrink-0 mt-0.5" /> : <ChevronDown size={14} className="text-gray-500 flex-shrink-0 mt-0.5" />}
+    <div className="border border-slate-300/50 rounded-xl overflow-hidden mb-3">
+      <button onClick={() => setOpen(o => !o)} className="w-full flex items-start gap-3 p-3 text-left hover:bg-slate-100/40 transition-colors">
+        <span className="text-slate-700 text-sm font-semibold flex-1 leading-relaxed">{q}</span>
+        {open ? <ChevronUp size={14} className="text-slate-400 flex-shrink-0 mt-0.5" /> : <ChevronDown size={14} className="text-slate-400 flex-shrink-0 mt-0.5" />}
       </button>
       {open && (
         <div className="px-3 pb-3 space-y-2">
           {focus && (
             <div className="px-3 py-2 rounded-lg bg-purple-500/10 border border-purple-500/20">
               <p className="text-purple-300 text-xs font-semibold mb-0.5">Focus</p>
-              <p className="text-gray-300 text-xs">{focus}</p>
+              <p className="text-slate-700 text-xs">{focus}</p>
             </div>
           )}
           {strategy && (
             <div className="px-3 py-2 rounded-lg bg-amber-500/10 border border-amber-500/20">
               <p className="text-amber-300 text-xs font-semibold mb-0.5">Strategy</p>
-              <p className="text-gray-300 text-xs leading-relaxed">{strategy}</p>
+              <p className="text-slate-700 text-xs leading-relaxed">{strategy}</p>
             </div>
           )}
           {answer && (
-            <div className="px-3 py-2 rounded-lg bg-indigo-500/10 border border-indigo-500/20">
+            <div className="px-3 py-2 rounded-lg bg-brand-500/10 border border-indigo-500/20">
               <p className="text-indigo-300 text-xs font-semibold mb-0.5">Suggested answer</p>
-              <p className="text-gray-300 text-xs leading-relaxed">{answer}</p>
+              <p className="text-slate-700 text-xs leading-relaxed">{answer}</p>
             </div>
           )}
         </div>
@@ -118,10 +118,10 @@ export default function PrepPage() {
           <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-purple-500/10 border border-purple-500/20 text-purple-400 text-xs font-semibold mb-4">
             <Target size={12} /> {es ? 'Preparacion de Entrevista · IA' : 'Interview Prep · AI'}
           </div>
-          <h1 className="text-4xl font-bold text-white mb-3">
+          <h1 className="text-4xl font-bold text-slate-900 mb-3">
             {es ? 'Preparacion completa para tu entrevista' : 'Complete interview preparation'}
           </h1>
-          <p className="text-gray-400 max-w-xl mx-auto">
+          <p className="text-slate-500 max-w-xl mx-auto">
             {es
               ? 'Estrategia personalizada, prep con el reclutador, prep con el Hiring Manager y preguntas inesperadas — todo basado en tu CV y el puesto especifico.'
               : 'Personalized strategy, recruiter prep, Hiring Manager prep and unexpected questions — all based on your CV and the specific role.'}
@@ -137,7 +137,7 @@ export default function PrepPage() {
         {/* Inputs */}
         <div className="grid lg:grid-cols-2 gap-5 mb-6">
           <div className="card">
-            <h2 className="font-bold text-white text-sm mb-3 flex items-center gap-2">
+            <h2 className="font-bold text-slate-900 text-sm mb-3 flex items-center gap-2">
               <Briefcase size={14} className="text-indigo-400" />
               {es ? 'Tu CV' : 'Your CV'}
             </h2>
@@ -145,7 +145,7 @@ export default function PrepPage() {
               placeholder={es ? 'Pega el texto de tu CV aqui...' : 'Paste your CV text here...'} />
           </div>
           <div className="card">
-            <h2 className="font-bold text-white text-sm mb-3 flex items-center gap-2">
+            <h2 className="font-bold text-slate-900 text-sm mb-3 flex items-center gap-2">
               <Building2 size={14} className="text-emerald-400" />
               {es ? 'Descripcion del puesto' : 'Job description'}
             </h2>
@@ -156,11 +156,11 @@ export default function PrepPage() {
 
         {/* Language */}
         <div className="card py-4 mb-5">
-          <label className="text-sm font-semibold text-gray-300 mb-3 block">{es ? 'Idioma de la preparacion' : 'Preparation language'}</label>
+          <label className="text-sm font-semibold text-slate-700 mb-3 block">{es ? 'Idioma de la preparacion' : 'Preparation language'}</label>
           <div className="flex gap-2">
             {[{ v: 'es', label: '🇪🇸 Español' }, { v: 'en', label: '🇬🇧 English' }, { v: 'pt', label: '🇧🇷 Português' }].map(l => (
               <button key={l.v} onClick={() => setLanguage(l.v)}
-                className={`flex-1 py-2 rounded-xl text-sm font-semibold transition-all ${language === l.v ? 'bg-indigo-600 text-white' : 'bg-gray-800 text-gray-400 hover:text-white'}`}>
+                className={`flex-1 py-2 rounded-xl text-sm font-semibold transition-all ${language === l.v ? 'bg-brand-600 text-white' : 'bg-slate-100 text-slate-500 hover:text-brand-700'}`}>
                 {l.label}
               </button>
             ))}
@@ -191,34 +191,34 @@ export default function PrepPage() {
               <Section title={es ? 'Estrategia de busqueda personalizada' : 'Personalized search strategy'} icon={<TrendingUp size={16} />} color="emerald">
                 <div className="space-y-4">
                   <div>
-                    <p className="text-xs font-semibold text-gray-400 mb-2 uppercase tracking-wider">{es ? 'Tu mensaje clave' : 'Your key message'}</p>
-                    <p className="text-gray-200 text-sm leading-relaxed italic bg-gray-800/50 px-4 py-3 rounded-xl border border-gray-700">&ldquo;{data.searchStrategy.keyMessage}&rdquo;</p>
+                    <p className="text-xs font-semibold text-slate-500 mb-2 uppercase tracking-wider">{es ? 'Tu mensaje clave' : 'Your key message'}</p>
+                    <p className="text-slate-800 text-sm leading-relaxed italic bg-slate-100/50 px-4 py-3 rounded-xl border border-slate-300">&ldquo;{data.searchStrategy.keyMessage}&rdquo;</p>
                   </div>
                   <div className="grid sm:grid-cols-2 gap-4">
                     <div>
                       <p className="text-xs font-semibold text-emerald-400 mb-2">{es ? 'Empresas objetivo' : 'Target companies'}</p>
                       {data.searchStrategy.targetCompanies?.map((c, i) => (
-                        <p key={i} className="text-sm text-gray-300 mb-1 flex items-center gap-2"><span className="w-4 h-4 rounded-full bg-emerald-500/20 text-emerald-400 text-[9px] font-bold flex items-center justify-center">{i+1}</span>{c}</p>
+                        <p key={i} className="text-sm text-slate-700 mb-1 flex items-center gap-2"><span className="w-4 h-4 rounded-full bg-emerald-500/20 text-emerald-400 text-[9px] font-bold flex items-center justify-center">{i+1}</span>{c}</p>
                       ))}
                     </div>
                     <div>
                       <p className="text-xs font-semibold text-indigo-400 mb-2">{es ? 'Roles alternativos' : 'Alternative roles'}</p>
                       {data.searchStrategy.targetRoles?.map((r, i) => (
-                        <p key={i} className="text-sm text-gray-300 mb-1 flex items-center gap-2"><span className="text-indigo-400">→</span>{r}</p>
+                        <p key={i} className="text-sm text-slate-700 mb-1 flex items-center gap-2"><span className="text-indigo-400">→</span>{r}</p>
                       ))}
                     </div>
                   </div>
                   <div>
-                    <p className="text-xs font-semibold text-gray-400 mb-1 uppercase tracking-wider">{es ? 'Networking' : 'Networking'}</p>
-                    <p className="text-sm text-gray-300 leading-relaxed">{data.searchStrategy.networking}</p>
+                    <p className="text-xs font-semibold text-slate-500 mb-1 uppercase tracking-wider">{es ? 'Networking' : 'Networking'}</p>
+                    <p className="text-sm text-slate-700 leading-relaxed">{data.searchStrategy.networking}</p>
                   </div>
                   <div>
-                    <p className="text-xs font-semibold text-gray-400 mb-1 uppercase tracking-wider">{es ? 'Plan 30 dias' : '30-day plan'}</p>
-                    <p className="text-sm text-gray-300 leading-relaxed">{data.searchStrategy.timeline}</p>
+                    <p className="text-xs font-semibold text-slate-500 mb-1 uppercase tracking-wider">{es ? 'Plan 30 dias' : '30-day plan'}</p>
+                    <p className="text-sm text-slate-700 leading-relaxed">{data.searchStrategy.timeline}</p>
                   </div>
                   <div className="flex flex-wrap gap-2">
                     {data.searchStrategy.platforms?.map((p, i) => (
-                      <span key={i} className="px-3 py-1 rounded-full bg-gray-700 text-gray-300 text-xs font-medium">{p}</span>
+                      <span key={i} className="px-3 py-1 rounded-full bg-slate-200 text-slate-700 text-xs font-medium">{p}</span>
                     ))}
                   </div>
                 </div>
@@ -227,7 +227,7 @@ export default function PrepPage() {
 
             {/* Recruiter Interview */}
             <Section title={es ? 'Entrevista con el Reclutador' : 'Recruiter Interview'} icon={<Users size={16} />} color="indigo">
-              <p className="text-gray-500 text-xs mb-4">
+              <p className="text-slate-400 text-xs mb-4">
                 {es ? 'El reclutador busca: fit cultural, motivacion y comunicacion clara.' : 'The recruiter looks for: cultural fit, motivation and clear communication.'}
               </p>
               {data.recruiterInterview?.map((item, i) => (
@@ -237,7 +237,7 @@ export default function PrepPage() {
 
             {/* HM Interview */}
             <Section title={es ? 'Entrevista con el Hiring Manager' : 'Hiring Manager Interview'} icon={<Briefcase size={16} />} color="purple">
-              <p className="text-gray-500 text-xs mb-4">
+              <p className="text-slate-400 text-xs mb-4">
                 {es ? 'El manager busca: mentalidad de crecimiento, ownership y capacidad de influenciar.' : 'The manager looks for: growth mindset, ownership and ability to influence.'}
               </p>
               {data.hiringManagerInterview?.map((item, i) => (
@@ -249,9 +249,9 @@ export default function PrepPage() {
             <Section title={es ? 'Preguntas que tu haces al manager' : 'Your questions to the manager'} icon={<HelpCircle size={16} />} color="amber">
               <div className="space-y-2">
                 {data.questionsToAsk?.map((q, i) => (
-                  <div key={i} className="flex items-start gap-3 p-3 rounded-xl bg-gray-800/50 border border-gray-700/50">
+                  <div key={i} className="flex items-start gap-3 p-3 rounded-xl bg-slate-100/50 border border-slate-300/50">
                     <span className="w-5 h-5 rounded-full bg-amber-500/20 text-amber-400 text-[10px] font-bold flex items-center justify-center flex-shrink-0 mt-0.5">{i+1}</span>
-                    <p className="text-gray-300 text-sm leading-relaxed">{q}</p>
+                    <p className="text-slate-700 text-sm leading-relaxed">{q}</p>
                   </div>
                 ))}
               </div>
@@ -259,7 +259,7 @@ export default function PrepPage() {
 
             {/* Unexpected questions */}
             <Section title={es ? '7 preguntas inesperadas del Full Loop' : '7 Unexpected Full Loop Questions'} icon={<Target size={16} />} color="rose">
-              <p className="text-gray-500 text-xs mb-4">
+              <p className="text-slate-400 text-xs mb-4">
                 {es ? 'Preguntas que suelen aparecer en rondas avanzadas del proceso.' : 'Questions that often appear in advanced interview rounds.'}
               </p>
               {data.unexpectedQuestions?.map((item, i) => (

@@ -490,10 +490,10 @@ function ProUnlockInline({ onActivate }: { onActivate: (email: string, key: stri
     <div className="flex flex-col gap-2 w-72">
       <div className="flex gap-2">
         <input type="email" value={email} onChange={e => { setEmail(e.target.value); setError(''); }}
-          className="flex-1 px-3 py-1.5 rounded-lg bg-gray-800 border border-gray-600 text-xs text-white placeholder-gray-500 outline-none focus:border-indigo-500"
+          className="flex-1 px-3 py-1.5 rounded-lg bg-slate-100 border border-slate-400 text-xs text-slate-900 placeholder-slate-400 outline-none focus:border-indigo-500"
           placeholder="Tu email..." />
         <input type="text" value={key} onChange={e => { setKey(e.target.value); setError(''); }}
-          className="flex-1 px-3 py-1.5 rounded-lg bg-gray-800 border border-gray-600 text-xs text-white placeholder-gray-500 outline-none focus:border-indigo-500"
+          className="flex-1 px-3 py-1.5 rounded-lg bg-slate-100 border border-slate-400 text-xs text-slate-900 placeholder-slate-400 outline-none focus:border-indigo-500"
           placeholder="Clave Pro (CSS4J.xxx)..." />
       </div>
       <div className="flex items-center gap-2">
@@ -521,41 +521,41 @@ function AtsCard({ data }: { data: AtsData }) {
       <div className="flex items-center justify-between mb-5 flex-wrap gap-3">
         <div className="flex items-center gap-2">
           <Target size={16} className="text-amber-400" />
-          <span className="font-bold text-white text-sm tracking-wide">ATS MATCH ANALYSIS</span>
+          <span className="font-bold text-slate-900 text-sm tracking-wide">ATS MATCH ANALYSIS</span>
           <span className="px-2 py-0.5 rounded-full bg-amber-500/20 border border-amber-500/30 text-amber-400 text-[10px] font-bold uppercase">Private</span>
         </div>
         <div className={`flex items-center gap-3 px-4 py-2.5 rounded-xl border ring-2 ${scoreBorder} ${scoreRing}`}>
           <div className="text-right">
-            <div className="text-[10px] text-gray-400 uppercase tracking-wider">Match Score</div>
+            <div className="text-[10px] text-slate-500 uppercase tracking-wider">Match Score</div>
             <div className={`text-3xl font-black leading-none ${scoreColor}`}>{sc}<span className="text-lg">%</span></div>
           </div>
         </div>
       </div>
       <div className="mb-5">
-        <h3 className="flex items-center gap-1.5 text-[11px] font-bold text-gray-400 uppercase tracking-wider mb-3">
+        <h3 className="flex items-center gap-1.5 text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-3">
           <Key size={11} className="text-indigo-400" /> Top 5 Keywords Matched
         </h3>
         <div className="space-y-2">
           {data.keywords.map((kw, i) => (
-            <div key={i} className="flex items-start gap-2.5 p-2.5 rounded-lg bg-gray-800/60 border border-gray-700/50">
-              <span className="w-5 h-5 rounded-full bg-indigo-500/20 text-indigo-300 text-[10px] font-bold flex items-center justify-center flex-shrink-0 mt-0.5">{i + 1}</span>
-              <div><span className="text-white text-xs font-semibold">{kw.kw}</span><p className="text-gray-400 text-xs mt-0.5 leading-relaxed">{kw.exp}</p></div>
+            <div key={i} className="flex items-start gap-2.5 p-2.5 rounded-lg bg-slate-100/60 border border-slate-300/50">
+              <span className="w-5 h-5 rounded-full bg-brand-500/20 text-indigo-300 text-[10px] font-bold flex items-center justify-center flex-shrink-0 mt-0.5">{i + 1}</span>
+              <div><span className="text-slate-900 text-xs font-semibold">{kw.kw}</span><p className="text-slate-500 text-xs mt-0.5 leading-relaxed">{kw.exp}</p></div>
             </div>
           ))}
         </div>
       </div>
       <div>
-        <h3 className="flex items-center gap-1.5 text-[11px] font-bold text-gray-400 uppercase tracking-wider mb-3">
+        <h3 className="flex items-center gap-1.5 text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-3">
           <TrendingUp size={11} className="text-amber-400" /> Top 3 Recommendations
         </h3>
         <div className="space-y-2">
           {data.recommendations.map((rec, i) => (
-            <div key={i} className="p-3 rounded-lg bg-gray-800/60 border border-gray-700/50">
+            <div key={i} className="p-3 rounded-lg bg-slate-100/60 border border-slate-300/50">
               <div className="flex items-center gap-2 mb-1">
                 <span className="w-4 h-4 rounded-full bg-amber-500/20 text-amber-300 text-[9px] font-bold flex items-center justify-center flex-shrink-0">{i + 1}</span>
-                <span className="text-white text-xs font-bold">{rec.title}</span>
+                <span className="text-slate-900 text-xs font-bold">{rec.title}</span>
               </div>
-              <p className="text-gray-400 text-xs leading-relaxed ml-6">{rec.text}</p>
+              <p className="text-slate-500 text-xs leading-relaxed ml-6">{rec.text}</p>
             </div>
           ))}
         </div>
@@ -779,7 +779,7 @@ export default function CVTailoringPage() {
   const usageBadge = ready ? (
     <span className={`text-xs px-2 py-0.5 rounded-full border font-semibold ${
       canGenerate
-        ? 'border-gray-700 text-gray-500 bg-gray-800/50'
+        ? 'border-slate-300 text-slate-400 bg-slate-100/50'
         : 'border-red-500/40 text-red-400 bg-red-500/10'
     }`}>
       {cvUsed}/{cvLimit === 999 ? '∞' : cvLimit} CVs este mes
@@ -792,11 +792,11 @@ export default function CVTailoringPage() {
 
         {/* Header */}
         <div className="text-center mb-10">
-          <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-indigo-500/10 border border-indigo-500/20 text-indigo-400 text-xs font-semibold mb-4">
+          <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-brand-500/10 border border-indigo-500/20 text-indigo-400 text-xs font-semibold mb-4">
             <Zap size={12} /> {t('cv_badge')}
           </div>
-          <h1 className="text-4xl font-bold text-white mb-3">{t('cv_h1')}</h1>
-          <p className="text-gray-400 max-w-xl mx-auto">{t('cv_desc')}</p>
+          <h1 className="text-4xl font-bold text-slate-900 mb-3">{t('cv_h1')}</h1>
+          <p className="text-slate-500 max-w-xl mx-auto">{t('cv_desc')}</p>
         </div>
 
         {/* Input grid */}
@@ -805,17 +805,17 @@ export default function CVTailoringPage() {
             {/* CV input */}
             <div className="card">
               <div className="flex items-center justify-between mb-4">
-                <h2 className="font-bold text-white flex items-center gap-2">
+                <h2 className="font-bold text-slate-900 flex items-center gap-2">
                   <FileText size={16} className="text-indigo-400" /> {t('cv_label')}
                 </h2>
-                <div className="flex gap-1 bg-gray-800 rounded-lg p-1">
-                  <button onClick={() => setActiveTab('paste')} className={`px-3 py-1 rounded-md text-xs font-semibold transition-all flex items-center gap-1 ${activeTab === 'paste' ? 'bg-violet-600 text-white' : 'text-gray-400 hover:text-white'}`}>
+                <div className="flex gap-1 bg-slate-100 rounded-lg p-1">
+                  <button onClick={() => setActiveTab('paste')} className={`px-3 py-1 rounded-md text-xs font-semibold transition-all flex items-center gap-1 ${activeTab === 'paste' ? 'bg-brand-600 text-white' : 'text-slate-500 hover:text-brand-700'}`}>
                     <Clipboard size={11} />{t('cv_paste')}
                   </button>
-                  <button onClick={() => { setActiveTab('upload'); fileRef.current?.click(); }} className={`px-3 py-1 rounded-md text-xs font-semibold transition-all flex items-center gap-1 ${activeTab === 'upload' ? 'bg-violet-600 text-white' : 'text-gray-400 hover:text-white'}`}>
+                  <button onClick={() => { setActiveTab('upload'); fileRef.current?.click(); }} className={`px-3 py-1 rounded-md text-xs font-semibold transition-all flex items-center gap-1 ${activeTab === 'upload' ? 'bg-brand-600 text-white' : 'text-slate-500 hover:text-brand-700'}`}>
                     <Upload size={11} />{t('cv_upload')}
                   </button>
-                  <button onClick={() => setActiveTab('linkedin')} className={`px-3 py-1 rounded-md text-xs font-semibold transition-all flex items-center gap-1 ${activeTab === 'linkedin' ? 'bg-violet-600 text-white' : 'text-gray-400 hover:text-white'}`}>
+                  <button onClick={() => setActiveTab('linkedin')} className={`px-3 py-1 rounded-md text-xs font-semibold transition-all flex items-center gap-1 ${activeTab === 'linkedin' ? 'bg-brand-600 text-white' : 'text-slate-500 hover:text-brand-700'}`}>
                     <svg viewBox="0 0 24 24" fill="currentColor" className="w-3 h-3"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
                     LinkedIn
                   </button>
@@ -827,18 +827,18 @@ export default function CVTailoringPage() {
               {activeTab !== 'linkedin' && (
                 <>
                   {ocrLoading ? (
-                    <div className="flex flex-col items-center justify-center h-48 gap-3 rounded-xl bg-gray-800/50 border border-violet-500/20">
-                      <svg className="animate-spin h-8 w-8 text-violet-500" viewBox="0 0 24 24" fill="none">
+                    <div className="flex flex-col items-center justify-center h-48 gap-3 rounded-xl bg-brand-50 border border-brand-200">
+                      <svg className="animate-spin h-8 w-8 text-brand-600" viewBox="0 0 24 24" fill="none">
                         <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"/>
                         <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"/>
                       </svg>
-                      <p className="text-sm text-violet-400 font-semibold">Leyendo tu CV con IA…</p>
-                      <p className="text-xs text-gray-500">Extrayendo texto del diseño visual</p>
+                      <p className="text-sm text-brand-400 font-semibold">Leyendo tu CV con IA…</p>
+                      <p className="text-xs text-slate-400">Extrayendo texto del diseño visual</p>
                     </div>
                   ) : (
                     <>
                       <textarea value={cvText} onChange={e => setCvText(e.target.value)} className="textarea" rows={14} placeholder={t('cv_placeholder')} />
-                      <p className="text-xs text-gray-600 mt-2">{cvText.length} chars</p>
+                      <p className="text-xs text-slate-500 mt-2">{cvText.length} chars</p>
                     </>
                   )}
                 </>
@@ -853,12 +853,12 @@ export default function CVTailoringPage() {
                       onChange={e => setLinkedinUrl(e.target.value)}
                       onKeyDown={e => e.key === 'Enter' && importLinkedIn()}
                       placeholder="https://www.linkedin.com/in/tu-perfil"
-                      className="flex-1 px-3 py-2.5 rounded-xl bg-gray-800 border border-gray-700 text-white placeholder-gray-500 focus:outline-none focus:border-violet-500 text-sm"
+                      className="flex-1 px-3 py-2.5 rounded-xl bg-white border border-slate-300 text-slate-900 placeholder-slate-400 focus:outline-none focus:border-brand-500 text-sm"
                     />
                     <button
                       onClick={importLinkedIn}
                       disabled={liLoading || !linkedinUrl.trim()}
-                      className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-violet-600 hover:bg-violet-500 text-white text-sm font-bold transition-all disabled:opacity-50"
+                      className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-brand-600 hover:bg-brand-500 text-white text-sm font-bold transition-all disabled:opacity-50"
                     >
                       {liLoading
                         ? <svg className="animate-spin h-4 w-4" viewBox="0 0 24 24" fill="none"><circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"/><path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"/></svg>
@@ -873,50 +873,50 @@ export default function CVTailoringPage() {
                   )}
 
                   {liMsg?.type === 'blocked' && !liShowForm && (
-                    <div className="bg-violet-500/5 border border-violet-500/20 rounded-xl p-4 space-y-2.5">
-                      <p className="text-sm font-semibold text-white mb-1">LinkedIn requiere sesión — elige cómo continuar:</p>
+                    <div className="bg-brand-500/5 border border-brand-500/20 rounded-xl p-4 space-y-2.5">
+                      <p className="text-sm font-semibold text-slate-900 mb-1">LinkedIn requiere sesión — elige cómo continuar:</p>
 
                       {/* Option A: Screenshot OCR */}
                       {liOcrLoading ? (
-                        <div className="flex items-center gap-3 w-full p-3 rounded-xl bg-violet-600/20 border border-violet-500/40">
-                          <svg className="animate-spin h-5 w-5 text-violet-400 flex-shrink-0" viewBox="0 0 24 24" fill="none">
+                        <div className="flex items-center gap-3 w-full p-3 rounded-xl bg-brand-600/20 border border-brand-500/40">
+                          <svg className="animate-spin h-5 w-5 text-brand-400 flex-shrink-0" viewBox="0 0 24 24" fill="none">
                             <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"/>
                             <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"/>
                           </svg>
-                          <p className="text-sm text-violet-300 font-semibold">Leyendo tu perfil con IA…</p>
+                          <p className="text-sm text-brand-300 font-semibold">Leyendo tu perfil con IA…</p>
                         </div>
                       ) : (
                         <button onClick={() => liScreenRef.current?.click()}
-                          className="flex items-center gap-3 w-full p-3 rounded-xl bg-violet-600/20 border border-violet-500/40 hover:bg-violet-600/30 text-left transition-all">
-                          <div className="w-9 h-9 rounded-lg bg-violet-600/40 flex items-center justify-center flex-shrink-0 text-lg">📸</div>
+                          className="flex items-center gap-3 w-full p-3 rounded-xl bg-brand-600/20 border border-brand-500/40 hover:bg-brand-600/30 text-left transition-all">
+                          <div className="w-9 h-9 rounded-lg bg-brand-600/40 flex items-center justify-center flex-shrink-0 text-lg">📸</div>
                           <div>
-                            <p className="text-sm font-semibold text-white">Subir captura de pantalla de LinkedIn</p>
-                            <p className="text-[11px] text-gray-400">La IA lee tu perfil de la imagen — rápido desde móvil o PC</p>
+                            <p className="text-sm font-semibold text-slate-900">Subir captura de pantalla de LinkedIn</p>
+                            <p className="text-[11px] text-slate-500">La IA lee tu perfil de la imagen — rápido desde móvil o PC</p>
                           </div>
                         </button>
                       )}
 
                       {/* Option B: Upload PDF */}
                       <button onClick={() => fileRef.current?.click()}
-                        className="flex items-center gap-3 w-full p-3 rounded-xl bg-gray-800 border border-gray-700 hover:border-violet-500/50 text-left transition-all">
-                        <div className="w-9 h-9 rounded-lg bg-gray-700 flex items-center justify-center flex-shrink-0">
-                          <Upload size={15} className="text-gray-300" />
+                        className="flex items-center gap-3 w-full p-3 rounded-xl bg-slate-100 border border-slate-300 hover:border-brand-500/50 text-left transition-all">
+                        <div className="w-9 h-9 rounded-lg bg-slate-200 flex items-center justify-center flex-shrink-0">
+                          <Upload size={15} className="text-slate-700" />
                         </div>
                         <div>
-                          <p className="text-sm font-semibold text-white">Subir PDF de LinkedIn</p>
-                          <p className="text-[11px] text-gray-500">Perfil → Más (···) → Guardar como PDF</p>
+                          <p className="text-sm font-semibold text-slate-900">Subir PDF de LinkedIn</p>
+                          <p className="text-[11px] text-slate-400">Perfil → Más (···) → Guardar como PDF</p>
                         </div>
                       </button>
 
                       {/* Option C: Manual form (mobile only) */}
                       <button onClick={() => setLiShowForm(true)}
-                        className="md:hidden flex items-center gap-3 w-full p-3 rounded-xl bg-gray-800/60 border border-gray-700 hover:border-violet-500/50 text-left transition-all">
-                        <div className="w-9 h-9 rounded-lg bg-gray-700 flex items-center justify-center flex-shrink-0">
-                          <AlignLeft size={15} className="text-gray-300" />
+                        className="md:hidden flex items-center gap-3 w-full p-3 rounded-xl bg-slate-100/60 border border-slate-300 hover:border-brand-500/50 text-left transition-all">
+                        <div className="w-9 h-9 rounded-lg bg-slate-200 flex items-center justify-center flex-shrink-0">
+                          <AlignLeft size={15} className="text-slate-700" />
                         </div>
                         <div>
-                          <p className="text-sm font-semibold text-white">Completar perfil manualmente</p>
-                          <p className="text-[11px] text-gray-500">Formulario rápido — sin archivos</p>
+                          <p className="text-sm font-semibold text-slate-900">Completar perfil manualmente</p>
+                          <p className="text-[11px] text-slate-400">Formulario rápido — sin archivos</p>
                         </div>
                       </button>
 
@@ -930,12 +930,12 @@ export default function CVTailoringPage() {
                     <div className="space-y-3">
                       <div className="flex items-center gap-3 mb-1">
                         <button onClick={() => setLiShowForm(false)}
-                          className="text-[11px] text-gray-500 hover:text-gray-300 transition-colors">
+                          className="text-[11px] text-slate-400 hover:text-slate-700 transition-colors">
                           ← Volver
                         </button>
-                        <p className="text-sm font-semibold text-white">Completa tu perfil</p>
+                        <p className="text-sm font-semibold text-slate-900">Completa tu perfil</p>
                       </div>
-                      <Suspense fallback={<div className="h-20 flex items-center justify-center text-gray-500 text-sm">Cargando formulario…</div>}>
+                      <Suspense fallback={<div className="h-20 flex items-center justify-center text-slate-400 text-sm">Cargando formulario…</div>}>
                         <QuickProfileForm
                           lang="es"
                           onSubmit={(text) => { setCvText(text); setActiveTab('paste'); setLiMsg({ type: 'ok', text: '✅ Perfil completado. Revisa y edita lo que necesites.' }); setLiShowForm(false); }}
@@ -950,18 +950,18 @@ export default function CVTailoringPage() {
                   )}
 
                   {!liMsg && (
-                    <p className="text-xs text-gray-600">Pega tu URL de LinkedIn. Si el perfil es privado, te mostramos cómo exportar el PDF en segundos.</p>
+                    <p className="text-xs text-slate-500">Pega tu URL de LinkedIn. Si el perfil es privado, te mostramos cómo exportar el PDF en segundos.</p>
                   )}
                 </div>
               )}
             </div>
             {/* Language */}
             <div className="card py-4">
-              <label className="text-sm font-semibold text-gray-300 mb-3 block">{t('cv_lang_label')}</label>
+              <label className="text-sm font-semibold text-slate-700 mb-3 block">{t('cv_lang_label')}</label>
               <div className="flex gap-2">
                 {[{ v: 'es', label: '🇪🇸 Español' }, { v: 'en', label: '🇬🇧 English' }, { v: 'pt', label: '🇧🇷 Português' }].map(l => (
                   <button key={l.v} onClick={() => setLanguage(l.v)}
-                    className={`flex-1 py-2 rounded-xl text-sm font-semibold transition-all ${language === l.v ? 'bg-indigo-600 text-white' : 'bg-gray-800 text-gray-400 hover:text-white'}`}>
+                    className={`flex-1 py-2 rounded-xl text-sm font-semibold transition-all ${language === l.v ? 'bg-brand-600 text-white' : 'bg-slate-100 text-slate-500 hover:text-brand-700'}`}>
                     {l.label}
                   </button>
                 ))}
@@ -971,11 +971,11 @@ export default function CVTailoringPage() {
 
           {/* Job description */}
           <div className="card">
-            <h2 className="font-bold text-white flex items-center gap-2 mb-4">
+            <h2 className="font-bold text-slate-900 flex items-center gap-2 mb-4">
               <FileText size={16} className="text-emerald-400" /> {t('cv_job_label')}
             </h2>
             <textarea value={jobDesc} onChange={e => setJobDesc(e.target.value)} className="textarea" rows={18} placeholder={t('cv_job_placeholder')} />
-            <p className="text-xs text-gray-600 mt-2">{jobDesc.length} chars</p>
+            <p className="text-xs text-slate-500 mt-2">{jobDesc.length} chars</p>
           </div>
         </div>
 
@@ -1004,22 +1004,22 @@ export default function CVTailoringPage() {
             <div className="card mb-4 border border-indigo-500/20">
               <div className="flex items-center gap-2 mb-4">
                 <Layout size={14} className="text-indigo-400" />
-                <span className="text-white font-bold text-sm">Diseño del CV</span>
-                <span className="px-1.5 py-0.5 rounded bg-indigo-500/20 text-indigo-400 text-[10px] font-bold">Vista previa gratis · PDF con Pro</span>
+                <span className="text-slate-900 font-bold text-sm">Diseño del CV</span>
+                <span className="px-1.5 py-0.5 rounded bg-brand-500/20 text-indigo-400 text-[10px] font-bold">Vista previa gratis · PDF con Pro</span>
               </div>
               <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-2">
                 {TEMPLATES.map(tpl => (
                   <button key={tpl.id} onClick={() => setSelectedTemplate(tpl.id)}
                     className={`relative p-3 rounded-xl border text-left transition-all ${
-                      selectedTemplate === tpl.id ? 'border-indigo-500 bg-indigo-500/10' : 'border-gray-700 bg-gray-800/50 hover:border-gray-600'
+                      selectedTemplate === tpl.id ? 'border-indigo-500 bg-brand-500/10' : 'border-slate-300 bg-slate-100/50 hover:border-slate-400'
                     }`}>
                     {/* Mini color dot */}
                     <div className="flex items-center gap-1.5 mb-1.5">
                       <div style={{ background: tpl.dot }} className="w-3 h-3 rounded-full flex-shrink-0" />
                       {selectedTemplate === tpl.id && <CheckCircle size={10} className="text-indigo-400 flex-shrink-0" />}
                     </div>
-                    <p className="text-white text-xs font-semibold leading-tight">{tpl.name}</p>
-                    <p className="text-gray-500 text-[10px] mt-0.5 leading-tight">{tpl.desc}</p>
+                    <p className="text-slate-900 text-xs font-semibold leading-tight">{tpl.name}</p>
+                    <p className="text-slate-400 text-[10px] mt-0.5 leading-tight">{tpl.desc}</p>
                   </button>
                 ))}
               </div>
@@ -1028,18 +1028,18 @@ export default function CVTailoringPage() {
             {/* ── Result header + actions ─────────────────────────────────── */}
             <div className="card">
               <div className="flex items-center justify-between mb-4 flex-wrap gap-3">
-                <h2 className="font-bold text-white flex items-center gap-2">
+                <h2 className="font-bold text-slate-900 flex items-center gap-2">
                   <CheckCircle size={16} className="text-emerald-400" /> {t('cv_result_title')}
                 </h2>
                 <div className="flex items-center gap-2 flex-wrap">
                   {/* View mode toggle */}
-                  <div className="flex rounded-lg overflow-hidden border border-gray-700">
+                  <div className="flex rounded-lg overflow-hidden border border-slate-300">
                     <button onClick={() => setViewMode('preview')}
-                      className={`flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold transition-all ${viewMode === 'preview' ? 'bg-indigo-600 text-white' : 'bg-gray-800 text-gray-400 hover:text-white'}`}>
+                      className={`flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold transition-all ${viewMode === 'preview' ? 'bg-brand-600 text-white' : 'bg-slate-100 text-slate-500 hover:text-brand-700'}`}>
                       <Eye size={12} /> Vista previa
                     </button>
                     <button onClick={() => setViewMode('text')}
-                      className={`flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold transition-all ${viewMode === 'text' ? 'bg-indigo-600 text-white' : 'bg-gray-800 text-gray-400 hover:text-white'}`}>
+                      className={`flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold transition-all ${viewMode === 'text' ? 'bg-brand-600 text-white' : 'bg-slate-100 text-slate-500 hover:text-brand-700'}`}>
                       <AlignLeft size={12} /> Texto
                     </button>
                   </div>
@@ -1059,9 +1059,9 @@ export default function CVTailoringPage() {
                       <div className="flex items-center gap-2">
                         {!showProForm ? (
                           <button onClick={() => setShowProForm(true)}
-                            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-gray-800 border border-gray-600 text-xs text-gray-400 hover:border-indigo-500 hover:text-indigo-400 transition-all">
+                            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-100 border border-slate-400 text-xs text-slate-500 hover:border-indigo-500 hover:text-indigo-400 transition-all">
                             <Lock size={11} /> {t('cv_download_pdf')}
-                            <span className="ml-1 px-1.5 py-0.5 rounded bg-indigo-500/20 text-indigo-400 text-[10px] font-bold">{t('pro_locked_label')}</span>
+                            <span className="ml-1 px-1.5 py-0.5 rounded bg-brand-500/20 text-indigo-400 text-[10px] font-bold">{t('pro_locked_label')}</span>
                           </button>
                         ) : (
                           <ProUnlockInline onActivate={handleActivatePro} />
@@ -1074,13 +1074,13 @@ export default function CVTailoringPage() {
 
               {/* Content: preview or plain text */}
               {viewMode === 'preview' ? (
-                <div className="rounded-xl overflow-auto bg-gray-200 p-4" style={{ maxHeight: 700 }}>
-                  <Suspense fallback={<div className="text-gray-400 text-sm text-center py-20">Cargando vista previa...</div>}>
+                <div className="rounded-xl overflow-auto bg-slate-100 p-4" style={{ maxHeight: 700 }}>
+                  <Suspense fallback={<div className="text-slate-500 text-sm text-center py-20">Cargando vista previa...</div>}>
                     <CVPreview text={result} template={selectedTemplate} />
                   </Suspense>
                 </div>
               ) : (
-                <pre className="text-gray-300 text-sm leading-relaxed whitespace-pre-wrap font-mono bg-gray-800/50 rounded-xl p-6 max-h-[700px] overflow-y-auto">{result}</pre>
+                <pre className="text-slate-700 text-sm leading-relaxed whitespace-pre-wrap font-mono bg-slate-100/50 rounded-xl p-6 max-h-[700px] overflow-y-auto">{result}</pre>
               )}
             </div>
           </div>
@@ -1093,12 +1093,12 @@ export default function CVTailoringPage() {
         {result && (
           <div className="mt-6 card border-2 border-indigo-500/20">
             <div className="flex items-center gap-3 mb-3">
-              <div className="w-9 h-9 rounded-xl bg-indigo-500/15 flex items-center justify-center">
+              <div className="w-9 h-9 rounded-xl bg-brand-500/15 flex items-center justify-center">
                 <Mail size={17} className="text-indigo-400" />
               </div>
               <div>
-                <h2 className="font-bold text-white">{t('cl_title')}</h2>
-                <p className="text-gray-500 text-xs">{t('cl_desc')}</p>
+                <h2 className="font-bold text-slate-900">{t('cl_title')}</h2>
+                <p className="text-slate-400 text-xs">{t('cl_desc')}</p>
               </div>
             </div>
             {clError && (
@@ -1115,21 +1115,21 @@ export default function CVTailoringPage() {
                 </button>
               ) : (
                 <div className="flex flex-col items-center gap-3 py-4 text-center">
-                  <div className="w-12 h-12 rounded-2xl bg-indigo-500/15 border border-indigo-500/20 flex items-center justify-center">
+                  <div className="w-12 h-12 rounded-2xl bg-brand-500/15 border border-indigo-500/20 flex items-center justify-center">
                     <Lock size={20} className="text-indigo-400" />
                   </div>
                   <div>
-                    <p className="text-white font-semibold text-sm">{t('cl_title')} — Plan Pro</p>
-                    <p className="text-gray-500 text-xs mt-1">Inicia sesión con tu clave Pro para generar cartas de presentación personalizadas.</p>
+                    <p className="text-slate-900 font-semibold text-sm">{t('cl_title')} — Plan Pro</p>
+                    <p className="text-slate-400 text-xs mt-1">Inicia sesión con tu clave Pro para generar cartas de presentación personalizadas.</p>
                   </div>
                   <div className="flex gap-2">
                     <button
                       onClick={() => setShowProForm(true)}
-                      className="flex items-center gap-1.5 px-4 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-semibold transition-all"
+                      className="flex items-center gap-1.5 px-4 py-2 rounded-xl bg-brand-600 hover:bg-brand-500 text-white text-xs font-semibold transition-all"
                     >
                       <Lock size={11} /> Activar Pro
                     </button>
-                    <a href="/pricing" className="flex items-center gap-1.5 px-4 py-2 rounded-xl bg-gray-800 border border-gray-700 hover:border-indigo-500/50 text-gray-300 hover:text-white text-xs font-semibold transition-all">
+                    <a href="/pricing" className="flex items-center gap-1.5 px-4 py-2 rounded-xl bg-slate-100 border border-slate-300 hover:border-indigo-500/50 text-slate-700 hover:text-brand-700 text-xs font-semibold transition-all">
                       Ver planes →
                     </a>
                   </div>
@@ -1139,7 +1139,7 @@ export default function CVTailoringPage() {
             {clResult && (
               <div>
                 <div className="flex items-center justify-between mb-3 flex-wrap gap-2">
-                  <span className="text-sm font-semibold text-white flex items-center gap-2">
+                  <span className="text-sm font-semibold text-slate-900 flex items-center gap-2">
                     <CheckCircle size={14} className="text-emerald-400" /> {t('cl_result_title')}
                   </span>
                   <div className="flex gap-2 flex-wrap">
@@ -1161,12 +1161,12 @@ export default function CVTailoringPage() {
                     )}
                   </div>
                 </div>
-                <pre className="text-gray-300 text-sm leading-relaxed whitespace-pre-wrap font-mono bg-gray-800/50 rounded-xl p-6 max-h-[500px] overflow-y-auto">
+                <pre className="text-slate-700 text-sm leading-relaxed whitespace-pre-wrap font-mono bg-slate-100/50 rounded-xl p-6 max-h-[500px] overflow-y-auto">
                   {clResult}
                 </pre>
                 <button
                   onClick={() => { setClResult(''); setClError(''); }}
-                  className="mt-3 text-xs text-gray-500 hover:text-gray-300 transition-colors"
+                  className="mt-3 text-xs text-slate-400 hover:text-slate-700 transition-colors"
                 >
                   &#8635; {language === 'en' ? 'Regenerate' : 'Regenerar'}
                 </button>

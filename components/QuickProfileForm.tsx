@@ -79,8 +79,8 @@ export default function QuickProfileForm({ onSubmit, onCancel, lang = 'es' }: Pr
 
   const canSubmit = name.trim() || exps.some(e => e.company || e.jobTitle);
 
-  const inputCls  = 'w-full px-2.5 py-2 rounded-lg bg-gray-900 border border-gray-700 text-white placeholder-gray-600 focus:outline-none focus:border-violet-500 text-xs';
-  const inputCls2 = 'w-full px-3 py-2 rounded-xl bg-gray-800 border border-gray-700 text-white placeholder-gray-500 focus:outline-none focus:border-violet-500 text-sm';
+  const inputCls  = 'w-full px-2.5 py-2 rounded-lg bg-white border border-slate-300 text-slate-900 placeholder-slate-400 focus:outline-none focus:border-brand-500 text-xs';
+  const inputCls2 = 'w-full px-3 py-2 rounded-xl bg-white border border-slate-300 text-slate-900 placeholder-slate-400 focus:outline-none focus:border-brand-500 text-sm';
 
   return (
     <div className="space-y-4">
@@ -106,23 +106,23 @@ export default function QuickProfileForm({ onSubmit, onCancel, lang = 'es' }: Pr
       {/* ── Experience ── */}
       <div>
         <div className="flex items-center justify-between mb-2">
-          <p className="text-xs font-bold text-gray-300 uppercase tracking-wider">
+          <p className="text-xs font-bold text-slate-700 uppercase tracking-wider">
             {es ? 'Experiencia laboral' : 'Work experience'}
           </p>
           <button onClick={addExp}
-            className="text-xs text-violet-400 hover:text-violet-300 flex items-center gap-1 transition-colors">
+            className="text-xs text-brand-400 hover:text-brand-300 flex items-center gap-1 transition-colors">
             <Plus size={11} /> {es ? 'Añadir' : 'Add'}
           </button>
         </div>
 
         {exps.map((e, i) => (
-          <div key={i} className="bg-gray-800/60 border border-gray-700/50 rounded-xl p-3 mb-2 space-y-2">
+          <div key={i} className="bg-slate-100/60 border border-slate-300/50 rounded-xl p-3 mb-2 space-y-2">
             <div className="flex gap-2">
               <input value={e.jobTitle} onChange={ev => updExp(i, 'jobTitle', ev.target.value)}
                 placeholder={es ? 'Cargo (ej. Diseñador Gráfico)' : 'Job title (e.g. Graphic Designer)'}
                 className={`${inputCls} flex-1`} />
               {exps.length > 1 && (
-                <button onClick={() => removeExp(i)} className="text-gray-600 hover:text-red-400 transition-colors flex-shrink-0">
+                <button onClick={() => removeExp(i)} className="text-slate-500 hover:text-red-400 transition-colors flex-shrink-0">
                   <Trash2 size={13} />
                 </button>
               )}
@@ -144,23 +144,23 @@ export default function QuickProfileForm({ onSubmit, onCancel, lang = 'es' }: Pr
       {/* ── Education ── */}
       <div>
         <div className="flex items-center justify-between mb-2">
-          <p className="text-xs font-bold text-gray-300 uppercase tracking-wider">
+          <p className="text-xs font-bold text-slate-700 uppercase tracking-wider">
             {es ? 'Educación' : 'Education'}
           </p>
           <button onClick={addEdu}
-            className="text-xs text-violet-400 hover:text-violet-300 flex items-center gap-1 transition-colors">
+            className="text-xs text-brand-400 hover:text-brand-300 flex items-center gap-1 transition-colors">
             <Plus size={11} /> {es ? 'Añadir' : 'Add'}
           </button>
         </div>
 
         {edus.map((e, i) => (
-          <div key={i} className="bg-gray-800/60 border border-gray-700/50 rounded-xl p-3 mb-2 space-y-2">
+          <div key={i} className="bg-slate-100/60 border border-slate-300/50 rounded-xl p-3 mb-2 space-y-2">
             <div className="flex gap-2">
               <input value={e.degree} onChange={ev => updEdu(i, 'degree', ev.target.value)}
                 placeholder={es ? 'Título / Grado' : 'Degree'}
                 className={`${inputCls} flex-1`} />
               {edus.length > 1 && (
-                <button onClick={() => removeEdu(i)} className="text-gray-600 hover:text-red-400 transition-colors flex-shrink-0">
+                <button onClick={() => removeEdu(i)} className="text-slate-500 hover:text-red-400 transition-colors flex-shrink-0">
                   <Trash2 size={13} />
                 </button>
               )}
@@ -177,7 +177,7 @@ export default function QuickProfileForm({ onSubmit, onCancel, lang = 'es' }: Pr
 
       {/* ── Skills ── */}
       <div>
-        <p className="text-xs font-bold text-gray-300 uppercase tracking-wider mb-2">
+        <p className="text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">
           {es ? 'Habilidades / Herramientas' : 'Skills / Tools'}
         </p>
         <input value={skills} onChange={e => setSkills(e.target.value)}
@@ -185,18 +185,18 @@ export default function QuickProfileForm({ onSubmit, onCancel, lang = 'es' }: Pr
             ? 'ej. Figma, Photoshop, Illustrator, CSS, branding, tipografía...'
             : 'e.g. Figma, Photoshop, Illustrator, CSS, branding, typography...'}
           className={inputCls2} />
-        <p className="text-[10px] text-gray-600 mt-1">{es ? 'Separa con comas' : 'Separate with commas'}</p>
+        <p className="text-[10px] text-slate-500 mt-1">{es ? 'Separa con comas' : 'Separate with commas'}</p>
       </div>
 
       {/* ── Actions ── */}
       <div className="flex gap-2 pt-1">
         <button onClick={onCancel}
-          className="flex-1 py-2.5 rounded-xl border border-gray-700 text-gray-400 hover:text-white text-sm font-semibold transition-all">
+          className="flex-1 py-2.5 rounded-xl border border-slate-300 text-slate-500 hover:text-brand-700 text-sm font-semibold transition-all">
           {es ? 'Cancelar' : 'Cancel'}
         </button>
         <button onClick={() => onSubmit(buildCv())}
           disabled={!canSubmit}
-          className="flex-[2] py-2.5 rounded-xl bg-violet-600 hover:bg-violet-500 text-white text-sm font-bold transition-all disabled:opacity-40 flex items-center justify-center gap-2">
+          className="flex-[2] py-2.5 rounded-xl bg-brand-600 hover:bg-brand-500 text-white text-sm font-bold transition-all disabled:opacity-40 flex items-center justify-center gap-2">
           <CheckCircle size={14} />
           {es ? 'Usar como CV' : 'Use as CV'}
         </button>

@@ -60,33 +60,33 @@ export default function LinkedInPage() {
           <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-400 text-xs font-semibold mb-4">
             <Linkedin size={12} /> {t('li_badge')}
           </div>
-          <h1 className="text-4xl font-bold text-white mb-3">{t('li_h1')}</h1>
-          <p className="text-gray-400 max-w-xl mx-auto">{t('li_desc')}</p>
+          <h1 className="text-4xl font-bold text-slate-900 mb-3">{t('li_h1')}</h1>
+          <p className="text-slate-500 max-w-xl mx-auto">{t('li_desc')}</p>
         </div>
 
         <div className="grid lg:grid-cols-2 gap-6">
           <div className="space-y-5">
             <div className="card">
-              <h2 className="font-bold text-white flex items-center gap-2 mb-4">
+              <h2 className="font-bold text-slate-900 flex items-center gap-2 mb-4">
                 <Linkedin size={16} className="text-blue-400" /> {t('li_label')}
               </h2>
               <textarea value={linkedinData} onChange={e => setLinkedinData(e.target.value)} className="textarea" rows={16} placeholder={t('li_placeholder')} />
-              <p className="text-xs text-gray-600 mt-2">{linkedinData.length} chars</p>
+              <p className="text-xs text-slate-500 mt-2">{linkedinData.length} chars</p>
             </div>
 
             <div className="card py-4">
-              <label className="text-sm font-semibold text-gray-300 mb-2 block flex items-center gap-2">
+              <label className="text-sm font-semibold text-slate-700 mb-2 block flex items-center gap-2">
                 <Target size={14} className="text-blue-400" /> {t('li_role_label')}
               </label>
               <input type="text" value={targetRole} onChange={e => setTargetRole(e.target.value)} className="input" placeholder={t('li_role_placeholder')} />
-              <p className="text-xs text-gray-500 mt-2">{t('li_role_hint')}</p>
+              <p className="text-xs text-slate-400 mt-2">{t('li_role_hint')}</p>
             </div>
 
             <div className="card py-4">
-              <label className="text-sm font-semibold text-gray-300 mb-3 block">{t('li_lang_label')}</label>
+              <label className="text-sm font-semibold text-slate-700 mb-3 block">{t('li_lang_label')}</label>
               <div className="flex gap-2">
                 {[{ v: 'es', label: '🇪🇸 Español' }, { v: 'en', label: '🇬🇧 English' }, { v: 'pt', label: '🇧🇷 Português' }].map(l => (
-                  <button key={l.v} onClick={() => setLanguage(l.v)} className={`flex-1 py-2 rounded-xl text-sm font-semibold transition-all ${language === l.v ? 'bg-blue-600 text-white' : 'bg-gray-800 text-gray-400 hover:text-white'}`}>
+                  <button key={l.v} onClick={() => setLanguage(l.v)} className={`flex-1 py-2 rounded-xl text-sm font-semibold transition-all ${language === l.v ? 'bg-blue-600 text-white' : 'bg-slate-100 text-slate-500 hover:text-brand-700'}`}>
                     {l.label}
                   </button>
                 ))}
@@ -96,24 +96,24 @@ export default function LinkedInPage() {
 
           <div className="space-y-5">
             <div className="card border-blue-500/20">
-              <h3 className="font-bold text-white mb-4 flex items-center gap-2">
+              <h3 className="font-bold text-slate-900 mb-4 flex items-center gap-2">
                 <Zap size={16} className="text-blue-400" /> {t('li_tips_title')}
               </h3>
               <div className="space-y-3">
                 {[t('li_tip1'), t('li_tip2'), t('li_tip3'), t('li_tip4')].map((tip, i) => (
-                  <div key={i} className="flex items-start gap-3 p-3 rounded-xl bg-gray-800/50">
+                  <div key={i} className="flex items-start gap-3 p-3 rounded-xl bg-slate-100/50">
                     <span className="text-lg">{['🎯','📊','🔑','📈'][i]}</span>
-                    <p className="text-gray-300 text-sm leading-relaxed">{tip}</p>
+                    <p className="text-slate-700 text-sm leading-relaxed">{tip}</p>
                   </div>
                 ))}
               </div>
             </div>
 
             <div className="card border-blue-500/20">
-              <h3 className="font-bold text-white mb-4">📋 {t('li_get_title')}</h3>
+              <h3 className="font-bold text-slate-900 mb-4">📋 {t('li_get_title')}</h3>
               <div className="space-y-2">
                 {['📊 Score (0-100)','🎯 Headline','📝 About / Summary','💼 Experience','🔑 10 Keywords','📈 Quick Wins','🌟 Missing Sections'].map((item, i) => (
-                  <div key={i} className="flex items-center gap-2 text-sm text-gray-300">
+                  <div key={i} className="flex items-center gap-2 text-sm text-slate-700">
                     <CheckCircle size={13} className="text-blue-400 flex-shrink-0" />
                     {item}
                   </div>
@@ -121,9 +121,9 @@ export default function LinkedInPage() {
               </div>
             </div>
 
-            <div className="card py-4 border-gray-700/50 bg-gray-900/30">
-              <h3 className="font-semibold text-gray-300 mb-2 text-sm">💡 {t('li_how_title')}</h3>
-              <ol className="space-y-1 text-xs text-gray-500 list-decimal list-inside">
+            <div className="card py-4 border-slate-300/50 bg-white/30">
+              <h3 className="font-semibold text-slate-700 mb-2 text-sm">💡 {t('li_how_title')}</h3>
+              <ol className="space-y-1 text-xs text-slate-400 list-decimal list-inside">
                 <li>{t('li_how1')}</li>
                 <li>{t('li_how2')}</li>
                 <li>{t('li_how3')}</li>
@@ -153,7 +153,7 @@ export default function LinkedInPage() {
         {result && (
           <div className="mt-8 card">
             <div className="flex items-center justify-between mb-4">
-              <h2 className="font-bold text-white flex items-center gap-2">
+              <h2 className="font-bold text-slate-900 flex items-center gap-2">
                 <CheckCircle size={16} className="text-blue-400" /> {t('li_result_title')}
               </h2>
               <div className="flex gap-2">
@@ -165,7 +165,7 @@ export default function LinkedInPage() {
                 </button>
               </div>
             </div>
-            <div className="text-gray-300 text-sm leading-relaxed whitespace-pre-wrap bg-gray-800/50 rounded-xl p-6 max-h-[700px] overflow-y-auto">{result}</div>
+            <div className="text-slate-700 text-sm leading-relaxed whitespace-pre-wrap bg-slate-100/50 rounded-xl p-6 max-h-[700px] overflow-y-auto">{result}</div>
           </div>
         )}
       </div>

@@ -48,14 +48,14 @@ export default function AdminPage() {
         <div className="card max-w-sm w-full">
           <div className="flex items-center gap-2 mb-6">
             <Lock size={18} className="text-indigo-400" />
-            <h1 className="text-white font-bold text-lg">Admin — CSS 4 JOBS</h1>
+            <h1 className="text-slate-900 font-bold text-lg">Admin — CSS 4 JOBS</h1>
           </div>
           <input
             type="password"
             value={pw}
             onChange={e => { setPw(e.target.value); setPwError(false); }}
             onKeyDown={e => e.key === 'Enter' && checkPw()}
-            className={`w-full px-4 py-3 rounded-xl bg-gray-800 border text-white placeholder-gray-500 outline-none focus:border-indigo-500 mb-3 ${pwError ? 'border-red-500' : 'border-gray-700'}`}
+            className={`w-full px-4 py-3 rounded-xl bg-slate-100 border text-white placeholder-slate-400 outline-none focus:border-indigo-500 mb-3 ${pwError ? 'border-red-500' : 'border-slate-300'}`}
             placeholder="Contraseña de admin..."
           />
           {pwError && <p className="text-red-400 text-xs mb-3">Ingresa la contraseña</p>}
@@ -72,28 +72,28 @@ export default function AdminPage() {
       <div className="max-w-xl mx-auto">
         <div className="flex items-center gap-2 mb-8">
           <Key size={20} className="text-indigo-400" />
-          <h1 className="text-white text-2xl font-bold">Generador de Claves Pro</h1>
+          <h1 className="text-slate-900 text-2xl font-bold">Generador de Claves Pro</h1>
         </div>
 
         <div className="card space-y-5">
           <div>
-            <label className="text-sm font-semibold text-gray-300 block mb-2">Email del cliente</label>
+            <label className="text-sm font-semibold text-slate-700 block mb-2">Email del cliente</label>
             <input
               type="email"
               value={email}
               onChange={e => setEmail(e.target.value)}
-              className="w-full px-4 py-3 rounded-xl bg-gray-800 border border-gray-700 text-white placeholder-gray-500 outline-none focus:border-indigo-500"
+              className="w-full px-4 py-3 rounded-xl bg-white border border-slate-300 text-slate-900 placeholder-slate-400 outline-none focus:border-indigo-500"
               placeholder="cliente@email.com"
             />
           </div>
 
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="text-sm font-semibold text-gray-300 block mb-2">CVs por mes</label>
+              <label className="text-sm font-semibold text-slate-700 block mb-2">CVs por mes</label>
               <select
                 value={limit}
                 onChange={e => setLimit(e.target.value)}
-                className="w-full px-4 py-3 rounded-xl bg-gray-800 border border-gray-700 text-white outline-none focus:border-indigo-500"
+                className="w-full px-4 py-3 rounded-xl bg-white border border-slate-300 text-slate-900 outline-none focus:border-indigo-500"
               >
                 <option value="5">5 CVs/mes</option>
                 <option value="10">10 CVs/mes</option>
@@ -103,11 +103,11 @@ export default function AdminPage() {
               </select>
             </div>
             <div>
-              <label className="text-sm font-semibold text-gray-300 block mb-2">Validez</label>
+              <label className="text-sm font-semibold text-slate-700 block mb-2">Validez</label>
               <select
                 value={months}
                 onChange={e => setMonths(e.target.value)}
-                className="w-full px-4 py-3 rounded-xl bg-gray-800 border border-gray-700 text-white outline-none focus:border-indigo-500"
+                className="w-full px-4 py-3 rounded-xl bg-white border border-slate-300 text-slate-900 outline-none focus:border-indigo-500"
               >
                 <option value="1">1 mes</option>
                 <option value="3">3 meses</option>
@@ -133,28 +133,28 @@ export default function AdminPage() {
             <div className="flex items-center gap-2 mb-3">
               <CheckCircle size={16} className="text-emerald-400" />
               <span className="text-emerald-400 font-semibold text-sm">Clave generada</span>
-              <span className="text-gray-500 text-xs">· {limit} CVs/mes · {months} {months === '1' ? 'mes' : 'meses'}</span>
+              <span className="text-slate-400 text-xs">· {limit} CVs/mes · {months} {months === '1' ? 'mes' : 'meses'}</span>
             </div>
             <div className="flex items-center gap-3">
-              <code className="flex-1 text-xs bg-gray-900 px-4 py-3 rounded-xl text-emerald-300 break-all font-mono border border-gray-700">
+              <code className="flex-1 text-xs bg-white px-4 py-3 rounded-xl text-emerald-300 break-all font-mono border border-slate-300">
                 {genKey}
               </code>
               <button
                 onClick={copy}
-                className="flex-shrink-0 p-3 rounded-xl bg-gray-800 hover:bg-gray-700 border border-gray-700 transition-all"
+                className="flex-shrink-0 p-3 rounded-xl bg-slate-100 hover:bg-slate-200 border border-slate-300 transition-all"
                 title="Copiar"
               >
-                {copied ? <CheckCircle size={16} className="text-emerald-400" /> : <Copy size={16} className="text-gray-400" />}
+                {copied ? <CheckCircle size={16} className="text-emerald-400" /> : <Copy size={16} className="text-slate-500" />}
               </button>
             </div>
-            <p className="text-gray-500 text-xs mt-3">
+            <p className="text-slate-400 text-xs mt-3">
               Envía esta clave al cliente ({email}). La clave solo funciona con ese email exacto.
             </p>
           </div>
         )}
 
-        <div className="mt-8 card border border-gray-700/50 bg-gray-900/50 text-xs text-gray-500 space-y-1">
-          <p className="font-semibold text-gray-400 mb-2">Instrucciones para el cliente:</p>
+        <div className="mt-8 card border border-slate-300/50 bg-white/50 text-xs text-slate-400 space-y-1">
+          <p className="font-semibold text-slate-500 mb-2">Instrucciones para el cliente:</p>
           <p>1. Ir a CSS 4 JOBS → Optimización de CV</p>
           <p>2. Tailorar un CV y hacer clic en &ldquo;Descargar PDF&rdquo;</p>
           <p>3. Ingresar su email y esta clave en el formulario que aparece</p>

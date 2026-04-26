@@ -31,7 +31,7 @@ export default function PasswordGate({ children }: { children: React.ReactNode }
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-950">
+      <div className="min-h-screen flex items-center justify-center bg-white">
         <div className="animate-spin h-8 w-8 border-2 border-indigo-500 border-t-transparent rounded-full" />
       </div>
     );
@@ -40,9 +40,9 @@ export default function PasswordGate({ children }: { children: React.ReactNode }
   if (unlocked) return <>{children}</>;
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-950 px-4">
-      <div className="absolute inset-0 bg-gradient-to-br from-indigo-950/40 via-gray-950 to-gray-950 pointer-events-none" />
-      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[500px] h-[250px] bg-indigo-600/10 blur-3xl rounded-full pointer-events-none" />
+    <div className="min-h-screen flex items-center justify-center bg-white px-4">
+      <div className="absolute inset-0 bg-gradient-to-br from-brand-50 via-white to-white pointer-events-none" />
+      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[500px] h-[250px] bg-brand-600/10 blur-3xl rounded-full pointer-events-none" />
 
       <div className="relative w-full max-w-sm">
         {/* Logo */}
@@ -56,19 +56,19 @@ export default function PasswordGate({ children }: { children: React.ReactNode }
               img.style.display = 'none';
             }}
           />
-          <h1 className="text-2xl font-bold text-white mb-1">CSS <span className="text-indigo-400">4 JOBS</span></h1>
-          <p className="text-gray-400 text-sm">Acceso privado · Beta</p>
+          <h1 className="text-2xl font-bold text-slate-900 mb-1">CSS <span className="text-indigo-400">4 JOBS</span></h1>
+          <p className="text-slate-500 text-sm">Acceso privado · Beta</p>
         </div>
 
         {/* Card */}
-        <div className="card border-gray-700">
+        <div className="card border-slate-300">
           <div className="flex items-center gap-2 mb-6">
-            <div className="w-8 h-8 rounded-lg bg-indigo-500/20 flex items-center justify-center">
+            <div className="w-8 h-8 rounded-lg bg-brand-500/20 flex items-center justify-center">
               <Lock size={15} className="text-indigo-400" />
             </div>
             <div>
-              <p className="text-white font-semibold text-sm">Acceso restringido</p>
-              <p className="text-gray-500 text-xs">Ingresá tu código de acceso</p>
+              <p className="text-slate-900 font-semibold text-sm">Acceso restringido</p>
+              <p className="text-slate-400 text-xs">Ingresá tu código de acceso</p>
             </div>
           </div>
 
@@ -94,7 +94,7 @@ export default function PasswordGate({ children }: { children: React.ReactNode }
           </form>
         </div>
 
-        <p className="text-center text-gray-600 text-xs mt-6">
+        <p className="text-center text-slate-500 text-xs mt-6">
           ¿No tenés acceso? Contactá a{' '}
           <a href="mailto:careerstrategystudio@gmail.com" className="text-indigo-400 hover:underline">
             CareerStrategy Studio

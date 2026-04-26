@@ -15,7 +15,7 @@ export const metadata: Metadata = {
   manifest: '/manifest.json',
   appleWebApp: {
     capable: true,
-    statusBarStyle: 'black-translucent',
+    statusBarStyle: 'default',
     title: 'CSS 4 JOBS',
   },
   other: {
@@ -28,10 +28,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="es" className="scroll-smooth">
       <head>
         <link rel="manifest" href="/manifest.json" />
-        <meta name="theme-color" content="#7c3aed" />
+        <meta name="theme-color" content="#5B6CFF" />
         <meta name="mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
-        <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+        <meta name="apple-mobile-web-app-status-bar-style" content="default" />
         <meta name="apple-mobile-web-app-title" content="CSS 4 JOBS" />
         <link rel="apple-touch-icon" href="/images/logo.png" />
       </head>
@@ -40,8 +40,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           <PasswordGate>
             <Navbar />
             <main>{children}</main>
-            <footer className="border-t border-gray-800 mt-20 py-10 text-center text-sm text-gray-500">
-              <p>© 2025 CSS 4 JOBS · by <span className="text-violet-400 font-semibold">CareerStrategy Studio</span></p>
+            <footer className="border-t border-slate-200 mt-20 py-10 text-center text-sm text-slate-500">
+              <p>© 2025 CSS 4 JOBS · by <span className="text-brand-700 font-semibold">CareerStrategy Studio</span></p>
             </footer>
           </PasswordGate>
         </LangProvider>

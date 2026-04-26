@@ -9,7 +9,7 @@ export default function HomePage() {
   const features = [
     {
       icon: FileText,
-      color: 'bg-indigo-500/10 text-indigo-400',
+      color: 'bg-brand-100 text-brand-700',
       title: t('feat1_title'),
       desc: t('feat1_desc'),
       href: '/cv',
@@ -17,7 +17,7 @@ export default function HomePage() {
     },
     {
       icon: Linkedin,
-      color: 'bg-blue-500/10 text-blue-400',
+      color: 'bg-accent-100 text-accent-700',
       title: t('feat2_title'),
       desc: t('feat2_desc'),
       href: '/linkedin',
@@ -25,7 +25,7 @@ export default function HomePage() {
     },
     {
       icon: Search,
-      color: 'bg-emerald-500/10 text-emerald-400',
+      color: 'bg-highlight-100 text-highlight-700',
       title: t('feat3_title'),
       desc: t('feat3_desc'),
       href: '#',
@@ -49,24 +49,24 @@ export default function HomePage() {
 
   return (
     <div className="min-h-screen">
-      {/* Hero */}
       <section className="relative overflow-hidden py-24 px-4">
-        <div className="absolute inset-0 bg-gradient-to-br from-indigo-950/50 via-gray-950 to-gray-950 pointer-events-none" />
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[300px] bg-indigo-600/10 blur-3xl rounded-full pointer-events-none" />
+        <div className="absolute inset-0 bg-gradient-to-br from-brand-50 via-white to-accent-50/40 pointer-events-none" />
+        <div className="absolute inset-0 bg-soft-grid pointer-events-none opacity-60" />
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[300px] bg-brand-300/30 blur-3xl rounded-full pointer-events-none" />
 
         <div className="relative max-w-5xl mx-auto text-center">
-          <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-indigo-500/10 border border-indigo-500/20 text-indigo-400 text-xs font-semibold mb-6">
+          <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-brand-100 border border-brand-200 text-brand-700 text-xs font-semibold mb-6">
             {t('home_badge')}
           </div>
 
-          <h1 className="text-5xl sm:text-6xl lg:text-7xl font-bold text-white leading-[1.1] mb-6">
+          <h1 className="text-5xl sm:text-6xl lg:text-7xl font-bold text-slate-900 leading-[1.1] mb-6">
             {t('home_h1a')}<br />
-            <span className="bg-gradient-to-r from-indigo-400 to-purple-400 bg-clip-text text-transparent">
+            <span className="text-gradient-brand">
               {t('home_h1b')}
             </span>
           </h1>
 
-          <p className="text-xl text-gray-400 max-w-2xl mx-auto mb-10 leading-relaxed">
+          <p className="text-xl text-slate-600 max-w-2xl mx-auto mb-10 leading-relaxed">
             {t('home_desc')}
           </p>
 
@@ -81,37 +81,35 @@ export default function HomePage() {
             </Link>
           </div>
 
-          {/* Stats */}
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-6 max-w-2xl mx-auto">
             {stats.map(s => (
               <div key={s.label} className="text-center">
-                <div className="text-2xl font-bold text-white mb-1">{s.value}</div>
-                <div className="text-xs text-gray-500">{s.label}</div>
+                <div className="text-2xl font-bold text-brand-700 mb-1">{s.value}</div>
+                <div className="text-xs text-slate-500">{s.label}</div>
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* Features */}
       <section className="py-20 px-4">
         <div className="max-w-6xl mx-auto">
-          <h2 className="text-3xl font-bold text-white text-center mb-4">{t('features_h2')}</h2>
-          <p className="text-gray-400 text-center mb-14 max-w-xl mx-auto">{t('features_sub')}</p>
+          <h2 className="text-3xl font-bold text-slate-900 text-center mb-4">{t('features_h2')}</h2>
+          <p className="text-slate-600 text-center mb-14 max-w-xl mx-auto">{t('features_sub')}</p>
 
           <div className="grid md:grid-cols-3 gap-6">
             {features.map(f => {
               const Icon = f.icon;
               return (
-                <div key={f.title} className={`card hover:border-gray-700 transition-all group ${f.soon ? 'opacity-60' : ''}`}>
+                <div key={f.title} className={`card hover:border-brand-300 hover:shadow-soft transition-all group ${f.soon ? 'opacity-70' : ''}`}>
                   <div className={`w-12 h-12 rounded-xl flex items-center justify-center mb-4 ${f.color}`}>
                     <Icon size={22} />
                   </div>
-                  <h3 className="text-lg font-bold text-white mb-2">{f.title}</h3>
-                  <p className="text-gray-400 text-sm leading-relaxed mb-6">{f.desc}</p>
+                  <h3 className="text-lg font-bold text-slate-900 mb-2">{f.title}</h3>
+                  <p className="text-slate-600 text-sm leading-relaxed mb-6">{f.desc}</p>
                   {f.soon ? (
-                    <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-gray-800 text-gray-500 text-xs font-semibold">
-                      🚀 {f.cta}
+                    <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-100 text-slate-500 text-xs font-semibold">
+                      {f.cta}
                     </span>
                   ) : (
                     <Link href={f.href} className="btn-primary text-xs">
@@ -125,11 +123,10 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* How it works */}
-      <section className="py-20 px-4 bg-gray-900/50">
+      <section className="py-20 px-4 bg-brand-50/50">
         <div className="max-w-4xl mx-auto text-center">
-          <h2 className="text-3xl font-bold text-white mb-4">{t('how_h2')}</h2>
-          <p className="text-gray-400 mb-14">{t('how_sub')}</p>
+          <h2 className="text-3xl font-bold text-slate-900 mb-4">{t('how_h2')}</h2>
+          <p className="text-slate-600 mb-14">{t('how_sub')}</p>
           <div className="grid md:grid-cols-3 gap-8">
             {[
               { n: '01', title: t('step1_title'), desc: t('step1_desc') },
@@ -137,9 +134,9 @@ export default function HomePage() {
               { n: '03', title: t('step3_title'), desc: t('step3_desc') },
             ].map(step => (
               <div key={step.n} className="relative">
-                <div className="text-6xl font-black text-gray-800 mb-3">{step.n}</div>
-                <h3 className="text-lg font-bold text-white mb-2">{step.title}</h3>
-                <p className="text-gray-400 text-sm leading-relaxed">{step.desc}</p>
+                <div className="text-6xl font-black text-brand-200 mb-3">{step.n}</div>
+                <h3 className="text-lg font-bold text-slate-900 mb-2">{step.title}</h3>
+                <p className="text-slate-600 text-sm leading-relaxed">{step.desc}</p>
               </div>
             ))}
           </div>
@@ -151,20 +148,19 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Testimonials */}
       <section className="py-20 px-4">
         <div className="max-w-5xl mx-auto">
-          <h2 className="text-3xl font-bold text-white text-center mb-14">{t('test_h2')}</h2>
+          <h2 className="text-3xl font-bold text-slate-900 text-center mb-14">{t('test_h2')}</h2>
           <div className="grid md:grid-cols-3 gap-6">
             {testimonials.map(t2 => (
               <div key={t2.name} className="card">
                 <div className="flex gap-1 mb-3">
-                  {[...Array(5)].map((_, i) => <Star key={i} size={14} className="fill-yellow-400 text-yellow-400" />)}
+                  {[...Array(5)].map((_, i) => <Star key={i} size={14} className="fill-highlight-500 text-highlight-500" />)}
                 </div>
-                <p className="text-gray-300 text-sm leading-relaxed mb-4 italic">&ldquo;{t2.text}&rdquo;</p>
+                <p className="text-slate-700 text-sm leading-relaxed mb-4 italic">&ldquo;{t2.text}&rdquo;</p>
                 <div>
-                  <div className="font-semibold text-white text-sm">{t2.name}</div>
-                  <div className="text-gray-500 text-xs">{t2.role}</div>
+                  <div className="font-semibold text-slate-900 text-sm">{t2.name}</div>
+                  <div className="text-slate-500 text-xs">{t2.role}</div>
                 </div>
               </div>
             ))}
@@ -172,12 +168,11 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* CTA Banner */}
       <section className="py-20 px-4">
-        <div className="max-w-4xl mx-auto bg-gradient-to-r from-indigo-600 to-purple-600 rounded-3xl p-12 text-center">
+        <div className="max-w-4xl mx-auto bg-gradient-to-r from-brand-600 via-brand-500 to-accent-500 rounded-3xl p-12 text-center shadow-glow">
           <h2 className="text-3xl font-bold text-white mb-4">{t('cta_h2')}</h2>
-          <p className="text-indigo-200 mb-8 max-w-xl mx-auto">{t('cta_sub')}</p>
-          <Link href="/cv" className="inline-flex items-center gap-2 px-8 py-3.5 rounded-xl bg-white text-indigo-700 font-bold text-base hover:bg-gray-100 transition-all">
+          <p className="text-brand-50 mb-8 max-w-xl mx-auto">{t('cta_sub')}</p>
+          <Link href="/cv" className="inline-flex items-center gap-2 px-8 py-3.5 rounded-xl bg-white text-brand-700 font-bold text-base hover:bg-brand-50 transition-all shadow-soft">
             <Zap size={18} />
             {t('cta_btn')}
           </Link>

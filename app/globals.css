@@ -2,14 +2,34 @@
 @tailwind components;
 @tailwind utilities;
 
+:root {
+  --background: #FAFBFF;
+  --foreground: #0F172A;
+  --surface: #FFFFFF;
+  --surface-muted: #F4F6FF;
+  --border: #E5E8F5;
+  --brand-600: #5B6CFF;
+  --brand-500: #6C63FF;
+  --accent-500: #2CBFAE;
+  --accent-400: #3ED1C2;
+  --highlight-500: #F47A2A;
+}
+
 @layer base {
+  html, body {
+    background: var(--background);
+    color: var(--foreground);
+  }
   body {
-    @apply bg-gray-950 text-gray-100 antialiased;
+    @apply antialiased;
+  }
+  ::selection {
+    background: #DCE0FF;
+    color: #1B205C;
   }
 }
 
 @layer utilities {
-  /* Hide scrollbar but keep scroll functionality */
   .scrollbar-hide {
     -ms-overflow-style: none;
     scrollbar-width: none;
@@ -17,22 +37,80 @@
   .scrollbar-hide::-webkit-scrollbar {
     display: none;
   }
+  .text-gradient-brand {
+    background: linear-gradient(90deg, #5B6CFF 0%, #6C63FF 50%, #2CBFAE 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+  .bg-soft-grid {
+    background-image:
+      radial-gradient(circle at 1px 1px, rgba(91,108,255,0.08) 1px, transparent 0);
+    background-size: 24px 24px;
+  }
 }
 
 @layer components {
+  /* Buttons */
   .btn-primary {
-    @apply inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-violet-600 hover:bg-violet-500 text-white font-semibold text-sm transition-all duration-200 shadow-lg shadow-violet-500/25;
+    @apply inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl
+           bg-brand-600 hover:bg-brand-500 text-white font-semibold text-sm
+           transition-all duration-200 shadow-soft hover:shadow-glow
+           focus:outline-none focus:ring-2 focus:ring-brand-400 focus:ring-offset-2;
+  }
+  .btn-accent {
+    @apply inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl
+           bg-accent-500 hover:bg-accent-600 text-white font-semibold text-sm
+           transition-all duration-200 shadow-soft
+           focus:outline-none focus:ring-2 focus:ring-accent-400 focus:ring-offset-2;
   }
   .btn-outline {
-    @apply inline-flex items-center gap-2 px-5 py-2.5 rounded-xl border border-gray-700 hover:border-violet-500 text-gray-300 hover:text-white font-semibold text-sm transition-all duration-200;
+    @apply inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl
+           border border-slate-300 hover:border-brand-500 text-slate-700 hover:text-brand-700
+           bg-white hover:bg-brand-50
+           font-semibold text-sm transition-all duration-200;
   }
+  .btn-ghost {
+    @apply inline-flex items-center justify-center gap-2 px-4 py-2 rounded-xl
+           text-slate-600 hover:text-brand-700 hover:bg-brand-50
+           font-medium text-sm transition-all duration-200;
+  }
+
+  /* Cards */
   .card {
-    @apply bg-gray-900 border border-gray-800 rounded-2xl p-4 sm:p-6;
+    @apply bg-white border border-slate-200 rounded-2xl p-4 sm:p-6 shadow-sm;
   }
+  .card-soft {
+    @apply bg-brand-50/60 border border-brand-100 rounded-2xl p-4 sm:p-6;
+  }
+
+  /* Forms */
   .input {
-    @apply w-full bg-gray-800 border border-gray-700 rounded-xl px-4 py-3 text-gray-100 placeholder-gray-500 focus:outline-none focus:border-violet-500 focus:ring-1 focus:ring-violet-500 transition-all text-sm;
+    @apply w-full bg-white border border-slate-300 rounded-xl px-4 py-3
+           text-slate-900 placeholder-slate-400
+           focus:outline-none focus:border-brand-500 focus:ring-2 focus:ring-brand-200
+           transition-all text-sm;
   }
   .textarea {
-    @apply w-full bg-gray-800 border border-gray-700 rounded-xl px-4 py-3 text-gray-100 placeholder-gray-500 focus:outline-none focus:border-violet-500 focus:ring-1 focus:ring-violet-500 transition-all text-sm resize-none;
+    @apply w-full bg-white border border-slate-300 rounded-xl px-4 py-3
+           text-slate-900 placeholder-slate-400
+           focus:outline-none focus:border-brand-500 focus:ring-2 focus:ring-brand-200
+           transition-all text-sm resize-none;
   }
+  .select {
+    @apply w-full bg-white border border-slate-300 rounded-xl px-4 py-3
+           text-slate-900
+           focus:outline-none focus:border-brand-500 focus:ring-2 focus:ring-brand-200
+           transition-all text-sm;
+  }
+
+  /* Chips */
+  .chip {
+    @apply inline-flex items-center gap-1.5 px-3 py-1 rounded-full
+           text-xs font-medium border;
+  }
+  .chip-brand   { @apply bg-brand-50      text-brand-700      border-brand-200; }
+  .chip-accent  { @apply bg-accent-50     text-accent-700     border-accent-200; }
+  .chip-warn    { @apply bg-highlight-50  text-highlight-700  border-highlight-200; }
+  .chip-muted   { @apply bg-slate-100     text-slate-700      border-slate-200; }
 }

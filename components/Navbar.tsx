@@ -33,25 +33,25 @@ function ProLoginModal({
 
   return (
     <div
-      className="fixed inset-0 z-[200] flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm"
+      className="fixed inset-0 z-[200] flex items-center justify-center p-4 bg-white/70 backdrop-blur-sm"
       onClick={onClose}
     >
       <div
-        className="bg-gray-900 border border-gray-700 rounded-2xl p-6 w-full max-w-sm shadow-2xl"
+        className="bg-white border border-slate-300 rounded-2xl p-6 w-full max-w-sm shadow-2xl"
         onClick={e => e.stopPropagation()}
       >
         {/* Header */}
         <div className="flex items-center justify-between mb-5">
           <div className="flex items-center gap-2.5">
-            <div className="w-9 h-9 rounded-xl bg-indigo-500/20 border border-indigo-500/30 flex items-center justify-center">
+            <div className="w-9 h-9 rounded-xl bg-brand-500/20 border border-indigo-500/30 flex items-center justify-center">
               <Star size={16} className="text-indigo-400" />
             </div>
             <div>
-              <h2 className="text-white font-bold text-sm">Acceso Plan Pro</h2>
-              <p className="text-gray-500 text-xs">Ingresa tu email y clave de cliente</p>
+              <h2 className="text-slate-900 font-bold text-sm">Acceso Plan Pro</h2>
+              <p className="text-slate-400 text-xs">Ingresa tu email y clave de cliente</p>
             </div>
           </div>
-          <button onClick={onClose} className="text-gray-600 hover:text-white transition-colors p-1">
+          <button onClick={onClose} className="text-slate-500 hover:text-brand-700 transition-colors p-1">
             <X size={16} />
           </button>
         </div>
@@ -62,33 +62,33 @@ function ProLoginModal({
               <Star size={30} className="text-emerald-400 fill-emerald-400" />
             </div>
             <p className="text-emerald-400 font-bold text-lg">¡Plan Pro activado!</p>
-            <p className="text-gray-500 text-sm mt-1">Cerrando ventana...</p>
+            <p className="text-slate-400 text-sm mt-1">Cerrando ventana...</p>
           </div>
         ) : (
           <div className="space-y-3">
             <div>
-              <label className="text-xs font-semibold text-gray-400 mb-1.5 block">Email</label>
+              <label className="text-xs font-semibold text-slate-500 mb-1.5 block">Email</label>
               <input
                 type="email"
                 value={email}
                 onChange={e => { setEmail(e.target.value); setError(''); }}
                 onKeyDown={handleKey}
-                className="w-full px-3 py-2.5 rounded-xl bg-gray-800 border border-gray-700 text-white text-sm placeholder-gray-500 outline-none focus:border-indigo-500 transition-colors"
+                className="w-full px-3 py-2.5 rounded-xl bg-white border border-slate-300 text-slate-900 text-sm placeholder-slate-400 outline-none focus:border-indigo-500 transition-colors"
                 placeholder="tu@email.com"
                 autoFocus
               />
             </div>
             <div>
-              <label className="text-xs font-semibold text-gray-400 mb-1.5 block">Clave Pro</label>
+              <label className="text-xs font-semibold text-slate-500 mb-1.5 block">Clave Pro</label>
               <input
                 type="text"
                 value={key}
                 onChange={e => { setKey(e.target.value); setError(''); }}
                 onKeyDown={handleKey}
-                className="w-full px-3 py-2.5 rounded-xl bg-gray-800 border border-gray-700 text-white text-sm placeholder-gray-500 outline-none focus:border-indigo-500 transition-colors font-mono tracking-wider"
+                className="w-full px-3 py-2.5 rounded-xl bg-white border border-slate-300 text-slate-900 text-sm placeholder-slate-400 outline-none focus:border-indigo-500 transition-colors font-mono tracking-wider"
                 placeholder="CSS4J.xxx..."
               />
-              <p className="text-gray-600 text-[11px] mt-1.5">La clave te la envía Javier tras tu pago.</p>
+              <p className="text-slate-500 text-[11px] mt-1.5">La clave te la envía Javier tras tu pago.</p>
             </div>
 
             {error && (
@@ -108,7 +108,7 @@ function ProLoginModal({
               }
             </button>
 
-            <p className="text-center text-xs text-gray-600 pt-1">
+            <p className="text-center text-xs text-slate-500 pt-1">
               ¿No tienes plan Pro?{' '}
               <a href="/pricing" onClick={onClose} className="text-indigo-400 hover:text-indigo-300 transition-colors">
                 Ver planes →
@@ -145,9 +145,9 @@ function ProUserBadge({
     <div className="relative" ref={ref}>
       <button
         onClick={() => setOpen(o => !o)}
-        className="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-indigo-500/15 border border-indigo-500/30 hover:bg-indigo-500/25 transition-all"
+        className="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-brand-500/15 border border-indigo-500/30 hover:bg-brand-500/25 transition-all"
       >
-        <div className="w-6 h-6 rounded-full bg-indigo-600 flex items-center justify-center text-white text-xs font-bold">
+        <div className="w-6 h-6 rounded-full bg-brand-600 flex items-center justify-center text-white text-xs font-bold">
           {initial}
         </div>
         <span className="text-indigo-300 text-xs font-bold hidden sm:block">PRO</span>
@@ -155,9 +155,9 @@ function ProUserBadge({
       </button>
 
       {open && (
-        <div className="absolute right-0 top-full mt-2 w-56 bg-gray-900 border border-gray-700 rounded-xl shadow-2xl py-2 z-50">
-          <div className="px-3 py-2 border-b border-gray-800">
-            <p className="text-white text-xs font-semibold truncate">{email}</p>
+        <div className="absolute right-0 top-full mt-2 w-56 bg-white border border-slate-300 rounded-xl shadow-2xl py-2 z-50">
+          <div className="px-3 py-2 border-b border-slate-200">
+            <p className="text-slate-900 text-xs font-semibold truncate">{email}</p>
             <div className="flex items-center gap-1 mt-0.5">
               <Star size={10} className="text-indigo-400 fill-indigo-400" />
               <span className="text-indigo-400 text-[11px] font-bold">Plan Pro activo</span>
@@ -165,7 +165,7 @@ function ProUserBadge({
           </div>
           <button
             onClick={() => { onLogout(); setOpen(false); }}
-            className="w-full flex items-center gap-2 px-3 py-2 text-gray-400 hover:text-white hover:bg-gray-800 text-xs transition-all"
+            className="w-full flex items-center gap-2 px-3 py-2 text-slate-500 hover:text-brand-700 hover:bg-slate-100 text-xs transition-all"
           >
             <LogOut size={13} /> Cerrar sesión
           </button>
@@ -181,13 +181,13 @@ export default function Navbar() {
   const { lang, setLang, t } = useLang();
   const { isPro, ready, proData, activatePro, deactivatePro } = usePro();
   const active = (href: string) =>
-    path === href ? 'text-white font-semibold' : 'text-gray-400 hover:text-white';
+    path === href ? 'text-white font-semibold' : 'text-slate-500 hover:text-brand-700';
 
   const [showLogin, setShowLogin] = useState(false);
 
   return (
     <>
-      <nav className="sticky top-0 z-50 bg-gray-950/80 backdrop-blur-lg border-b border-gray-800">
+      <nav className="sticky top-0 z-50 bg-white/80 backdrop-blur-lg border-b border-slate-200">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 flex items-center justify-between h-16">
           {/* Logo */}
           <Link href="/" className="flex items-center gap-2">
@@ -202,7 +202,7 @@ export default function Navbar() {
                 if (fallback) fallback.style.removeProperty('display');
               }}
             />
-            <span className="font-bold text-white" style={{ display: 'none' }}>
+            <span className="font-bold text-slate-900" style={{ display: 'none' }}>
               CSS <span className="text-indigo-400">4 JOBS</span>
             </span>
           </Link>
@@ -221,7 +221,7 @@ export default function Navbar() {
             {/* Lang toggle */}
             <button
               onClick={() => setLang(lang === 'es' ? 'en' : 'es')}
-              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-gray-800 hover:bg-gray-700 transition-all text-sm font-semibold text-gray-300 hover:text-white border border-gray-700"
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 transition-all text-sm font-semibold text-slate-700 hover:text-brand-700 border border-slate-300"
               title={lang === 'es' ? 'Switch to English' : 'Cambiar a Español'}
             >
               <span>{lang === 'es' ? '🇬🇧' : '🇪🇸'}</span>
@@ -235,9 +235,9 @@ export default function Navbar() {
               ) : (
                 <button
                   onClick={() => setShowLogin(true)}
-                  className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-gray-800 border border-gray-700 hover:border-indigo-500/50 hover:bg-gray-700 text-gray-300 hover:text-white text-xs font-semibold transition-all"
+                  className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-100 border border-slate-300 hover:border-indigo-500/50 hover:bg-slate-200 text-slate-700 hover:text-brand-700 text-xs font-semibold transition-all"
                 >
-                  <Lock size={12} className="text-gray-500" />
+                  <Lock size={12} className="text-slate-400" />
                   {lang === 'es' ? 'Iniciar sesión' : 'Log in'}
                 </button>
               )
