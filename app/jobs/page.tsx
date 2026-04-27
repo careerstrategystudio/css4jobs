@@ -833,15 +833,32 @@ export default function JobsPage() {
                     </button>
                   )}
 
-                  <a
-                    href={job.redirect_url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex items-center gap-1.5 px-4 py-1.5 rounded-lg bg-gradient-to-r from-brand-600 to-purple-600 hover:from-brand-500 hover:to-purple-500 text-white text-xs font-bold transition-all ml-auto shadow-sm shadow-soft"
-                  >
-                    <Zap size={12} />
-                    {es ? 'Aplicar →' : 'Apply →'}
-                  </a>
+                  <div className="flex items-center gap-2">
+                    {/* Adapt CV button */}
+                    {match && match.score < 89 && cvText.trim() && ready && !adaptedCVs[job.id] && (
+                      isPro ? (
+                        <button onClick={() => adaptCV(job)} disabled={adaptLoading === job.id}
+                          className="flex items-center gap-1.5 px-4 py-1.5 rounded-lg bg-fuchsia-500/20 hover:bg-fuchsia-500/30 border border-fuchsia-500/40 text-fuchsia-300 text-xs font-bold transition-all shadow-sm disabled:opacity-50">
+                          {adaptLoading === job.id
+                            ? <><Spinner /> {es ? 'Adaptando...' : 'Tailoring...'}</>
+                            : <><Zap size={12} /> {es ? 'Adaptar' : 'Tailor'}</>}
+                        </button>
+                      ) : (
+                        <a href="/pricing" className="flex items-center gap-1.5 px-4 py-1.5 rounded-lg bg-slate-200/30 border border-slate-300/50 text-slate-400 text-xs font-bold hover:border-brand-300 hover:text-brand-400 transition-all shadow-sm">
+                          <Lock size={12} /> {es ? 'Adaptar' : 'Tailor'}
+                        </a>
+                      )
+                    )}
+
+                    <a
+                      href={job.redirect_url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex items-center gap-1.5 px-4 py-1.5 rounded-lg bg-gradient-to-r from-brand-600 to-purple-600 hover:from-brand-500 hover:to-purple-500 text-white text-xs font-bold transition-all shadow-sm shadow-soft">
+                      <Zap size={12} />
+                      {es ? 'Aplicar →' : 'Apply →'}
+                    </a>
+                  </div>
                 </div>
 
                 {/* Expanded description */}
@@ -908,25 +925,8 @@ export default function JobsPage() {
                       </div>
                     )}
 
-                    {/* Adapt CV */}
-                    {match.score < 89 && cvText.trim() && ready && !adaptedCVs[job.id] && (
-                      isPro ? (
-                        <button onClick={() => adaptCV(job)} disabled={adaptLoading === job.id}
-                          className="flex items-center gap-2 px-4 py-2 rounded-lg bg-fuchsia-500/10 border border-fuchsia-500/30 text-fuchsia-400 text-xs font-semibold hover:bg-fuchsia-500/20 transition-all disabled:opacity-50 w-full justify-center">
-                          {adaptLoading === job.id
-                            ? <><Spinner /> {es ? 'Adaptando CV...' : 'Tailoring CV...'}</>
-                            : <><Zap size={12} /> {es ? `Adaptar CV para este cargo (match: ${match.score}%)` : `Tailor CV for this job (match: ${match.score}%)`}</>}
-                        </button>
-                      ) : (
-                        <div className="flex items-center gap-2 px-4 py-2 rounded-lg bg-slate-100/50 border border-slate-300/50">
-                          <Lock size={12} className="text-slate-400 flex-shrink-0" />
-                          <span className="text-slate-400 text-xs">{es ? 'Adaptar CV — ' : 'Tailor CV — '}</span>
-                          <a href="/pricing" className="text-brand-400 text-xs font-semibold hover:text-brand-300 flex items-center gap-1">
-                            <Star size={10} className="fill-brand-500" /> {es ? 'Solo Pro' : 'Pro only'}
-                          </a>
-                        </div>
-                      )
-                    )}
+                    {/* Adapt CV - moved to header */}
+
                     {adaptedCVs[job.id] && (
                       <div className="p-4 rounded-xl bg-fuchsia-500/5 border border-fuchsia-500/20 mt-2">
                         <div className="flex items-center justify-between mb-2">
