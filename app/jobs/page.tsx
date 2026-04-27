@@ -949,30 +949,3 @@ export default function JobsPage() {
     </div>
   );
 }
-                            <Star size={10} className="fill-brand-500" /> {es ? 'Solo Pro' : 'Pro only'}
-                          </a>
-                        </div>
-                      )
-                    )}
-                    {adaptedCVs[job.id] && (
-                      <div className="p-4 rounded-xl bg-fuchsia-500/5 border border-fuchsia-500/20 mt-2">
-                        <div className="flex items-center justify-between mb-2">
-                          <span className="text-xs font-semibold text-fuchsia-400 flex items-center gap-1.5"><Zap size={11} /> {es ? 'CV Adaptado' : 'Tailored CV'}</span>
-                          <button onClick={() => { navigator.clipboard.writeText(adaptedCVs[job.id]); setAdaptCopied(job.id); setTimeout(() => setAdaptCopied(null), 2000); }}
-                            className="flex items-center gap-1 text-slate-500 hover:text-brand-700 text-xs">
-                            {adaptCopied === job.id ? <><CheckCircle size={11} className="text-emerald-400" /> {es ? 'Copiado' : 'Copied'}</> : <><Copy size={11} /> {es ? 'Copiar' : 'Copy'}</>}
-                          </button>
-                        </div>
-                        <pre className="text-slate-700 text-xs leading-relaxed whitespace-pre-wrap max-h-60 overflow-y-auto">{adaptedCVs[job.id]}</pre>
-                      </div>
-                    )}
-                  </div>
-                )}
-              </div>
-            );
-          })}
-        </div>
-      </div>
-    </div>
-  );
-}
