@@ -1,6 +1,6 @@
 'use client';
 import Link from 'next/link';
-import { FileText, Linkedin, Search, Zap, ArrowRight, Star } from 'lucide-react';
+import { FileText, Linkedin, Briefcase, Zap, ArrowRight, Star } from 'lucide-react';
 import { useLang } from '@/lib/i18n';
 
 export default function HomePage() {
@@ -22,6 +22,14 @@ export default function HomePage() {
       desc: t('feat2_desc'),
       href: '/linkedin',
       cta: t('feat2_cta'),
+    },
+    {
+      icon: Briefcase,
+      color: 'bg-highlight-100 text-highlight-700',
+      title: t('feat3_title'),
+      desc: t('feat3_desc'),
+      href: '/interviews',
+      cta: t('feat3_cta'),
     },
   ];
 
@@ -83,33 +91,29 @@ export default function HomePage() {
         </div>
       </section>
 
-      <section className="py-20 px-4">
-        <div className="max-w-6xl mx-auto">
+      <section className="py-20">
+        <div style={{ width: '100%', padding: '0 16px' }}>
           <h2 className="text-3xl font-bold text-slate-900 text-center mb-4">{t('features_h2')}</h2>
           <p className="text-slate-600 text-center mb-14 max-w-xl mx-auto">{t('features_sub')}</p>
 
-          <div className="grid md:grid-cols-3 gap-6">
-            {features.map(f => {
-              const Icon = f.icon;
-              return (
-                <div key={f.title} className={`card hover:border-brand-300 hover:shadow-soft transition-all group ${f.soon ? 'opacity-70' : ''}`}>
-                  <div className={`w-12 h-12 rounded-xl flex items-center justify-center mb-4 ${f.color}`}>
-                    <Icon size={22} />
-                  </div>
-                  <h3 className="text-lg font-bold text-slate-900 mb-2">{f.title}</h3>
-                  <p className="text-slate-600 text-sm leading-relaxed mb-6">{f.desc}</p>
-                  {f.soon ? (
-                    <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-100 text-slate-500 text-xs font-semibold">
-                      {f.cta}
-                    </span>
-                  ) : (
+          <div style={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '24px', width: '900px', maxWidth: '100%', padding: '0 16px' }}>
+              {features.map(f => {
+                const Icon = f.icon;
+                return (
+                  <div key={f.title} className="card hover:border-brand-300 hover:shadow-soft transition-all group">
+                    <div className={`w-12 h-12 rounded-xl flex items-center justify-center mb-4 ${f.color}`}>
+                      <Icon size={22} />
+                    </div>
+                    <h3 className="text-lg font-bold text-slate-900 mb-2">{f.title}</h3>
+                    <p className="text-slate-600 text-sm leading-relaxed mb-6">{f.desc}</p>
                     <Link href={f.href} className="btn-primary text-xs">
                       {f.cta} <ArrowRight size={13} />
                     </Link>
-                  )}
-                </div>
-              );
-            })}
+                  </div>
+                );
+              })}
+            </div>
           </div>
         </div>
       </section>

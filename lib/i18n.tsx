@@ -38,9 +38,9 @@ const translations = {
     feat2_title: 'LinkedIn Optimizer',
     feat2_desc: 'Pega tu perfil de LinkedIn y recibe un analisis completo con mejoras especificas: headline, about, experiencia y keywords para aparecer en mas busquedas.',
     feat2_cta: 'Optimizar LinkedIn',
-    feat3_title: 'Busqueda Global de Trabajo',
-    feat3_desc: 'Buscador de empleos internacionales integrado. Irlanda, España, UK, LATAM y mas. Proximamente disponible.',
-    feat3_cta: 'Proximamente',
+    feat3_title: 'Preparar Entrevistas',
+    feat3_desc: 'Practica entrevistas con IA. Recibe feedback detallado sobre tus respuestas, mejora tu comunicacion y aumenta tu confianza antes de la entrevista real.',
+    feat3_cta: 'Preparar entrevista',
 
     // How it works
     how_h2: '¿Como funciona?',
@@ -238,9 +238,9 @@ const translations = {
     feat2_title: 'LinkedIn Optimizer',
     feat2_desc: 'Paste your LinkedIn profile and get a complete analysis with specific improvements: headline, about, experience and keywords to appear in more searches.',
     feat2_cta: 'Optimize LinkedIn',
-    feat3_title: 'Global Job Search',
-    feat3_desc: 'Integrated international job search. Ireland, Spain, UK, LATAM and more. Coming soon.',
-    feat3_cta: 'Coming soon',
+    feat3_title: 'Interview Preparation',
+    feat3_desc: 'Practice interviews with AI. Get detailed feedback on your answers, improve your communication and build confidence before the real interview.',
+    feat3_cta: 'Prepare interview',
 
     // How it works
     how_h2: 'How does it work?',
