@@ -2,11 +2,6 @@ import { NextRequest, NextResponse } from 'next/server';
 import { generateKey } from '@/lib/keys';
 import { createClient } from '@supabase/supabase-js';
 
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_ROLE_KEY!
-);
-
 interface GenerateKeyRequest {
   email: string;
   plan: 'monthly' | 'quadrimestral' | 'semestral';
@@ -20,6 +15,20 @@ const PLAN_CONFIG: Record<string, { months: number; limit: number }> = {
 
 export async function POST(req: NextRequest) {
   try {
+    // Verificar variables de entorno
+    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+    const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+    
+    if (!supabaseUrl || !supabaseKey) {
+      return NextResponse.json(
+        { error: 'Supabase configuration missing' },
+        { status: 500 }
+      );
+    }
+
+    // Crear cliente Supabase
+    const supabase = createClient(supabaseUrl, supabaseKey);
+
     // Verificar que sea una solicitud autorizada (desde admin panel)
     const authHeader = req.headers.get('authorization');
     if (authHeader !== `Bearer ${process.env.ADMIN_SECRET}`) {
