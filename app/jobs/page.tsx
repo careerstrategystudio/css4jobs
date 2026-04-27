@@ -205,15 +205,28 @@ export default function JobsPage() {
     const isPdf   = file.type === 'application/pdf' || file.name.endsWith('.pdf');
     const isImage = file.type.startsWith('image/');
     if (!isPdf && !isImage) {
-      setCvText(await file.text());
+      const text = await file.text();
+      setCvText(text);
       setCvTab('text');
+      // Auto-match if jobs already loaded
+      if (jobs.length > 0) {
+        autoMatchJobs(jobs.slice(0, 8), text);
+      }
       return;
     }
     if (isPdf) {
       try {
         const raw = await file.text();
         const readable = raw.replace(/[^\x20-\x7E\n\r\t]/g, '').trim();
-        if (readable.length > 200) { setCvText(readable); setCvTab('text'); return; }
+        if (readable.length > 200) { 
+          setCvText(readable); 
+          setCvTab('text');
+          // Auto-match if jobs already loaded
+          if (jobs.length > 0) {
+            autoMatchJobs(jobs.slice(0, 8), readable);
+          }
+          return; 
+        }
       } catch { /* fall through */ }
     }
     setOcrLoading(true); setCvTab('text');
@@ -222,7 +235,13 @@ export default function JobsPage() {
       form.append('file', file);
       const res  = await fetch('/api/ocr-cv', { method: 'POST', body: form });
       const data = await res.json();
-      if (data.text) setCvText(data.text);
+      if (data.text) {
+        setCvText(data.text);
+        // Auto-match if jobs already loaded
+        if (jobs.length > 0) {
+          autoMatchJobs(jobs.slice(0, 8), data.text);
+        }
+      }
     } catch { /* ignore */ } finally { setOcrLoading(false); }
   };
 
