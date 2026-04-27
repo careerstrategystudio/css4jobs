@@ -31,7 +31,7 @@ export default function AdminGenerateKey() {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${process.env.NEXT_PUBLIC_ADMIN_SECRET || 'CSS4J_ADMIN_2025_SECURE'}`,
+          'Authorization': `Bearer CSS4J_ADMIN_2025_SECURE`,
         },
         body: JSON.stringify({ email, plan }),
       });
