@@ -12,7 +12,7 @@ const PLAN_CONFIG: Record<string, { months: number; limit: number }> = {
   semestral: { months: 6, limit: 30 },
 };
 
-// Supabase REST API directly
+// Supabase REST API directly - with retries
 async function insertProKey(email: string, proKey: string, plan: string, expiresAt: string) {
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
   const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
@@ -21,29 +21,56 @@ async function insertProKey(email: string, proKey: string, plan: string, expires
     throw new Error('Supabase configuration missing');
   }
   
-  console.log('[API] Making REST API call to Supabase...');
-  const response = await fetch(`${supabaseUrl}/rest/v1/pro_keys`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'apikey': supabaseKey,
-      'Authorization': `Bearer ${supabaseKey}`,
-    },
-    body: JSON.stringify({
-      email: email.toLowerCase().trim(),
-      pro_key: proKey,
-      plan,
-      expires_at: expiresAt,
-      status: 'active',
-    }),
-  });
+  const maxRetries = 3;
+  let lastError: any;
+  
+  for (let attempt = 1; attempt <= maxRetries; attempt++) {
+    try {
+      console.log(`[API] Making REST API call to Supabase (attempt ${attempt}/${maxRetries})...`);
+      
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 30000); // 30 second timeout
+      
+      const response = await fetch(`${supabaseUrl}/rest/v1/pro_keys`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'apikey': supabaseKey,
+          'Authorization': `Bearer ${supabaseKey}`,
+          'Prefer': 'return=minimal',
+        },
+        body: JSON.stringify({
+          email: email.toLowerCase().trim(),
+          pro_key: proKey,
+          plan,
+          expires_at: expiresAt,
+          status: 'active',
+        }),
+        signal: controller.signal,
+      });
 
-  if (!response.ok) {
-    const error = await response.json();
-    throw new Error(`Supabase REST API error (${response.status}): ${JSON.stringify(error)}`);
+      clearTimeout(timeoutId);
+
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(`Supabase REST API error (${response.status}): ${JSON.stringify(error)}`);
+      }
+
+      console.log(`[API] Successfully inserted on attempt ${attempt}`);
+      return response.json();
+    } catch (error) {
+      lastError = error;
+      console.error(`[API] Attempt ${attempt} failed:`, error instanceof Error ? error.message : String(error));
+      
+      if (attempt < maxRetries) {
+        const waitTime = Math.pow(2, attempt) * 1000; // exponential backoff
+        console.log(`[API] Retrying in ${waitTime}ms...`);
+        await new Promise(resolve => setTimeout(resolve, waitTime));
+      }
+    }
   }
-
-  return response.json();
+  
+  throw lastError;
 }
 
 export async function POST(req: NextRequest) {
