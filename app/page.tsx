@@ -23,15 +23,6 @@ export default function HomePage() {
       href: '/linkedin',
       cta: t('feat2_cta'),
     },
-    {
-      icon: Search,
-      color: 'bg-highlight-100 text-highlight-700',
-      title: t('feat3_title'),
-      desc: t('feat3_desc'),
-      href: '#',
-      cta: t('feat3_cta'),
-      soon: true,
-    },
   ];
 
   const stats = [

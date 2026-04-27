@@ -94,8 +94,8 @@ export default function PricingPage() {
     {
       id: 'semestral',
       name:     es ? 'Plan Semestral' : 'Semiannual Plan',
-      monthly:  '13.55',
-      total:    '81.30',
+      monthly:  '9.55',
+      total:    '57.30',
       period:   es ? 'facturado cada 6 meses' : 'billed every 6 months',
       badge:    es ? 'MEJOR INVERSIÓN' : 'BEST INVESTMENT',
       badgeColor: 'bg-brand-600 text-white',
@@ -108,8 +108,8 @@ export default function PricingPage() {
     {
       id: 'cuatrimestral',
       name:     es ? 'Plan Cuatrimestral' : '4-Month Plan',
-      monthly:  '15.58',
-      total:    '62.32',
+      monthly:  '11.58',
+      total:    '46.32',
       period:   es ? 'facturado cada 4 meses' : 'billed every 4 months',
       badge:    es ? 'MÁS POPULAR' : 'MOST POPULAR',
       badgeColor: 'bg-emerald-500 text-white',
@@ -122,7 +122,7 @@ export default function PricingPage() {
     {
       id: 'mensual',
       name:     es ? 'Plan Mensual' : 'Monthly Plan',
-      monthly:  '18.00',
+      monthly:  '14.00',
       total:    null,
       period:   es ? 'facturado mensualmente' : 'billed monthly',
       badge:    null,
@@ -333,8 +333,3 @@ export default function PricingPage() {
     </div>
   );
 }
-
-// build
-
-// build
-// stripe
