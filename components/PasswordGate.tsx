@@ -1,9 +1,46 @@
 'use client';
 import { useState, useEffect } from 'react';
 import { Zap, Lock } from 'lucide-react';
+import * as crypto from 'crypto';
 
 const PASSWORD = process.env.NEXT_PUBLIC_ACCESS_PASSWORD || 'css4jobs2025';
+const KEY_SECRET = 'css4jobs-pro-secret-key-2025';
 const STORAGE_KEY = 'css4jobs_access';
+
+// Validate Pro key format: CSS4J.{payload}.{signature}
+function validateProKey(key: string): boolean {
+  if (!key.startsWith('CSS4J.')) return false;
+  
+  const parts = key.split('.');
+  if (parts.length !== 3) return false;
+  
+  const [_, payloadB64, signature] = parts;
+  
+  try {
+    // Decode payload
+    const payload = Buffer.from(payloadB64, 'base64url').toString('utf-8');
+    const data = JSON.parse(payload);
+    
+    // Verify signature
+    const hmac = crypto.createHmac('sha256', KEY_SECRET);
+    hmac.update(payloadB64);
+    const expectedSig = hmac.digest('base64url');
+    
+    // Check if key is still valid (not expired)
+    if (data.createdAt) {
+      const createdDate = new Date(data.createdAt);
+      const months = data.months || 1;
+      const expirationDate = new Date(createdDate);
+      expirationDate.setMonth(expirationDate.getMonth() + months);
+      
+      if (new Date() > expirationDate) return false;
+    }
+    
+    return signature === expectedSig;
+  } catch {
+    return false;
+  }
+}
 
 export default function PasswordGate({ children }: { children: React.ReactNode }) {
   const [unlocked, setUnlocked] = useState(false);
@@ -19,14 +56,29 @@ export default function PasswordGate({ children }: { children: React.ReactNode }
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (input.trim() === PASSWORD) {
+    const trimmedInput = input.trim();
+    
+    // Check if it's a Pro key
+    if (trimmedInput.startsWith('CSS4J.')) {
+      if (validateProKey(trimmedInput)) {
+        localStorage.setItem(STORAGE_KEY, 'true');
+        setUnlocked(true);
+        setError(false);
+        return;
+      }
+    }
+    
+    // Check if it's the beta password
+    if (trimmedInput === PASSWORD) {
       localStorage.setItem(STORAGE_KEY, 'true');
       setUnlocked(true);
       setError(false);
-    } else {
-      setError(true);
-      setInput('');
+      return;
     }
+    
+    // Invalid
+    setError(true);
+    setInput('');
   };
 
   if (loading) {
