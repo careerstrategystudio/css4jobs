@@ -28,7 +28,7 @@ export default function HomePage() {
       color: 'bg-highlight-100 text-highlight-700',
       title: t('feat3_title'),
       desc: t('feat3_desc'),
-      href: '/interviews',
+      href: '/prep',
       cta: t('feat3_cta'),
     },
   ];
