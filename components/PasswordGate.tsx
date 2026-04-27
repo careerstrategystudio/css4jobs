@@ -61,6 +61,33 @@ export default function PasswordGate({ children }: { children: React.ReactNode }
     // Check if it's a Pro key
     if (trimmedInput.startsWith('CSS4J.')) {
       if (validateProKey(trimmedInput)) {
+        // Parse and store Pro data
+        try {
+          const parts = trimmedInput.split('.');
+          const payloadB64 = parts[1];
+          const payload = JSON.parse(Buffer.from(payloadB64, 'base64url').toString('utf-8'));
+          
+          // Calculate expiration date
+          const createdDate = new Date(payload.createdAt);
+          const months = payload.months || 1;
+          const expirationDate = new Date(createdDate);
+          expirationDate.setMonth(expirationDate.getMonth() + months);
+          
+          // Store Pro data in Pro system format
+          const proData = {
+            email: payload.email,
+            key: trimmedInput,
+            limit: payload.limit || 999,
+            exp: expirationDate.toISOString(),
+            usedMonth: 0,
+            resetMonth: new Date().toISOString().slice(0, 7),
+          };
+          
+          localStorage.setItem('css4jobs_pro_v2', JSON.stringify(proData));
+        } catch {
+          // Silently ignore parsing errors
+        }
+        
         localStorage.setItem(STORAGE_KEY, 'true');
         setUnlocked(true);
         setError(false);
