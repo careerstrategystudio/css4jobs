@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { generateKey } from '@/lib/keys';
-import { createClient } from '@supabase/supabase-js';
 
 interface GenerateKeyRequest {
   email: string;
@@ -12,6 +11,40 @@ const PLAN_CONFIG: Record<string, { months: number; limit: number }> = {
   quadrimestral: { months: 4, limit: 20 },
   semestral: { months: 6, limit: 30 },
 };
+
+// Supabase REST API directly
+async function insertProKey(email: string, proKey: string, plan: string, expiresAt: string) {
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+  
+  if (!supabaseUrl || !supabaseKey) {
+    throw new Error('Supabase configuration missing');
+  }
+  
+  console.log('[API] Making REST API call to Supabase...');
+  const response = await fetch(`${supabaseUrl}/rest/v1/pro_keys`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'apikey': supabaseKey,
+      'Authorization': `Bearer ${supabaseKey}`,
+    },
+    body: JSON.stringify({
+      email: email.toLowerCase().trim(),
+      pro_key: proKey,
+      plan,
+      expires_at: expiresAt,
+      status: 'active',
+    }),
+  });
+
+  if (!response.ok) {
+    const error = await response.json();
+    throw new Error(`Supabase REST API error (${response.status}): ${JSON.stringify(error)}`);
+  }
+
+  return response.json();
+}
 
 export async function POST(req: NextRequest) {
   try {
@@ -32,10 +65,6 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    // Crear cliente Supabase
-    console.log('[API] Creating Supabase client...');
-    const supabase = createClient(supabaseUrl, supabaseKey);
-
     // Verificar que sea una solicitud autorizada (desde admin panel)
     const authHeader = req.headers.get('authorization');
     const expectedAuth = `Bearer ${process.env.ADMIN_SECRET}`;
@@ -53,7 +82,7 @@ export async function POST(req: NextRequest) {
 
     console.log('[API] Parsing request body...');
     const { email, plan }: GenerateKeyRequest = await req.json();
-
+    
     console.log('[API] Validating email and plan...');
     if (!email || !plan) {
       console.error('[API] Missing email or plan');
@@ -76,29 +105,20 @@ export async function POST(req: NextRequest) {
     const proKey = generateKey(email, limit, months);
     console.log('[API] Key generated:', proKey?.substring(0, 20) + '...');
 
-    // Guardar en Supabase
+    // Guardar en Supabase usando REST API
     console.log('[API] Saving to Supabase...');
     const expiresAt = new Date(Date.now() + months * 30 * 24 * 60 * 60 * 1000).toISOString();
     
-    const { error: dbError, data: dbData } = await supabase
-      .from('pro_keys')
-      .insert({
-        email: email.toLowerCase().trim(),
-        pro_key: proKey,
-        plan,
-        expires_at: expiresAt,
-        status: 'active',
-      });
-
-    if (dbError) {
-      console.error('[API] Supabase insert error:', dbError);
+    try {
+      await insertProKey(email, proKey, plan, expiresAt);
+      console.log('[API] Successfully saved to Supabase');
+    } catch (dbError) {
+      console.error('[API] Database error:', dbError);
       return NextResponse.json(
-        { error: `Error al guardar en base de datos: ${dbError.message}` },
+        { error: `Error al guardar en base de datos: ${dbError instanceof Error ? dbError.message : String(dbError)}` },
         { status: 500 }
       );
     }
-    
-    console.log('[API] Successfully saved to Supabase');
 
     // Enviar email con la clave
     console.log('[API] Sending email...');
