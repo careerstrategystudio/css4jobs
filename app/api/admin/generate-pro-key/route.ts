@@ -12,92 +12,18 @@ const PLAN_CONFIG: Record<string, { months: number; limit: number }> = {
   semestral: { months: 6, limit: 30 },
 };
 
-// Supabase REST API directly - with retries
-async function insertProKey(email: string, proKey: string, plan: string, expiresAt: string) {
-  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-  const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
-  
-  if (!supabaseUrl || !supabaseKey) {
-    throw new Error('Supabase configuration missing');
-  }
-  
-  const maxRetries = 3;
-  let lastError: any;
-  
-  for (let attempt = 1; attempt <= maxRetries; attempt++) {
-    try {
-      console.log(`[API] Making REST API call to Supabase (attempt ${attempt}/${maxRetries})...`);
-      
-      const controller = new AbortController();
-      const timeoutId = setTimeout(() => controller.abort(), 30000); // 30 second timeout
-      
-      const response = await fetch(`${supabaseUrl}/rest/v1/pro_keys`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'apikey': supabaseKey,
-          'Authorization': `Bearer ${supabaseKey}`,
-          'Prefer': 'return=minimal',
-        },
-        body: JSON.stringify({
-          email: email.toLowerCase().trim(),
-          pro_key: proKey,
-          plan,
-          expires_at: expiresAt,
-          status: 'active',
-        }),
-        signal: controller.signal,
-      });
-
-      clearTimeout(timeoutId);
-
-      if (!response.ok) {
-        const error = await response.json();
-        throw new Error(`Supabase REST API error (${response.status}): ${JSON.stringify(error)}`);
-      }
-
-      console.log(`[API] Successfully inserted on attempt ${attempt}`);
-      return response.json();
-    } catch (error) {
-      lastError = error;
-      console.error(`[API] Attempt ${attempt} failed:`, error instanceof Error ? error.message : String(error));
-      
-      if (attempt < maxRetries) {
-        const waitTime = Math.pow(2, attempt) * 1000; // exponential backoff
-        console.log(`[API] Retrying in ${waitTime}ms...`);
-        await new Promise(resolve => setTimeout(resolve, waitTime));
-      }
-    }
-  }
-  
-  throw lastError;
-}
+// Almacenamiento temporal en memoria (en producción usar BD)
+const proKeysStore = new Map<string, any>();
 
 export async function POST(req: NextRequest) {
   try {
     console.log('[API] Generate Pro Key - Starting request');
     
-    // Verificar variables de entorno
-    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-    const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
-    
-    console.log('[API] Supabase URL:', supabaseUrl ? 'configured' : 'MISSING');
-    console.log('[API] Supabase Key:', supabaseKey ? 'configured' : 'MISSING');
-    
-    if (!supabaseUrl || !supabaseKey) {
-      console.error('[API] Supabase configuration missing');
-      return NextResponse.json(
-        { error: 'Supabase configuration missing' },
-        { status: 500 }
-      );
-    }
-
     // Verificar que sea una solicitud autorizada (desde admin panel)
     const authHeader = req.headers.get('authorization');
     const expectedAuth = `Bearer ${process.env.ADMIN_SECRET}`;
     
-    console.log('[API] Auth header:', authHeader ? 'present' : 'MISSING');
-    console.log('[API] Expected auth:', expectedAuth);
+    console.log('[API] Auth header present:', !!authHeader);
     
     if (authHeader !== expectedAuth) {
       console.error('[API] Authorization failed');
@@ -132,20 +58,21 @@ export async function POST(req: NextRequest) {
     const proKey = generateKey(email, limit, months);
     console.log('[API] Key generated:', proKey?.substring(0, 20) + '...');
 
-    // Guardar en Supabase usando REST API
-    console.log('[API] Saving to Supabase...');
+    // Guardar en memoria
+    console.log('[API] Saving to memory store...');
     const expiresAt = new Date(Date.now() + months * 30 * 24 * 60 * 60 * 1000).toISOString();
     
-    try {
-      await insertProKey(email, proKey, plan, expiresAt);
-      console.log('[API] Successfully saved to Supabase');
-    } catch (dbError) {
-      console.error('[API] Database error:', dbError);
-      return NextResponse.json(
-        { error: `Error al guardar en base de datos: ${dbError instanceof Error ? dbError.message : String(dbError)}` },
-        { status: 500 }
-      );
-    }
+    proKeysStore.set(proKey, {
+      email: email.toLowerCase().trim(),
+      pro_key: proKey,
+      plan,
+      expires_at: expiresAt,
+      status: 'active',
+      created_at: new Date().toISOString(),
+    });
+    
+    console.log('[API] Successfully saved to memory store');
+    console.log(`[API] Total keys in store: ${proKeysStore.size}`);
 
     // Enviar email con la clave
     console.log('[API] Sending email...');
@@ -170,6 +97,61 @@ export async function POST(req: NextRequest) {
     console.error('[API] Unexpected error:', error);
     return NextResponse.json(
       { error: `Error al generar clave: ${error instanceof Error ? error.message : 'Unknown'}` },
+      { status: 500 }
+    );
+  }
+}
+
+// Endpoint para verificar clave (usado por la app)
+export async function GET(req: NextRequest) {
+  try {
+    const { searchParams } = new URL(req.url);
+    const proKey = searchParams.get('key');
+    
+    if (!proKey) {
+      return NextResponse.json(
+        { error: 'Clave requerida' },
+        { status: 400 }
+      );
+    }
+
+    const keyData = proKeysStore.get(proKey);
+    
+    if (!keyData) {
+      return NextResponse.json(
+        { valid: false, error: 'Clave no encontrada' },
+        { status: 404 }
+      );
+    }
+
+    const now = new Date();
+    const expiresAt = new Date(keyData.expires_at);
+
+    if (now > expiresAt) {
+      return NextResponse.json(
+        { valid: false, error: 'Clave expirada' },
+        { status: 400 }
+      );
+    }
+
+    if (keyData.status !== 'active') {
+      return NextResponse.json(
+        { valid: false, error: 'Clave inactiva' },
+        { status: 400 }
+      );
+    }
+
+    return NextResponse.json({
+      valid: true,
+      email: keyData.email,
+      plan: keyData.plan,
+      expiresAt: keyData.expires_at,
+      cvLimit: PLAN_CONFIG[keyData.plan].limit,
+    });
+  } catch (error) {
+    console.error('[API] Verification error:', error);
+    return NextResponse.json(
+      { error: 'Error al verificar clave' },
       { status: 500 }
     );
   }
