@@ -15,11 +15,17 @@ const PLAN_CONFIG: Record<string, { months: number; limit: number }> = {
 
 export async function POST(req: NextRequest) {
   try {
+    console.log('[API] Generate Pro Key - Starting request');
+    
     // Verificar variables de entorno
     const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
     const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
     
+    console.log('[API] Supabase URL:', supabaseUrl ? 'configured' : 'MISSING');
+    console.log('[API] Supabase Key:', supabaseKey ? 'configured' : 'MISSING');
+    
     if (!supabaseUrl || !supabaseKey) {
+      console.error('[API] Supabase configuration missing');
       return NextResponse.json(
         { error: 'Supabase configuration missing' },
         { status: 500 }
@@ -27,20 +33,30 @@ export async function POST(req: NextRequest) {
     }
 
     // Crear cliente Supabase
+    console.log('[API] Creating Supabase client...');
     const supabase = createClient(supabaseUrl, supabaseKey);
 
     // Verificar que sea una solicitud autorizada (desde admin panel)
     const authHeader = req.headers.get('authorization');
-    if (authHeader !== `Bearer ${process.env.ADMIN_SECRET}`) {
+    const expectedAuth = `Bearer ${process.env.ADMIN_SECRET}`;
+    
+    console.log('[API] Auth header:', authHeader ? 'present' : 'MISSING');
+    console.log('[API] Expected auth:', expectedAuth);
+    
+    if (authHeader !== expectedAuth) {
+      console.error('[API] Authorization failed');
       return NextResponse.json(
         { error: 'Unauthorized' },
         { status: 401 }
       );
     }
 
+    console.log('[API] Parsing request body...');
     const { email, plan }: GenerateKeyRequest = await req.json();
 
+    console.log('[API] Validating email and plan...');
     if (!email || !plan) {
+      console.error('[API] Missing email or plan');
       return NextResponse.json(
         { error: 'Email y plan son requeridos' },
         { status: 400 }
@@ -48,42 +64,53 @@ export async function POST(req: NextRequest) {
     }
 
     if (!PLAN_CONFIG[plan]) {
+      console.error('[API] Invalid plan:', plan);
       return NextResponse.json(
         { error: 'Plan inválido' },
         { status: 400 }
       );
     }
 
+    console.log('[API] Generating key for:', email, 'plan:', plan);
     const { months, limit } = PLAN_CONFIG[plan];
     const proKey = generateKey(email, limit, months);
+    console.log('[API] Key generated:', proKey?.substring(0, 20) + '...');
 
     // Guardar en Supabase
-    const { error: dbError } = await supabase
+    console.log('[API] Saving to Supabase...');
+    const expiresAt = new Date(Date.now() + months * 30 * 24 * 60 * 60 * 1000).toISOString();
+    
+    const { error: dbError, data: dbData } = await supabase
       .from('pro_keys')
       .insert({
         email: email.toLowerCase().trim(),
         pro_key: proKey,
         plan,
-        expires_at: new Date(Date.now() + months * 30 * 24 * 60 * 60 * 1000).toISOString(),
+        expires_at: expiresAt,
         status: 'active',
       });
 
     if (dbError) {
-      console.error('Supabase error:', dbError);
+      console.error('[API] Supabase insert error:', dbError);
       return NextResponse.json(
-        { error: 'Error al guardar en base de datos' },
+        { error: `Error al guardar en base de datos: ${dbError.message}` },
         { status: 500 }
       );
     }
+    
+    console.log('[API] Successfully saved to Supabase');
 
     // Enviar email con la clave
+    console.log('[API] Sending email...');
     try {
       await sendProKeyEmail(email, proKey, plan);
+      console.log('[API] Email sent successfully');
     } catch (emailError) {
-      console.error('Email error:', emailError);
+      console.error('[API] Email error:', emailError);
       // No fallar si el email no se envía, la clave ya está generada
     }
 
+    console.log('[API] Request completed successfully');
     return NextResponse.json({
       success: true,
       message: 'Clave generada y email enviado',
@@ -93,9 +120,9 @@ export async function POST(req: NextRequest) {
       expiresIn: `${months} mes${months > 1 ? 'es' : ''}`,
     });
   } catch (error) {
-    console.error('Generate key error:', error);
+    console.error('[API] Unexpected error:', error);
     return NextResponse.json(
-      { error: 'Error al generar clave' },
+      { error: `Error al generar clave: ${error instanceof Error ? error.message : 'Unknown'}` },
       { status: 500 }
     );
   }
