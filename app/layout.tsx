@@ -41,7 +41,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             <Navbar />
             <main>{children}</main>
             <footer className="border-t border-slate-200 mt-20 py-10 text-center text-sm text-slate-500">
-              <p>© 2025 CSS 4 JOBS · by <span className="text-brand-700 font-semibold">CareerStrategy Studio</span></p>
+              <p>© 2025 CSS 4 JOBS · by <span className="text-brand-700 font-semibold">CareerStrategyStudio</span></p>
             </footer>
           </PasswordGate>
         </LangProvider>

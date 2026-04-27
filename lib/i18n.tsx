@@ -12,7 +12,7 @@ const translations = {
     nav_cta: 'Empezar gratis',
 
     // Home hero
-    home_badge: 'CareerStrategy Studio',
+    home_badge: 'CareerStrategyStudio',
     home_h1a: 'Tu proximo trabajo,',
     home_h1b: 'conseguido con IA',
     home_desc: 'Adapta tu CV para cada puesto, optimiza tu LinkedIn y consigue mas entrevistas. Diseñado para profesionales hispanos que quieren trabajar en cualquier parte del mundo.',
@@ -212,7 +212,7 @@ const translations = {
     nav_cta: 'Start free',
 
     // Home hero
-    home_badge: 'CareerStrategy Studio',
+    home_badge: 'CareerStrategyStudio',
     home_h1a: 'Your next job,',
     home_h1b: 'landed with AI',
     home_desc: 'Tailor your CV for every job, optimize your LinkedIn and get more interviews. Built for professionals who want to work anywhere in the world.',
